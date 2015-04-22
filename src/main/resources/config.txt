@@ -1,0 +1,50 @@
+# Note: do not put spaces after the colons
+
+# Database configuration
+# host: the host of the mysql server
+# port: the port of the mysql server
+# user: the username to login with
+# pass: the password for the user
+# database: the name of the database
+# table: the name of the table that contains the data
+# columntitle: the name of the column with all the titles
+# columnid: the name of the column with all the ids
+dbhost:localhost
+dbport:3306
+dbuser:root
+dbpass:
+dbdatabase:database
+dbtable:series
+dbcolumntitle:titles
+dbcolumnid:id
+
+# The location of the xml file to parse
+xmlfile:http://everath.net/sslist/csparse.xml
+
+# The base url for the mangaupdate(rlstrackr) search
+muurl:https://rlstrackr.com/series/info/
+
+# The base url for the batoto search
+bturl:http://bato.to/search?name_cond=c&name=
+
+# Irc configuration
+# nick, login, realname: login as "nick!user@host : realname"
+# host: the host of the irc server
+# port: the port to connect to
+# ssl: whether to make the connection secure
+# nickserv: the nickserv password
+# pass: the password to be sent as /PASS [pass] upon connecting
+# channels: the channels to connect to, use #chan:key,#chan2:key2, no spaces
+ircnick:SilentBot
+irclogin:SilentBot
+ircrealname:A bot for silentsky
+irchost:irc.irchighway.net
+ircport:6667
+ircssl:false
+ircnickserv:
+ircpass:
+ircchannels:#configureme,#configme:password
+
+# Note: every single field, except the passwords(ircnickserv, ircpass, and
+# dbpass, if the mysql user does not have a password) must be filled out.
+# The password fields must also exist, at the very least.
