@@ -49,51 +49,19 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		batotoPattern =
 				Pattern.compile("((http(s)?://)?bato.to/comic/_/(comics/)?\\S+(/)?)");
 		
-		final Builder<PircBotX> build = new Configuration.Builder<PircBotX>();
+		bot = new PircBotX(configure(cfg));
 		
-		build.addListener(this)
-				.setAutoReconnect(true)
-				.setName(cfg.getProperty("ircnick"))
-				.setLogin(cfg.getProperty("irclogin"))
-				.setRealName(cfg.getProperty("ircrealname"))
-				.setServer(cfg.getProperty("irchost"),
-						Integer.parseInt(cfg.getProperty("ircport")));
-		
-		if (Boolean.parseBoolean(cfg.getProperty("ircssl"))) {
-			build.setSocketFactory(new UtilSSLSocketFactory()
-					.trustAllCertificates());
-		}
-		
-		if (!cfg.getProperty("ircnickserv").isEmpty()) {
-			build.setNickservPassword(cfg.getProperty("ircnickserv"));
-		}
-		
-		if (!cfg.getProperty("ircpass").isEmpty()) {
-			build.setNickservPassword(cfg.getProperty("ircpass"));
-		}
-		
-		final String[] chans = cfg.getProperty("ircchannels").split(",");
-		for (final String chan : chans) {
-			
-			final String[] chanKey = chan.split(":");
-			
-			if (chanKey.length > 1) {
-				build.addAutoJoinChannel(chanKey[0], chanKey[1]);
-			} else {
-				build.addAutoJoinChannel(chan);
-			}
-			
-		}
-		
-		bot = new PircBotX(build.buildConfiguration());
+	}
+	
+	public void start() {
 		
 		try {
 			
 			bot.startBot();
 			
-		} catch (IrcException | IOException e) {
+		} catch (IOException | IrcException e) {
 			
-			System.out.println("Error: Exception while starting bot!");
+			System.out.println("Error: Exception with the irc connection!");
 			System.out
 					.println("Please send the following error message to the author:");
 			e.printStackTrace();
@@ -146,6 +114,48 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	public void onSocketConnect(final SocketConnectEvent<PircBotX> eve) {
 		
 		System.out.println("Connecting...");
+		
+	}
+	
+	private Configuration<PircBotX> configure(final ConfigParser cfg) {
+		
+		final Builder<PircBotX> build = new Configuration.Builder<PircBotX>();
+		
+		build.addListener(this)
+				.setAutoReconnect(true)
+				.setName(cfg.getProperty("ircnick"))
+				.setLogin(cfg.getProperty("irclogin"))
+				.setRealName(cfg.getProperty("ircrealname"))
+				.setServer(cfg.getProperty("irchost"),
+						Integer.parseInt(cfg.getProperty("ircport")));
+		
+		if (Boolean.parseBoolean(cfg.getProperty("ircssl"))) {
+			build.setSocketFactory(new UtilSSLSocketFactory()
+					.trustAllCertificates());
+		}
+		
+		if (!cfg.getProperty("ircnickserv").isEmpty()) {
+			build.setNickservPassword(cfg.getProperty("ircnickserv"));
+		}
+		
+		if (!cfg.getProperty("ircpass").isEmpty()) {
+			build.setNickservPassword(cfg.getProperty("ircpass"));
+		}
+		
+		final String[] chans = cfg.getProperty("ircchannels").split(",");
+		for (final String chan : chans) {
+			
+			final String[] chanKey = chan.split(":");
+			
+			if (chanKey.length > 1) {
+				build.addAutoJoinChannel(chanKey[0], chanKey[1]);
+			} else {
+				build.addAutoJoinChannel(chan);
+			}
+			
+		}
+		
+		return build.buildConfiguration();
 		
 	}
 	
