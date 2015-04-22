@@ -4,6 +4,8 @@ import io.github.likcoras.ssbot.ConfigParser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,6 +27,21 @@ public class XmlHandler {
 	public synchronized String[] getData(final String tri) {
 		
 		return data.get(tri);
+		
+	}
+	
+	public void scheduleUpdate() {
+		
+		new Timer().schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				
+				update();
+				
+			}
+			
+		}, 0L, 1000 * 60 * 60 * 24);
 		
 	}
 	
