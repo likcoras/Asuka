@@ -14,6 +14,7 @@ import org.pircbotx.Colors;
 import org.pircbotx.Configuration;
 import org.pircbotx.Configuration.Builder;
 import org.pircbotx.PircBotX;
+import org.pircbotx.User;
 import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -24,72 +25,62 @@ import org.pircbotx.hooks.events.SocketConnectEvent;
 
 public class BotManager extends ListenerAdapter<PircBotX> {
 	
-	private final DbHandler db;
-	private final MuHandler mu;
-	private final XmlHandler xml;
-	private final BttHandler bt;
+	private final DbHandler database;
+	private final MuHandler mangaUpdates;
+	private final XmlHandler xmlFile;
+	private final BttHandler batoto;
 	
 	private final PircBotX bot;
 	
-	private final Pattern mup;
+	private final Pattern mangeUpdatePattern;
 	
-	private final Pattern btp;
+	private final Pattern batotoPattern;
 	
 	public BotManager(final ConfigParser cfg, final DbHandler db,
 			final MuHandler mu, final XmlHandler xml, final BttHandler bt) {
 		
-		this.db = db;
-		this.mu = mu;
-		this.xml = xml;
-		this.bt = bt;
+		database = db;
+		mangaUpdates = mu;
+		xmlFile = xml;
+		batoto = bt;
 		
-		mup =
+		mangeUpdatePattern =
 				Pattern.compile("(http(s)?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)(/)?");
-		btp =
+		batotoPattern =
 				Pattern.compile("((http(s)?://)?bato.to/comic/_/(comics/)?\\S+(/)?)");
 		
 		final Builder<PircBotX> build = new Configuration.Builder<PircBotX>();
 		
 		build.addListener(this)
 				.setAutoReconnect(true)
-				.setName(cfg.getString("ircnick"))
-				.setLogin(cfg.getString("irclogin"))
-				.setRealName(cfg.getString("ircrealname"))
-				.setServer(cfg.getString("irchost"),
-						Integer.parseInt(cfg.getString("ircport")));
+				.setName(cfg.getProperty("ircnick"))
+				.setLogin(cfg.getProperty("irclogin"))
+				.setRealName(cfg.getProperty("ircrealname"))
+				.setServer(cfg.getProperty("irchost"),
+						Integer.parseInt(cfg.getProperty("ircport")));
 		
-		if (Boolean.parseBoolean(cfg.getString("ircssl"))) {
-			
+		if (Boolean.parseBoolean(cfg.getProperty("ircssl"))) {
 			build.setSocketFactory(new UtilSSLSocketFactory()
 					.trustAllCertificates());
-			
 		}
 		
-		if (!cfg.getString("ircnickserv").isEmpty()) {
-			
-			build.setNickservPassword(cfg.getString("ircnickserv"));
-			
+		if (!cfg.getProperty("ircnickserv").isEmpty()) {
+			build.setNickservPassword(cfg.getProperty("ircnickserv"));
 		}
 		
-		if (!cfg.getString("ircpass").isEmpty()) {
-			
-			build.setNickservPassword(cfg.getString("ircpass"));
-			
+		if (!cfg.getProperty("ircpass").isEmpty()) {
+			build.setNickservPassword(cfg.getProperty("ircpass"));
 		}
 		
-		final String[] rch = cfg.getString("ircchannels").split(",");
-		for (final String s : rch) {
+		final String[] chans = cfg.getProperty("ircchannels").split(",");
+		for (final String chan : chans) {
 			
-			final String[] ss = s.split(":");
+			final String[] chanKey = chan.split(":");
 			
-			if (ss.length > 1) {
-				
-				build.addAutoJoinChannel(ss[0], ss[1]);
-				
+			if (chanKey.length > 1) {
+				build.addAutoJoinChannel(chanKey[0], chanKey[1]);
 			} else {
-				
-				build.addAutoJoinChannel(s);
-				
+				build.addAutoJoinChannel(chan);
 			}
 			
 		}
@@ -129,82 +120,24 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		final String msg = eve.getMessage();
 		
-		final Matcher mum = mup.matcher(msg);
-		final Matcher btm = btp.matcher(msg);
+		final Matcher muMatcher = mangeUpdatePattern.matcher(msg);
+		final Matcher btMatcher = batotoPattern.matcher(msg);
 		
-		if (mum.find()) {
-			
-			sendMu(eve.getChannel(), mu.getData(Integer.parseInt(mum.group(7))));
-			
-		} else if (btm.find()) {
-			
-			sendBt(eve.getChannel(), bt.getData(btm.group(1)));
-			
+		if (muMatcher.find()) {
+			sendMu(eve.getChannel(),
+					mangaUpdates.getData(Integer.parseInt(muMatcher.group(7))));
+		} else if (btMatcher.find()) {
+			sendBt(eve.getChannel(), batoto.getData(btMatcher.group(1)));
 		} else if (msg.startsWith("!batoto ") || msg.startsWith(".batoto ")) {
-			
-			final String[] data = bt.search(msg.substring(8));
-			
-			if (data != null) {
-				
-				sendBt(eve.getChannel(), data);
-				
-			} else {
-				
-				eve.getChannel()
-						.send()
-						.message("Nothing found for '" + msg.substring(8) + "'");
-				
-			}
-			
+			searchBt(eve.getChannel(), msg.substring(8));
 		} else if (msg.startsWith("!baka ") || msg.startsWith(".baka ")) {
-			
-			final int i = db.getId(msg.substring(6).split(" "));
-			
-			if (i > -1) {
-				
-				sendMu(eve.getChannel(), mu.getData(i));
-				
-			} else {
-				
-				eve.getChannel()
-						.send()
-						.message("Nothing found for '" + msg.substring(6) + "'");
-				
-			}
-			
-		} else if (msg.matches("(\\.|!)quit")) {
-			
-			if (eve.getChannel().getOps().contains(eve.getUser())
-					|| eve.getChannel().getOwners().contains(eve.getUser())
-					|| eve.getChannel().getSuperOps().contains(eve.getUser())) {
-				
-				eve.getChannel().send().message("Understood, quitting.");
-				bot.stopBotReconnect();
-				bot.sendIRC().quitServer("Requested");
-				
-			}
-			
-		} else if (msg.matches("(\\.|!)update")) {
-			
-			if (eve.getChannel().getOps().contains(eve.getUser())
-					|| eve.getChannel().getOwners().contains(eve.getUser())
-					|| eve.getChannel().getSuperOps().contains(eve.getUser())) {
-				
-				eve.getChannel().send().message("Understood, updating.");
-				xml.update();
-				
-			}
-			
+			searchMu(eve.getChannel(), msg.substring(6));
+		} else if (msg.equals("!quit") || msg.equals(".quit")) {
+			quit(eve.getUser(), eve.getChannel());
+		} else if (msg.equals("!update") || msg.equals(".update")) {
+			update(eve.getUser(), eve.getChannel());
 		} else if (msg.startsWith("!")) {
-			
-			final String[] data = xml.getData(msg.substring(1));
-			
-			if (data != null) {
-				
-				sendXml(eve.getChannel(), data);
-				
-			}
-			
+			searchXml(eve.getChannel(), msg.substring(1));
 		}
 		
 	}
@@ -221,13 +154,11 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		ch.send()
 				.message(
 						String.format(
-								"%sName: %s%s | "
-										+ "%sAuthor: %s%s | %sTags: %s%s | %sStatus: %s%s | %sLink: %s%s",
-								Colors.BOLD, Colors.BOLD, data[0], Colors.BOLD,
-								Colors.BOLD, data[1], Colors.BOLD, Colors.BOLD,
-								data[2], Colors.BOLD, Colors.BOLD, data[3],
-								Colors.BOLD, Colors.BOLD, data[4], Colors.BOLD,
-								Colors.BOLD, data[4]));
+								"%bName: %b%s | "
+										+ "%bAuthor: %b%s | %bTags: %b%s | %bStatus: %b%s | %bLink: %b%s"
+												.replaceAll("%b", Colors.BOLD),
+								data[0], data[1], data[2], data[3], data[4],
+								data[4]));
 		
 	}
 	
@@ -236,27 +167,86 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		ch.send()
 				.message(
 						String.format(
-								"%sName: %s%s | "
-										+ "%sAuthor: %s%s | %sTags: %s%s | %sLatest Release: %s%s "
-										+ "by %s (%s days ago) | %sLink: %s%s",
-								Colors.BOLD, Colors.BOLD, data[0], Colors.BOLD,
-								Colors.BOLD, data[1], Colors.BOLD, Colors.BOLD,
-								data[2], Colors.BOLD, Colors.BOLD, data[3],
-								data[5], data[4], Colors.BOLD, Colors.BOLD,
-								data[6]));
+								"%bName: %b%s | "
+										+ "%bAuthor: %b%s | %bTags: %b%s | %bLatest Release: %b%s "
+										+ "by %s (%s days ago) | %bLink: %b%s"
+												.replaceAll("%b", Colors.BOLD),
+								data[0], data[1], data[2], data[3], data[5],
+								data[4], data[6]));
 		
 	}
 	
 	private void sendXml(final Channel ch, final String[] data) {
 		
-		ch.send()
-				.message(
-						String.format(
-								"%s%s%s chapter %s%s%s | %sMega: %s%s | %sMediafire: %s%s | %sReader: %s%s",
-								Colors.BOLD, data[0], Colors.BOLD, Colors.BOLD,
-								data[1], Colors.BOLD, Colors.BOLD, Colors.BOLD,
-								data[2], Colors.BOLD, Colors.BOLD, data[3],
-								Colors.BOLD, Colors.BOLD, data[4]));
+		ch.send().message(
+				String.format(
+						"%b%s%b chapter %b%s%b | %bMega: %b%s | %bMediafire: %b%s | %bReader: %b%s"
+								.replaceAll("%b", Colors.BOLD), data[0],
+						data[1], data[2], data[3], data[4]));
+		
+	}
+	
+	private void searchBt(final Channel c, final String msg) {
+		
+		final String[] data = batoto.search(msg);
+		
+		if (data != null) {
+			sendBt(c, data);
+		} else {
+			c.send().message("Nothing found for '" + msg + "'");
+		}
+		
+	}
+	
+	private void searchMu(final Channel c, final String msg) {
+		
+		final int i = database.getId(msg.split(" "));
+		
+		if (i > -1) {
+			sendMu(c, mangaUpdates.getData(i));
+		} else {
+			c.send().message("Nothing found for '" + msg + "'");
+		}
+		
+	}
+	
+	private void quit(final User u, final Channel c) {
+		
+		if (isAuthorized(u, c)) {
+			
+			c.send().message("Understood, quitting.");
+			bot.stopBotReconnect();
+			bot.sendIRC().quitServer("Requested");
+			
+		}
+		
+	}
+	
+	private void update(final User u, final Channel c) {
+		
+		if (isAuthorized(u, c)) {
+			
+			c.send().message("Understood, updating.");
+			xmlFile.update();
+			
+		}
+		
+	}
+	
+	private boolean isAuthorized(final User u, final Channel c) {
+		
+		return c.getOwners().contains(u) || c.getSuperOps().contains(u)
+				|| c.getOps().contains(u);
+		
+	}
+	
+	private void searchXml(final Channel c, final String msg) {
+		
+		final String[] data = xmlFile.getData(msg);
+		
+		if (data != null) {
+			sendXml(c, data);
+		}
 		
 	}
 	

@@ -24,16 +24,16 @@ public class DbHandler {
 	
 	public DbHandler(final ConfigParser cfg) {
 		
-		host = cfg.getString("dbhost");
-		port = Integer.parseInt(cfg.getString("dbport"));
+		host = cfg.getProperty("dbhost");
+		port = Integer.parseInt(cfg.getProperty("dbport"));
 		
-		user = cfg.getString("dbuser");
-		pass = cfg.getString("dbpass");
+		user = cfg.getProperty("dbuser");
+		pass = cfg.getProperty("dbpass");
 		
-		database = cfg.getString("dbdatabase");
-		table = cfg.getString("dbtable");
-		titles = cfg.getString("dbcolumntitle");
-		id = cfg.getString("dbcolumnid");
+		database = cfg.getProperty("dbdatabase");
+		table = cfg.getProperty("dbtable");
+		titles = cfg.getProperty("dbcolumntitle");
+		id = cfg.getProperty("dbcolumnid");
 		
 		try {
 			
@@ -56,9 +56,7 @@ public class DbHandler {
 		String qr = "";
 		
 		for (final String k : s) {
-			
 			qr += String.format("%s LIKE '%%%s%%' AND ", titles, k);
-			
 		}
 		
 		qr =
@@ -73,9 +71,7 @@ public class DbHandler {
 			final ResultSet res = st.executeQuery(qr);
 			
 			if (res.next()) {
-				
 				i = res.getInt(id);
-				
 			}
 			
 			con.close();

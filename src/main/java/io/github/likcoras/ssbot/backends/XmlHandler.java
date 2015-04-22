@@ -2,7 +2,6 @@ package io.github.likcoras.ssbot.backends;
 
 import io.github.likcoras.ssbot.ConfigParser;
 
-import java.awt.EventQueue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,18 +18,7 @@ public class XmlHandler {
 	
 	public XmlHandler(final ConfigParser cfg) {
 		
-		link = cfg.getString("xmlfile");
-		
-		EventQueue.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				update();
-				
-			}
-			
-		});
+		link = cfg.getProperty("xmlfile");
 		
 	}
 	
@@ -49,23 +37,23 @@ public class XmlHandler {
 			final Document doc = build.parse(link);
 			
 			data = new HashMap<String, String[]>();
-			Node node = doc.getFirstChild().getFirstChild();
+			Node trigger = doc.getFirstChild().getFirstChild();
 			
-			while (node != null) {
+			while (trigger != null) {
 				
-				final String[] dat = new String[5];
+				final String[] links = new String[5];
 				
-				Node sub = node.getFirstChild().getNextSibling();
-				for (int i = 0; i < dat.length; i++) {
+				Node sub = trigger.getFirstChild().getNextSibling();
+				for (int i = 0; i < links.length; i++) {
 					
-					dat[i] = sub.getTextContent();
+					links[i] = sub.getTextContent();
 					sub = sub.getNextSibling();
 					
 				}
 				
-				data.put(node.getNodeName(), dat);
+				data.put(trigger.getNodeName(), links);
 				
-				node = node.getNextSibling();
+				trigger = trigger.getNextSibling();
 				
 			}
 			

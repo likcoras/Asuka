@@ -25,6 +25,10 @@ public class ConfigParser {
 		prop = new HashMap<String, String>();
 		conf = new File("config.txt");
 		
+	}
+	
+	public void parse() {
+		
 		createDefault();
 		load();
 		check();
@@ -33,38 +37,16 @@ public class ConfigParser {
 		
 	}
 	
-	private void check() {
+	public String getProperty(final String k) {
 		
-		for (String s : keys) {
-			
-			boolean b = false;
-			if (s.startsWith("#")) {
-				
-				s = s.substring(1);
-				b = true;
-				
-			}
-			
-			if (!prop.containsKey(s) || (!b && prop.get(s).isEmpty())) {
-				
-				System.out
-						.println("Error: Missing configuration on " + s + "!");
-				System.out
-						.println("Remember, every single field must be filled, except passwords.");
-				System.exit(1);
-				
-			}
-			
-		}
+		return prop.get(k);
 		
 	}
 	
 	private void createDefault() {
 		
 		if (conf.exists()) {
-			
 			return;
-			
 		}
 		
 		System.out.println("Writing default configuration...");
@@ -82,9 +64,7 @@ public class ConfigParser {
 			
 			String line;
 			while ((line = def.readLine()) != null) {
-				
 				out.write(line + "\n");
-				
 			}
 			
 			def.close();
@@ -107,12 +87,6 @@ public class ConfigParser {
 		
 	}
 	
-	public String getString(final String k) {
-		
-		return prop.get(k);
-		
-	}
-	
 	private void load() {
 		
 		System.out.println("Loading configuration...");
@@ -123,9 +97,7 @@ public class ConfigParser {
 			while ((line = in.readLine()) != null) {
 				
 				if (line.startsWith("#") || !line.contains(":")) {
-					
 					continue;
-					
 				}
 				
 				final int i = line.indexOf(":");
@@ -143,6 +115,33 @@ public class ConfigParser {
 					.println("Please send the following error message to the author:");
 			e.printStackTrace();
 			System.exit(1);
+			
+		}
+		
+	}
+	
+	private void check() {
+		
+		for (String key : keys) {
+			
+			boolean notRequired = false;
+			if (key.startsWith("#")) {
+				
+				key = key.substring(1);
+				notRequired = true;
+				
+			}
+			
+			if (!prop.containsKey(key)
+					|| (!notRequired && prop.get(key).isEmpty())) {
+				
+				System.out.println("Error: Missing configuration on " + key
+						+ "!");
+				System.out
+						.println("Remember, every single field must be filled, except passwords.");
+				System.exit(1);
+				
+			}
 			
 		}
 		

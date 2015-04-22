@@ -15,7 +15,7 @@ public class BttHandler {
 	
 	public BttHandler(final ConfigParser cfg) {
 		
-		base = cfg.getString("bturl");
+		base = cfg.getProperty("bturl");
 		
 	}
 	
@@ -24,9 +24,7 @@ public class BttHandler {
 		try {
 			
 			if (!link.startsWith("http")) {
-				
 				link = "http://" + link;
-				
 			}
 			
 			final Document doc = Jsoup.connect(link).get();
@@ -34,14 +32,14 @@ public class BttHandler {
 			
 			data[0] = doc.select("h1.ipsType_pagetitle").text();
 			
-			final Elements inf = doc.select("td > a");
-			data[1] = inf.get(0).text();
+			final Elements info = doc.select("td > a");
+			data[1] = info.get(0).text();
 			
-			final Elements gen = doc.select("td > a[href] > span");
+			final Elements tags = doc.select("td > a[href] > span");
 			data[2] = "";
-			for (final Element a : gen) {
+			for (final Element tag : tags) {
 				
-				data[2] += a.text() + ", ";
+				data[2] += tag.text() + ", ";
 				
 			}
 			data[2] =
@@ -49,15 +47,10 @@ public class BttHandler {
 							"");
 			
 			final Elements stat = doc.select("td");
-			
 			for (final Element a : stat) {
-				
 				if (a.text().equals("Status:")) {
-					
 					data[3] = a.nextElementSibling().text();
-					
 				}
-				
 			}
 			
 			data[4] = link;
@@ -82,17 +75,13 @@ public class BttHandler {
 		try {
 			
 			final Document doc = Jsoup.connect(base + search).get();
-			
 			final Elements es = doc.select("strong > a[href]");
 			
 			if (es.isEmpty()) {
-				
 				return null;
-				
 			}
 			
 			final Element e = es.get(0);
-			
 			return getData(e.attr("href"));
 			
 		} catch (final IOException e) {

@@ -10,6 +10,7 @@ public class SSBot {
 	public static void main(final String[] args) {
 		
 		final ConfigParser cfg = new ConfigParser();
+		cfg.parse();
 		
 		System.out.println("Loading database backend...");
 		final DbHandler db = new DbHandler(cfg);
@@ -20,6 +21,7 @@ public class SSBot {
 		System.out
 				.println("Loading xml backend...(Fetching the xml file from another thread)");
 		final XmlHandler xml = new XmlHandler(cfg);
+		xml.update();
 		
 		System.out.println("Loading batoto backend...");
 		final BttHandler bt = new BttHandler(cfg);

@@ -18,7 +18,7 @@ public class MuHandler {
 	
 	public MuHandler(final ConfigParser cfg) {
 		
-		base = cfg.getString("muurl");
+		base = cfg.getProperty("muurl");
 		
 	}
 	
@@ -30,34 +30,34 @@ public class MuHandler {
 			
 			final Document doc = Jsoup.connect(base + id).get();
 			
-			final Elements tit = doc.select("h2");
-			out[0] = tit.get(1).text();
+			final Elements title = doc.select("h2");
+			out[0] = title.get(1).text();
 			
-			final Elements inf = doc.select("dt");
-			out[1] = inf.get(0).text();
+			final Elements info = doc.select("dt");
+			out[1] = info.get(0).text();
 			
 			try {
 				
-				out[2] = inf.get(3).text();
+				out[2] = info.get(3).text();
 				
 			} catch (final IndexOutOfBoundsException e) {
 				
-				out[2] = inf.get(2).text();
+				out[2] = info.get(2).text();
 				
 			}
 			
-			final Elements lat = doc.select("td");
-			out[3] = lat.get(0).text();
+			final Elements last = doc.select("td");
+			out[3] = last.get(0).text();
 			
-			final Date d =
+			final Date releaseDate =
 					new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH)
-							.parse(lat.get(1).text());
+							.parse(last.get(1).text());
 			final long diff =
-					(System.currentTimeMillis() - d.getTime())
+					(System.currentTimeMillis() - releaseDate.getTime())
 							/ (1000 * 60 * 60 * 24);
 			
 			out[4] = Long.toString(diff);
-			out[5] = lat.get(2).text();
+			out[5] = last.get(2).text();
 			
 			out[6] = linkBase + id;
 			
