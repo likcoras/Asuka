@@ -36,14 +36,10 @@ public class MuHandler {
 			final Elements info = doc.select("dt");
 			out[1] = info.get(0).text();
 			
-			try {
-				
+			if (info.size() == 4) {
 				out[2] = info.get(3).text();
-				
-			} catch (final IndexOutOfBoundsException e) {
-				
+			} else {
 				out[2] = info.get(2).text();
-				
 			}
 			
 			final Elements last = doc.select("td");
