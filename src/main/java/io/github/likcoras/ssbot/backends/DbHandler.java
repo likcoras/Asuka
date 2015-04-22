@@ -50,28 +50,28 @@ public class DbHandler {
 		
 	}
 	
-	public int getId(final String... s) {
+	public int getId(final String... keywords) {
 		
 		int i = -1;
-		String qr = "";
+		String query = "";
 		
-		for (final String k : s) {
-			qr += String.format("%s LIKE '%%%s%%' AND ", titles, k);
+		for (final String keyword : keywords) {
+			query += String.format("%s LIKE '%%%s%%' AND ", titles, keyword);
 		}
 		
-		qr =
+		query =
 				String.format("SELECT * FROM %s.%s WHERE %s LIMIT 0,1",
-						database, table, qr.substring(0, qr.length() - 5));
+						database, table, query.substring(0, query.length() - 5));
 		
 		try {
 			
 			final Connection con = makeCon();
 			
-			final Statement st = con.createStatement();
-			final ResultSet res = st.executeQuery(qr);
+			final Statement state = con.createStatement();
+			final ResultSet result = state.executeQuery(query);
 			
-			if (res.next()) {
-				i = res.getInt(id);
+			if (result.next()) {
+				i = result.getInt(id);
 			}
 			
 			con.close();
