@@ -48,3 +48,7 @@ ircchannels:#configureme,#configme:password
 # Note: every single field, except the passwords(ircnickserv, ircpass, and
 # dbpass, if the mysql user does not have a password) must be filled out.
 # The password fields must also exist, at the very least.
+
+# The password used when forcing an update on the bot or making it quit
+# This is not an optional field.
+adminpass:

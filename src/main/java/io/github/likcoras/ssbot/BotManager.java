@@ -21,6 +21,7 @@ import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
 import org.pircbotx.hooks.events.DisconnectEvent;
 import org.pircbotx.hooks.events.MessageEvent;
+import org.pircbotx.hooks.events.PrivateMessageEvent;
 import org.pircbotx.hooks.events.SocketConnectEvent;
 
 public class BotManager extends ListenerAdapter<PircBotX> {
@@ -32,8 +33,9 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	
 	private final PircBotX bot;
 	
-	private final Pattern mangeUpdatePattern;
+	private final String password;
 	
+	private final Pattern mangeUpdatePattern;
 	private final Pattern batotoPattern;
 	
 	public BotManager(final ConfigParser cfg, final DbHandler db,
@@ -43,6 +45,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		mangaUpdates = mu;
 		xmlFile = xml;
 		batoto = bt;
+		
+		password = cfg.getProperty("adminpass");
 		
 		mangeUpdatePattern =
 				Pattern.compile("(http(s)?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)(/)?");
@@ -111,10 +115,23 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	}
 	
 	@Override
+	public void onPrivateMessage(final PrivateMessageEvent<PircBotX> eve) {
+		
+		String msg = eve.getMessage();
+		
+		if (msg.equals("quit " + password)) {
+			quit(eve.getUser());
+		} else if (msg.equals("update " + password)) {
+			update(eve.getUser());
+		} else {
+			eve.getUser().send().message("Nope! It's 'quit <password>' or 'update <password>'!");
+		}
+		
+	}
+	
+	@Override
 	public void onSocketConnect(final SocketConnectEvent<PircBotX> eve) {
-		
 		System.out.println("Connecting...");
-		
 	}
 	
 	private Configuration<PircBotX> configure(final ConfigParser cfg) {
@@ -164,8 +181,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		ch.send()
 				.message(
 						String.format(
-								"%bName: %b%s | "
-										+ "%bAuthor: %b%s | %bTags: %b%s | %bStatus: %b%s | %bLink: %b%s"
+								("%bName: %b%s | "
+										+ "%bAuthor: %b%s | %bTags: %b%s | %bStatus: %b%s | %bLink: %b%s")
 												.replaceAll("%b", Colors.BOLD),
 								data[0], data[1], data[2], data[3], data[4],
 								data[4]));
@@ -177,9 +194,9 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		ch.send()
 				.message(
 						String.format(
-								"%bName: %b%s | "
+								("%bName: %b%s | "
 										+ "%bAuthor: %b%s | %bTags: %b%s | %bLatest Release: %b%s "
-										+ "by %s (%s days ago) | %bLink: %b%s"
+										+ "by %s (%s days ago) | %bLink: %b%s")
 												.replaceAll("%b", Colors.BOLD),
 								data[0], data[1], data[2], data[3], data[5],
 								data[4], data[6]));
@@ -232,21 +249,28 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
+	private void quit(final User u) {
+		u.send().message("Understood, quitting.");
+		bot.stopBotReconnect();
+		bot.sendIRC().quitServer("Requested");
+	}
+	
 	private void update(final User u, final Channel c) {
-		
 		if (isAuthorized(u, c)) {
-			
 			c.send().message("Understood, updating.");
 			xmlFile.update();
-			
 		}
-		
+	}
+	
+	private void update(final User u) {
+		u.send().message("Understood, updating.");
+		xmlFile.update();
 	}
 	
 	private boolean isAuthorized(final User u, final Channel c) {
 		
-		return c.getOwners().contains(u) || c.getSuperOps().contains(u)
-				|| c.getOps().contains(u);
+		return c.isOwner(u) || c.isSuperOp(u)
+				|| c.isOp(u) || c.isHalfOp(u);
 		
 	}
 	
