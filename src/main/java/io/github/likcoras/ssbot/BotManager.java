@@ -4,6 +4,7 @@ import io.github.likcoras.ssbot.backends.BttHandler;
 import io.github.likcoras.ssbot.backends.DbHandler;
 import io.github.likcoras.ssbot.backends.MuHandler;
 import io.github.likcoras.ssbot.backends.XmlHandler;
+import io.github.likcoras.ssbot.data.XmlData;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -203,13 +204,9 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private void sendXml(final Channel ch, final String[] data) {
+	private void sendXml(final Channel ch, final XmlData data) {
 		
-		ch.send().message(
-				String.format(
-						"%b%s%b chapter %b%s%b | %bMega: %b%s | %bMediafire: %b%s | %bReader: %b%s"
-								.replaceAll("%b", Colors.BOLD), data[0],
-						data[1], data[2], data[3], data[4]));
+		ch.send().message(data.ircString());
 		
 	}
 	
@@ -276,11 +273,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	
 	private void searchXml(final Channel c, final String msg) {
 		
-		final String[] data = xmlFile.getData(msg);
-		
-		if (data != null) {
-			sendXml(c, data);
-		}
+		sendXml(c, xmlFile.getData(msg));
 		
 	}
 	
