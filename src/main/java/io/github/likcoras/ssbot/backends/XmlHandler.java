@@ -6,8 +6,7 @@ import io.github.likcoras.ssbot.data.XmlData;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,10 +16,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class XmlHandler {
+public class XmlHandler implements DataHandler {
 	
 	private final String link;
 	private final Map<String, XmlData> data;
+	
+	private static final Pattern HANDLE_PATTERN = Pattern.compile("[a-z]+\\d+");
 	
 	public XmlHandler(final ConfigParser cfg) {
 		
@@ -29,32 +30,31 @@ public class XmlHandler {
 		
 	}
 	
-	public synchronized XmlData getData(final String tri) {
+	@Override
+	public boolean isHandlerOf(String query) {
+		
+		return HANDLE_PATTERN.matcher(query).matches();
+		
+	}
+	
+	@Override
+	public XmlData getData(final String query) throws NoResultsException {
+		
+		XmlData result;
 		
 		synchronized (data) {
-			
-			return data.get(tri);
-			
+			result = data.get(query);
 		}
 		
-	}
-	
-	public void scheduleUpdate() {
+		if (result == null)
+			throw new NoResultsException(query);
 		
-		new Timer().schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				
-				update();
-				
-			}
-			
-		}, 0L, 86400000);
+		return result;
 		
 	}
 	
-	public void update() {
+	public void update() throws IOException, SAXException,
+		ParserConfigurationException {
 		
 		final Map<String, XmlData> tmpData = new HashMap<String, XmlData>();
 		addData(tmpData);
@@ -68,7 +68,8 @@ public class XmlHandler {
 		
 	}
 	
-	private void addData(final Map<String, XmlData> map) {
+	private void addData(final Map<String, XmlData> map) throws IOException,
+		SAXException, ParserConfigurationException {
 		
 		final NodeList chapters = getDocument().getFirstChild().getChildNodes();
 		for (int i = 0; i < chapters.getLength(); i++) {
@@ -107,16 +108,11 @@ public class XmlHandler {
 		
 	}
 	
-	private Document getDocument() {
+	private Document getDocument() throws IOException, SAXException,
+		ParserConfigurationException {
 		
-		try {
-			return DocumentBuilderFactory.newInstance().newDocumentBuilder()
-				.parse(link);
-		} catch (SAXException | IOException | ParserConfigurationException e) {
-			// Temporary fix until I figure out what I'm supposed to do in these
-			// situations
-			return null;
-		}
+		return DocumentBuilderFactory.newInstance().newDocumentBuilder()
+			.parse(link);
 		
 	}
 	
