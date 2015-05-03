@@ -1,4 +1,4 @@
-package io.github.likcoras.ssbot.backends;
+package io.github.likcoras.ssbot.backends.exceptions;
 
 public class NoResultsException extends Exception {
 	

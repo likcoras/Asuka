@@ -1,7 +1,7 @@
 package io.github.likcoras.ssbot;
 
 import io.github.likcoras.ssbot.backends.DataHandler;
-import io.github.likcoras.ssbot.backends.NoResultsException;
+import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
 
 import java.io.IOException;
 import java.util.ArrayList;

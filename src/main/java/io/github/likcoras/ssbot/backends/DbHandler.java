@@ -1,6 +1,7 @@
 package io.github.likcoras.ssbot.backends;
 
 import io.github.likcoras.ssbot.ConfigParser;
+import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

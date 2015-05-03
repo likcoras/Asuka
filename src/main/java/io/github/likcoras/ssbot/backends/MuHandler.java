@@ -1,6 +1,8 @@
 package io.github.likcoras.ssbot.backends;
 
 import io.github.likcoras.ssbot.ConfigParser;
+import io.github.likcoras.ssbot.backends.exceptions.InvalidHandlerException;
+import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
 import io.github.likcoras.ssbot.data.MuData;
 import io.github.likcoras.ssbot.data.Release;
 
