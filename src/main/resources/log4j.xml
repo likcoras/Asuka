@@ -38,25 +38,22 @@
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{HH:mm:ss}] [%p] %m%n"/>
     </layout>
+    <filter class="org.apache.log4j.filter.LevelRangeFilter">
+      <param name="AcceptOnMatch" value="true"/>
+      <param name="LevelMin" value="warn"/>
+      <param name="LevelMax" value="fatal"/>
+    </filter>
   </appender>
   
   <logger name="org.pircbotx">
     <level value="info"/>
     <appender-ref ref="IrcLog"/>
+    <appender-ref ref="ErrorLog"/>
   </logger>
   
   <logger name="io.github.likcoras.ssbot">
     <level value="info"/>
     <appender-ref ref="SilentLog"/>
-  </logger>
-  
-  <logger name="io.github.likcoras.ssbot">
-    <level value="warn"/>
-    <appender-ref ref="ErrorLog"/>
-  </logger>
-  
-  <logger name="org.pircbotx">
-    <level value="warn"/>
     <appender-ref ref="ErrorLog"/>
   </logger>
   
