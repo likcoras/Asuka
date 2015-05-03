@@ -2,6 +2,7 @@ package io.github.likcoras.ssbot.backends;
 
 import io.github.likcoras.ssbot.ConfigParser;
 import io.github.likcoras.ssbot.data.XmlData;
+import io.github.likcoras.ssbot.data.XmlUpdateData;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class XmlHandler implements DataHandler {
 	@Override
 	public boolean isHandlerOf(final String query) {
 		
-		return HandlerUtils.checkHandler(query, HANDLE_PATTERN) && data.containsKey(query.substring(1));
+		return query.equals(".update") || HandlerUtils.checkHandler(query, HANDLE_PATTERN) && data.containsKey(query.substring(1));
 		
 	}
 	
@@ -43,6 +44,17 @@ public class XmlHandler implements DataHandler {
 		
 		if (!isHandlerOf(query))
 			throw new InvalidHandlerException(query);
+		else if (query.equals(".update"))
+			try {
+				
+				update();
+				return new XmlUpdateData();
+				
+			} catch (IOException | SAXException | ParserConfigurationException e) {
+				
+				throw new NoResultsException(query, e);
+				
+			}
 		
 		XmlData result;
 		
