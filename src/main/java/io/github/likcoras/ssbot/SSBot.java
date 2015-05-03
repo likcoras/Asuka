@@ -8,15 +8,12 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.BasicConfigurator;
 import org.pircbotx.exception.IrcException;
 import org.xml.sax.SAXException;
 
 public class SSBot {
 	
 	public static void main(final String[] args) {
-		
-		BasicConfigurator.configure();
 		
 		final ConfigParser cfg = new ConfigParser();
 		
