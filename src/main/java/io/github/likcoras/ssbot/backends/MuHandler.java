@@ -104,7 +104,7 @@ public class MuHandler implements DataHandler {
 	
 	private void addTitle(final MuData mu, final Document doc) {
 		
-		mu.setTitle(doc.select("div.content > h2").text());
+		mu.setTitle(doc.select("div.content > header > h2").text());
 		
 	}
 	
@@ -115,12 +115,13 @@ public class MuHandler implements DataHandler {
 		
 		for (final Iterator<Element> it = sidebar.iterator(); it.hasNext();) {
 			
-			final String text = it.next().text();
+			final Element header = it.next();
+			final String text = header.text();
 			
 			if (text.equals("Author"))
-				mu.setAuthor(it.next().text());
+				mu.setAuthor(header.nextElementSibling().text());
 			else if (text.equals("Tags"))
-				addTags(mu, it.next());
+				addTags(mu, header.nextElementSibling());
 			
 		}
 		

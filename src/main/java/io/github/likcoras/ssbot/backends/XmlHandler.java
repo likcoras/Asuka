@@ -59,7 +59,7 @@ public class XmlHandler implements DataHandler {
 		XmlData result;
 		
 		synchronized (data) {
-			result = data.get(query);
+			result = data.get(query.substring(1));
 		}
 		
 		if (result == null)

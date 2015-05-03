@@ -107,15 +107,14 @@ public class BttHandler implements DataHandler {
 		
 		final Elements tableRows =
 			doc.getElementsByTag("table").get(0)
-				.getElementsByTag("td[font-weight]");
-		
-		for (final Element row : tableRows) {
+				.getElementsByAttribute("style");
 			
+		for (final Element row : tableRows) {
 			final String header = row.text();
 			
 			if (header.equals("Author:"))
 				btt.setAuthor(row.nextElementSibling().text());
-			else if (header.equals("Genres"))
+			else if (header.equals("Genres:"))
 				addTags(btt, row.nextElementSibling());
 			else if (header.equals("Status:"))
 				addStatus(btt, row.nextElementSibling().text());

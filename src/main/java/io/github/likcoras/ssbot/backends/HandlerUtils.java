@@ -8,7 +8,8 @@ public class HandlerUtils {
 		final Pattern... patterns) {
 		
 		for (final Pattern pattern : patterns)
-			return pattern.matcher(query).find();
+			if (pattern.matcher(query).find())
+				return true;
 		
 		return false;
 		
