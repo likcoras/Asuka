@@ -108,6 +108,7 @@ public class BttHandler implements DataHandler {
 		final Elements tableRows =
 			doc.getElementsByTag("table").get(0)
 				.getElementsByTag("td[font-weight]");
+		
 		for (final Element row : tableRows) {
 			
 			final String header = row.text();
