@@ -45,7 +45,7 @@
     </filter>
   </appender>
   
-  <logger name="org.pircbotx">
+  <logger name="org.pircbotx" additivity="false">
     <level value="info"/>
     <appender-ref ref="IrcLog"/>
     <appender-ref ref="ErrorLog"/>
