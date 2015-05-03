@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 public class XmlHandler implements DataHandler {
 	
 	private static final Pattern HANDLE_PATTERN = Pattern
-		.compile("^[a-z]+\\d+$");
+		.compile("^![a-z]+\\d+$");
 	
 	private final String link;
 	private final Map<String, XmlData> data;
@@ -34,7 +34,7 @@ public class XmlHandler implements DataHandler {
 	@Override
 	public boolean isHandlerOf(final String query) {
 		
-		return HandlerUtils.checkHandler(query, HANDLE_PATTERN);
+		return HandlerUtils.checkHandler(query, HANDLE_PATTERN) && data.containsKey(query.substring(1));
 		
 	}
 	
