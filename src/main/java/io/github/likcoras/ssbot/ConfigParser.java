@@ -84,6 +84,8 @@ public class ConfigParser {
 			
 		}
 		
+		in.close();
+		
 	}
 	
 	private void check() {
