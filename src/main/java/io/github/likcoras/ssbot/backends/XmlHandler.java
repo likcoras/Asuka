@@ -18,10 +18,10 @@ import org.xml.sax.SAXException;
 
 public class XmlHandler implements DataHandler {
 	
+	private static final Pattern HANDLE_PATTERN = Pattern.compile("^[a-z]+\\d+$");
+	
 	private final String link;
 	private final Map<String, XmlData> data;
-	
-	private static final Pattern HANDLE_PATTERN = Pattern.compile("[a-z]+\\d+");
 	
 	public XmlHandler(final ConfigParser cfg) {
 		
@@ -31,14 +31,17 @@ public class XmlHandler implements DataHandler {
 	}
 	
 	@Override
-	public boolean isHandlerOf(String query) {
+	public boolean isHandlerOf(final String query) {
 		
-		return HANDLE_PATTERN.matcher(query).matches();
+		return HandlerUtils.checkHandler(query, HANDLE_PATTERN);
 		
 	}
 	
 	@Override
 	public XmlData getData(final String query) throws NoResultsException {
+		
+		if (!isHandlerOf(query))
+			throw new InvalidHandlerException(query);
 		
 		XmlData result;
 		
