@@ -81,7 +81,7 @@ public class MuHandler implements DataHandler {
 	private MuData search(final String query) throws SQLException,
 		NoResultsException, IOException, ParseException {
 		
-		final int id = database.getId(query.split("\\w"));
+		final int id = database.getId(query.split("\\s"));
 		return fromLink(base + id);
 		
 	}

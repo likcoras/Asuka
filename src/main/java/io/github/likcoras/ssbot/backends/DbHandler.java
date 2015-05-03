@@ -54,7 +54,7 @@ public class DbHandler {
 		final String query = getQuery(keywords);
 		final ResultSet result = makeQuery(query);
 		
-		if (result.next())
+		if (!result.next())
 			throw new NoResultsException(keywords);
 		
 		return result.getInt(id);
@@ -73,7 +73,7 @@ public class DbHandler {
 			throw new IllegalArgumentException(
 				"There must be at least one valid keyword");
 		
-		return queryFormat.replace("{}", query);
+		return queryFormat.replace("{}", query.substring(0, query.length() - 5));
 		
 	}
 	
@@ -81,7 +81,8 @@ public class DbHandler {
 		
 		makeCon();
 		final Statement state = connection.createStatement();
-		return state.executeQuery(queryFormat.replace("{}", query));
+		
+		return state.executeQuery(query);
 		
 	}
 	
