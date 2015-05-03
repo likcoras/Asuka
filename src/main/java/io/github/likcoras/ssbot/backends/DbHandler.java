@@ -7,9 +7,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.IllegalFormatException;
 
 public class DbHandler {
+	
+	private final String queryFormat;
+	private final String keywordFormat;
 	
 	private final String host;
 	private final int port;
@@ -22,7 +24,9 @@ public class DbHandler {
 	private final String titles;
 	private final String id;
 	
-	public DbHandler(final ConfigParser cfg) {
+	private Connection connection;
+	
+	public DbHandler(final ConfigParser cfg) throws ClassNotFoundException {
 		
 		host = cfg.getProperty("dbhost");
 		port = Integer.parseInt(cfg.getProperty("dbport"));
@@ -35,87 +39,58 @@ public class DbHandler {
 		titles = cfg.getProperty("dbcolumntitle");
 		id = cfg.getProperty("dbcolumnid");
 		
-		try {
-			
-			Class.forName("com.mysql.jdbc.Driver");
-			
-		} catch (final ClassNotFoundException e) {
-			
-			System.out.println("Error: Unable to load mysql driver!");
-			System.out
-					.println("Please send the following error message to the author:");
-			e.printStackTrace();
-			
-		}
+		Class.forName("com.mysql.jdbc.Driver");
+		
+		queryFormat =
+			String.format("SELECT * FROM %s.%s WHERE {} LIMIT 0,1", database,
+				table);
+		keywordFormat = String.format("%s LIKE '%%{}%%' AND ", titles);
 		
 	}
 	
-	public int getId(final String... keywords) {
+	public int getId(final String[] keywords) throws SQLException,
+		NoResultsException {
 		
-		int i = -1;
+		final String query = getQuery(keywords);
+		final ResultSet result = makeQuery(query);
+		
+		if (result.next())
+			throw new NoResultsException(keywords);
+		
+		return result.getInt(id);
+		
+	}
+	
+	private String getQuery(final String[] keywords) {
+		
 		String query = "";
 		
-		for (final String keyword : keywords) {
-			query += String.format("%s LIKE '%%%s%%' AND ", titles, keyword);
-		}
+		for (final String keyword : keywords)
+			if (keyword != null && !keyword.isEmpty())
+				query += keywordFormat.replace("{}", keyword);
 		
-		query =
-				String.format("SELECT * FROM %s.%s WHERE %s LIMIT 0,1",
-						database, table, query.substring(0, query.length() - 5));
+		if (query.isEmpty())
+			throw new IllegalArgumentException(
+				"There must be at least one valid keyword");
 		
-		try {
-			
-			final Connection con = makeCon();
-			
-			final Statement state = con.createStatement();
-			final ResultSet result = state.executeQuery(query);
-			
-			if (result.next()) {
-				i = result.getInt(id);
-			}
-			
-			con.close();
-			
-		} catch (final SQLException e) {
-			
-			System.out
-					.println("Error: Exception while querying the database!!");
-			System.out
-					.println("Please send the following error message to the author:");
-			e.printStackTrace();
-			i = -2;
-			
-		}
-		
-		return i;
+		return queryFormat.replace("{}", query);
 		
 	}
 	
-	private Connection makeCon() {
+	private ResultSet makeQuery(final String query) throws SQLException {
 		
-		try {
-			
-			return DriverManager.getConnection(String.format(
+		makeCon();
+		final Statement state = connection.createStatement();
+		return state.executeQuery(queryFormat.replace("{}", query));
+		
+	}
+	
+	private void makeCon() throws SQLException {
+		
+		if (connection == null || connection.isClosed())
+			connection =
+				DriverManager.getConnection(String.format(
 					"jdbc:mysql://%s:%d/%s", host, port, database), user, pass);
-			
-		} catch (final SQLException e) {
-			
-			System.out
-					.println("Error: Unable to establish connection to server!");
-			System.out
-					.println("Please send the following error message to the author:");
-			e.printStackTrace();
-			
-		} catch (final IllegalFormatException e) {
-			
-			System.out.println("Error: Wrong format on db configuration!");
-			System.out
-					.println("Please send the following error message to the author:");
-			e.printStackTrace();
-			
-		}
-		
-		return null;
 		
 	}
 	
