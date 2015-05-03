@@ -1,72 +1,157 @@
 package io.github.likcoras.ssbot.backends;
 
 import io.github.likcoras.ssbot.ConfigParser;
+import io.github.likcoras.ssbot.data.MuData;
+import io.github.likcoras.ssbot.data.Release;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class MuHandler {
+public class MuHandler implements DataHandler {
+	
+	private static final Pattern SEARCH_PATTERN = Pattern
+		.compile("^baka\\s+(\\S+.*)");
+	private static final Pattern LINK_PATTERN =
+		Pattern
+			.compile("((http(s)?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)(/)?)");
 	
 	private final String base;
-	private final String linkBase =
-			"https://www.mangaupdates.com/series.html?id=";
 	
-	public MuHandler(final ConfigParser cfg) {
+	private final DbHandler database;
+	
+	public MuHandler(final ConfigParser cfg) throws ClassNotFoundException {
 		
 		base = cfg.getProperty("muurl");
+		database = new DbHandler(cfg);
 		
 	}
 	
-	public String[] getData(final int id) {
+	@Override
+	public boolean isHandlerOf(final String query) {
 		
-		final String[] out = new String[7];
+		return HandlerUtils.checkHandler(query, SEARCH_PATTERN, LINK_PATTERN);
+		
+	}
+	
+	@Override
+	public MuData getData(final String query) throws NoResultsException {
+		
+		if (!isHandlerOf(query))
+			throw new InvalidHandlerException(query);
 		
 		try {
 			
-			final Document doc = Jsoup.connect(base + id).get();
+			final Matcher searchMatch = SEARCH_PATTERN.matcher(query);
+			if (searchMatch.find())
+				return search(searchMatch.group(1));
 			
-			final Elements title = doc.select("h2");
-			out[0] = title.get(1).text();
+			final Matcher linkMatch = LINK_PATTERN.matcher(query);
+			if (linkMatch.find())
+				return fromLink(linkMatch.group(1));
 			
-			final Elements info = doc.select("dt");
-			out[1] = info.get(0).text();
+		} catch (final IOException e) {
 			
-			if (info.size() == 4) {
-				out[2] = info.get(3).text();
-			} else {
-				out[2] = info.get(2).text();
-			}
+			throw new NoResultsException(query, e);
 			
-			final Elements last = doc.select("td");
-			out[3] = last.get(0).text();
+		} catch (final SQLException e) {
 			
-			final Date releaseDate =
-					new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH)
-							.parse(last.get(1).text());
-			final long diff =
-					(System.currentTimeMillis() - releaseDate.getTime())
-							/ (1000 * 60 * 60 * 24);
+			throw new NoResultsException(query, e);
 			
-			out[4] = Long.toString(diff);
-			out[5] = last.get(2).text();
+		} catch (final ParseException e) {
 			
-			out[6] = linkBase + id;
-			
-		} catch (final Exception e) {
-			
-			System.out.println("Error: Exception while fetching data!");
-			System.out
-					.println("Please send the following error message to the author:");
-			e.printStackTrace();
+			throw new NoResultsException(query, e);
 			
 		}
 		
-		return out;
+		throw new NoResultsException(query);
+		
+	}
+	
+	private MuData search(final String query) throws SQLException,
+		NoResultsException, IOException, ParseException {
+		
+		final int id = database.getId(query.split("\\w"));
+		return fromLink(base + id);
+		
+	}
+	
+	private MuData fromLink(final String link) throws IOException,
+		ParseException {
+		
+		final Document doc = Jsoup.connect(link).get();
+		final MuData mu = new MuData();
+		
+		mu.setLink(link);
+		addTitle(mu, doc);
+		parseSidebar(mu, doc);
+		addLatest(mu, doc);
+		
+		return mu;
+		
+	}
+	
+	private void addTitle(final MuData mu, final Document doc) {
+		
+		mu.setTitle(doc.select("div.content > h2").text());
+		
+	}
+	
+	private void parseSidebar(final MuData mu, final Document doc) {
+		
+		final Elements sidebar =
+			doc.getElementsByTag("dl").get(0).getElementsByTag("dd");
+		
+		for (final Iterator<Element> it = sidebar.iterator(); it.hasNext();) {
+			
+			final String text = it.next().text();
+			
+			if (text.equals("Author"))
+				mu.setAuthor(it.next().text());
+			else if (text.equals("Tags"))
+				addTags(mu, it.next());
+			
+		}
+		
+	}
+	
+	private void addTags(final MuData mu, final Element element) {
+		
+		final Elements tags = element.getElementsByTag("a");
+		for (final Element tag : tags)
+			mu.addTag(tag.text());
+		
+	}
+	
+	private void addLatest(final MuData mu, final Document doc)
+		throws ParseException {
+		
+		final Elements row =
+			doc.select("table").get(0).getElementsByTag("tr").get(0)
+				.getElementsByTag("td");
+		
+		final String group = row.get(2).text();
+		final String chapter = row.get(0).text();
+		final Date date = calcDays(row.get(1).text());
+		
+		mu.setLatest(new Release(group, chapter, date));
+		
+	}
+	
+	private Date calcDays(final String date) throws ParseException {
+		
+		return new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(date);
 		
 	}
 	
