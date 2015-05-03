@@ -4,9 +4,10 @@ import java.util.regex.Pattern;
 
 public class HandlerUtils {
 	
-	public static boolean checkHandler(String query, Pattern... patterns) {
+	public static boolean checkHandler(final String query,
+		final Pattern... patterns) {
 		
-		for (Pattern pattern : patterns)
+		for (final Pattern pattern : patterns)
 			return pattern.matcher(query).find();
 		
 		return false;

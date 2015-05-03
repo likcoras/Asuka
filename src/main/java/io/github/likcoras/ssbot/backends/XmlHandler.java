@@ -18,7 +18,8 @@ import org.xml.sax.SAXException;
 
 public class XmlHandler implements DataHandler {
 	
-	private static final Pattern HANDLE_PATTERN = Pattern.compile("^[a-z]+\\d+$");
+	private static final Pattern HANDLE_PATTERN = Pattern
+		.compile("^[a-z]+\\d+$");
 	
 	private final String link;
 	private final Map<String, XmlData> data;

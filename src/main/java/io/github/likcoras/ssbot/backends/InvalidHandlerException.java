@@ -6,13 +6,13 @@ public class InvalidHandlerException extends RuntimeException {
 	
 	private static final String MESSAGE = "Invalid handler for ";
 	
-	public InvalidHandlerException(String query) {
+	public InvalidHandlerException(final String query) {
 		
 		super(MESSAGE + "'" + query + "'");
 		
 	}
 	
-	public InvalidHandlerException(String query, Throwable cause) {
+	public InvalidHandlerException(final String query, final Throwable cause) {
 		
 		super(MESSAGE + "'" + query + "'", cause);
 		

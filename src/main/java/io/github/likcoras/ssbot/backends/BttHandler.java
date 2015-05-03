@@ -15,8 +15,10 @@ import org.jsoup.select.Elements;
 
 public class BttHandler implements DataHandler {
 	
-	private static final Pattern SEARCH_PATTERN = Pattern.compile("^batoto\\s+(\\S+.*)");
-	private static final Pattern LINK_PATTERN = Pattern.compile("((http(s)?://)?bato.to/comic/_/(comics/)?\\S+(/)?)");
+	private static final Pattern SEARCH_PATTERN = Pattern
+		.compile("^batoto\\s+(\\S+.*)");
+	private static final Pattern LINK_PATTERN = Pattern
+		.compile("((http(s)?://)?bato.to/comic/_/(comics/)?\\S+(/)?)");
 	
 	private final String base;
 	
@@ -34,22 +36,22 @@ public class BttHandler implements DataHandler {
 	}
 	
 	@Override
-	public BttData getData(String query) throws NoResultsException {
+	public BttData getData(final String query) throws NoResultsException {
 		
 		if (!isHandlerOf(query))
 			throw new InvalidHandlerException(query);
 		
 		try {
 			
-			Matcher searchMatch = SEARCH_PATTERN.matcher(query);
+			final Matcher searchMatch = SEARCH_PATTERN.matcher(query);
 			if (searchMatch.find())
 				return search(searchMatch.group(1));
 			
-			Matcher linkMatch = LINK_PATTERN.matcher(query);
+			final Matcher linkMatch = LINK_PATTERN.matcher(query);
 			if (linkMatch.find())
 				return fromLink(linkMatch.group(1));
 			
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			
 			throw new NoResultsException(query, e);
 			
@@ -59,7 +61,8 @@ public class BttHandler implements DataHandler {
 		
 	}
 	
-	private BttData search(final String query) throws IOException, NoResultsException {
+	private BttData search(final String query) throws IOException,
+		NoResultsException {
 		
 		final Document doc = Jsoup.connect(base + query).get();
 		final Elements elements = doc.select("strong > a[href]");
@@ -72,10 +75,10 @@ public class BttHandler implements DataHandler {
 		
 	}
 	
-	private BttData fromLink(String link) throws IOException {
+	private BttData fromLink(final String link) throws IOException {
 		
-		Document doc = connect(link);
-		BttData btt = new BttData();
+		final Document doc = connect(link);
+		final BttData btt = new BttData();
 		
 		btt.setLink(link);
 		addTitle(btt, doc);
@@ -94,18 +97,20 @@ public class BttHandler implements DataHandler {
 		
 	}
 	
-	private void addTitle(BttData btt, Document doc) {
+	private void addTitle(final BttData btt, final Document doc) {
 		
 		btt.setTitle(doc.select("h1.ipsType_pagetitle").text());
 		
 	}
 	
-	private void parseTable(BttData btt, Document doc) {
+	private void parseTable(final BttData btt, final Document doc) {
 		
-		Elements tableRows = doc.getElementsByTag("table").get(0).getElementsByTag("td[font-weight]");
-		for (Element row : tableRows) {
+		final Elements tableRows =
+			doc.getElementsByTag("table").get(0)
+				.getElementsByTag("td[font-weight]");
+		for (final Element row : tableRows) {
 			
-			String header = row.text();
+			final String header = row.text();
 			
 			if (header.equals("Author:"))
 				btt.setAuthor(row.nextElementSibling().text());
@@ -118,15 +123,15 @@ public class BttHandler implements DataHandler {
 		
 	}
 	
-	private void addTags(BttData btt, Element element) {
+	private void addTags(final BttData btt, final Element element) {
 		
-		Elements tags = element.getElementsByTag("a");
-		for (Element tag : tags)
+		final Elements tags = element.getElementsByTag("a");
+		for (final Element tag : tags)
 			btt.addTag(tag.text());
 		
 	}
 	
-	private void addStatus(BttData btt, String status) {
+	private void addStatus(final BttData btt, final String status) {
 		
 		if (status.equals("Complete"))
 			btt.setStatus(Status.COMPLETE);
