@@ -1,7 +1,13 @@
 package io.github.likcoras.ssbot;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.pircbotx.exception.IrcException;
+import org.xml.sax.SAXException;
+
 import io.github.likcoras.ssbot.backends.BttHandler;
-import io.github.likcoras.ssbot.backends.DbHandler;
 import io.github.likcoras.ssbot.backends.MuHandler;
 import io.github.likcoras.ssbot.backends.XmlHandler;
 
@@ -12,24 +18,41 @@ public class SSBot {
 		final ConfigParser cfg = new ConfigParser();
 		cfg.parse();
 		
-		System.out.println("Loading database backend...");
-		final DbHandler db = new DbHandler(cfg);
+		BotManager bot = new BotManager(cfg);
+		bot.registerHandler(new BttHandler(cfg));
 		
-		System.out.println("Loading mangaupdates backend...");
-		final MuHandler mu = new MuHandler(cfg);
+		try {
+			
+			bot.registerHandler(new MuHandler(cfg));
+			
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+			
+		}
 		
-		System.out
-				.println("Loading xml backend...(Fetching the xml file from another thread)");
-		final XmlHandler xml = new XmlHandler(cfg);
-		xml.scheduleUpdate();
+		XmlHandler xml = new XmlHandler(cfg);
 		
-		System.out.println("Loading batoto backend...");
-		final BttHandler bt = new BttHandler(cfg);
+		try {
+			
+			xml.update();
+			
+		} catch (IOException | SAXException | ParserConfigurationException e) {
+			
+			e.printStackTrace();
+			
+		}
 		
-		System.out.println("Starting bot...");
-		new BotManager(cfg, db, mu, xml, bt).start();
+		bot.registerHandler(xml);
 		
-		System.out.println("Bye!");
+		try {
+			bot.start();
+		} catch (IOException | IrcException e) {
+			
+			e.printStackTrace();
+			
+		}
+		
 		System.exit(0);
 		
 	}
