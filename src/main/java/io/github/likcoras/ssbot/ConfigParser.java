@@ -120,10 +120,11 @@ public class ConfigParser {
 			if (!prop.containsKey(key) || !notRequired
 				&& prop.get(key).isEmpty()) {
 				
-				LOG.error("Required configuration value '" + key + "' was not found!");
+				LOG.error("Required configuration value '" + key
+					+ "' was not found!");
 				
 				fail = true;
-			
+				
 			}
 			
 		}

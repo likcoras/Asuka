@@ -10,12 +10,15 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class BttHandler implements DataHandler {
+	
+	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private static final Pattern SEARCH_PATTERN = Pattern
 		.compile("^\\.batoto\\s+(\\S+.*)");
@@ -45,21 +48,25 @@ public class BttHandler implements DataHandler {
 		
 		try {
 			
+			BttData btt = null;
+			
 			final Matcher searchMatch = SEARCH_PATTERN.matcher(query);
 			if (searchMatch.find())
-				return search(searchMatch.group(1));
+				btt = search(searchMatch.group(1));
 			
 			final Matcher linkMatch = LINK_PATTERN.matcher(query);
 			if (linkMatch.find())
-				return fromLink(linkMatch.group(1));
+				btt = fromLink(linkMatch.group(1));
+			
+			HANDLE.info("Query '" + query + "' returned data: "
+				+ btt.toString());
+			return btt;
 			
 		} catch (final IOException e) {
 			
 			throw new NoResultsException(query, e);
 			
 		}
-		
-		throw new NoResultsException(query);
 		
 	}
 	

@@ -47,7 +47,8 @@ public class BotLogger extends ListenerAdapter<PircBotX> {
 	public void onKick(final KickEvent<PircBotX> eve) {
 		
 		if (eve.getRecipient().equals(eve.getBot().getUserBot()))
-			LOG.info("Kicked from " + eve.getChannel().getName() + " for '" + eve.getReason() + "'");
+			LOG.info("Kicked from " + eve.getChannel().getName() + " for '"
+				+ eve.getReason() + "'");
 		
 	}
 	

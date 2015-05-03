@@ -21,6 +21,7 @@ import org.pircbotx.hooks.events.PrivateMessageEvent;
 public class BotManager extends ListenerAdapter<PircBotX> {
 	
 	private static final Logger LOG = Logger.getLogger(BotManager.class);
+	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private final PircBotX bot;
 	private final List<DataHandler> handlers;
@@ -62,7 +63,9 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			if (handler.isHandlerOf(msg))
 				try {
 					
-					LOG.info("Handling query '" + msg + "' by " + userIdentifier(eve.getUser()) + " with handler " + handler.getClass().getSimpleName());
+					HANDLE.info("Handling query '" + msg + "' by "
+						+ userIdentifier(eve.getUser()) + " with handler "
+						+ handler.getClass().getSimpleName());
 					
 					eve.getChannel().send()
 						.message(handler.getData(msg).ircString());
@@ -71,8 +74,14 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 					
 					if (e.getCause() != null) {
 						
-						LOG.error("Error while handing query: ", e.getCause());
-						eve.getChannel().send().message("Error: " + e.getCause().getMessage());
+						HANDLE.error("Error while handing query: ",
+							e.getCause());
+						eve.getChannel()
+							.send()
+							.message(
+								"Error("
+									+ e.getCause().getClass().getSimpleName()
+									+ "): " + e.getCause().getMessage());
 						
 					} else
 						eve.getChannel().send().message("No results found");
@@ -89,7 +98,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		if (!eve.getMessage().equals(".quit " + password)) {
 			
-			LOG.warn("Failed authentication attempt by " + userIdentifier(eve.getUser()) + " (" + eve.getMessage() + ")");
+			LOG.warn("Failed authentication attempt by "
+				+ userIdentifier(eve.getUser()) + " (" + eve.getMessage() + ")");
 			return;
 			
 		}
@@ -142,9 +152,10 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private String userIdentifier(User user) {
+	private String userIdentifier(final User user) {
 		
-		return user.getNick() + "!" + user.getLogin() + "@" + user.getHostmask();
+		return user.getNick() + "!" + user.getLogin() + "@"
+			+ user.getHostmask();
 		
 	}
 	

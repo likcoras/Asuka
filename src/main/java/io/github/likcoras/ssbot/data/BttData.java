@@ -68,4 +68,11 @@ public class BttData implements SeriesData {
 		
 	}
 	
+	@Override
+	public String toString() {
+		
+		return link;
+		
+	}
+	
 }

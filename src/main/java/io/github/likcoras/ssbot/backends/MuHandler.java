@@ -15,12 +15,15 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class MuHandler implements DataHandler {
+	
+	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private static final Pattern SEARCH_PATTERN = Pattern
 		.compile("^\\.baka\\s+(\\S+.*)");
@@ -54,29 +57,25 @@ public class MuHandler implements DataHandler {
 		
 		try {
 			
+			MuData mu = null;
+			
 			final Matcher searchMatch = SEARCH_PATTERN.matcher(query);
 			if (searchMatch.find())
-				return search(searchMatch.group(1));
+				mu = search(searchMatch.group(1));
 			
 			final Matcher linkMatch = LINK_PATTERN.matcher(query);
 			if (linkMatch.find())
-				return fromLink(linkMatch.group(1));
+				mu = fromLink(linkMatch.group(1));
 			
-		} catch (final IOException e) {
+			HANDLE
+				.info("Query '" + query + "' returned data: " + mu.toString());
+			return mu;
 			
-			throw new NoResultsException(query, e);
-			
-		} catch (final SQLException e) {
-			
-			throw new NoResultsException(query, e);
-			
-		} catch (final ParseException e) {
+		} catch (final IOException | SQLException | ParseException e) {
 			
 			throw new NoResultsException(query, e);
 			
 		}
-		
-		throw new NoResultsException(query);
 		
 	}
 	
@@ -114,7 +113,7 @@ public class MuHandler implements DataHandler {
 		final Elements sidebar =
 			doc.getElementsByTag("dl").get(0).getElementsByTag("dd");
 		
-		for (Element header : sidebar) {
+		for (final Element header : sidebar) {
 			
 			final String text = header.text();
 			

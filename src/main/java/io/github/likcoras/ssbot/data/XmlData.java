@@ -65,4 +65,11 @@ public class XmlData implements SeriesData {
 		
 	}
 	
+	@Override
+	public String toString() {
+		
+		return title + " " + chapter;
+		
+	}
+	
 }

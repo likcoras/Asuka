@@ -14,12 +14,15 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XmlHandler implements DataHandler {
+	
+	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private static final Pattern HANDLE_PATTERN = Pattern
 		.compile("^![a-z]+\\d+$");
@@ -69,12 +72,16 @@ public class XmlHandler implements DataHandler {
 		if (result == null)
 			throw new NoResultsException(query);
 		
+		HANDLE
+			.info("Query '" + query + "' returned data: " + result.toString());
 		return result;
 		
 	}
 	
 	public void update() throws IOException, SAXException,
 		ParserConfigurationException {
+		
+		HANDLE.info("Updating xml...");
 		
 		final Map<String, XmlData> tmpData = new HashMap<String, XmlData>();
 		addData(tmpData);

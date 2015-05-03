@@ -9,7 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+
 public class DbHandler {
+	
+	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private final String queryFormat;
 	private final String keywordFormat;
@@ -58,6 +62,9 @@ public class DbHandler {
 		if (!result.next())
 			throw new NoResultsException(keywords);
 		
+		HANDLE.info("Database query '" + query + "' returned data: "
+			+ result.getInt(id));
+		
 		return result.getInt(id);
 		
 	}
@@ -74,7 +81,8 @@ public class DbHandler {
 			throw new IllegalArgumentException(
 				"There must be at least one valid keyword");
 		
-		return queryFormat.replace("{}", query.substring(0, query.length() - 5));
+		return queryFormat
+			.replace("{}", query.substring(0, query.length() - 5));
 		
 	}
 	
