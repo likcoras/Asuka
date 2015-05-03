@@ -28,13 +28,11 @@ public class ConfigParser {
 		
 	}
 	
-	public void parse() {
+	public void parse() throws IOException {
 		
 		createDefault();
 		load();
 		check();
-		
-		System.out.println("Configuration loaded with no errors.");
 		
 	}
 	
@@ -44,78 +42,47 @@ public class ConfigParser {
 		
 	}
 	
-	private void createDefault() {
+	private void createDefault() throws IOException {
 		
-		if (conf.exists()) {
+		if (conf.exists())
 			return;
-		}
 		
-		System.out.println("Writing default configuration...");
+		conf.createNewFile();
 		
-		try {
-			
-			conf.createNewFile();
-			
-			final BufferedReader def =
-					new BufferedReader(
-							new InputStreamReader(this.getClass()
-									.getClassLoader()
-									.getResourceAsStream("config.txt")));
-			final BufferedWriter out = new BufferedWriter(new FileWriter(conf));
-			
-			String line;
-			while ((line = def.readLine()) != null) {
-				out.write(line + "\n");
-			}
-			
-			def.close();
-			out.flush();
-			out.close();
-			
-			System.out
-					.println("Wrote default configuration! Please configure and re-run the application!");
-			
-		} catch (final IOException e) {
-			
-			System.out.println("Error: Exception while writing configuration!");
-			System.out
-					.println("Please send the following error message to the author:");
-			e.printStackTrace();
-			
-		}
+		final BufferedReader def =
+				new BufferedReader(
+						new InputStreamReader(this.getClass()
+								.getClassLoader()
+								.getResourceAsStream("config.txt")));
+		final BufferedWriter out = new BufferedWriter(new FileWriter(conf));
+		
+		String line;
+		while ((line = def.readLine()) != null)
+			out.write(line + "\n");
+		
+		def.close();
+		out.flush();
+		out.close();
 		
 		System.exit(1);
 		
 	}
 	
-	private void load() {
+	private void load() throws IOException {
 		
-		System.out.println("Loading configuration...");
+		BufferedReader in = new BufferedReader(new FileReader(conf));
 		
-		try (BufferedReader in = new BufferedReader(new FileReader(conf))) {
+		String line;
+		while ((line = in.readLine()) != null) {
 			
-			String line;
-			while ((line = in.readLine()) != null) {
-				
-				if (line.startsWith("#") || !line.contains(":")) {
-					continue;
-				}
-				
-				final int i = line.indexOf(":");
-				final String key = line.substring(0, i);
-				final String val = line.substring(i + 1);
-				
-				prop.put(key, val);
-				
-			}
+			if (line.startsWith("#") || !line.contains(":"))
+				continue;
 			
-		} catch (final IOException e) {
+			final int i = line.indexOf(":");
+			final String key = line.substring(0, i);
+			final String val = line.substring(i + 1);
 			
-			System.out.println("Error: Exception while reading configuration!");
-			System.out
-					.println("Please send the following error message to the author:");
-			e.printStackTrace();
-			System.exit(1);
+			prop.put(key, val);
 			
 		}
 		
@@ -136,10 +103,7 @@ public class ConfigParser {
 			if (!prop.containsKey(key)
 					|| (!notRequired && prop.get(key).isEmpty())) {
 				
-				System.out.println("Error: Missing configuration on " + key
-						+ "!");
-				System.out
-						.println("Remember, every single field must be filled, except passwords.");
+				// TODO log
 				System.exit(1);
 				
 			}

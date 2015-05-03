@@ -16,7 +16,16 @@ public class SSBot {
 	public static void main(final String[] args) {
 		
 		final ConfigParser cfg = new ConfigParser();
-		cfg.parse();
+		
+		try {
+			
+			cfg.parse();
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			
+		}
 		
 		BotManager bot = new BotManager(cfg);
 		bot.registerHandler(new BttHandler(cfg));
