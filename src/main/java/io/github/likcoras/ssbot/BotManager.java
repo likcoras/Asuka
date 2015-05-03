@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.pircbotx.Configuration;
 import org.pircbotx.Configuration.Builder;
 import org.pircbotx.PircBotX;
+import org.pircbotx.User;
 import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -18,16 +20,16 @@ import org.pircbotx.hooks.events.PrivateMessageEvent;
 
 public class BotManager extends ListenerAdapter<PircBotX> {
 	
+	private static final Logger LOG = Logger.getLogger(BotManager.class);
+	
 	private final PircBotX bot;
 	private final List<DataHandler> handlers;
-	
 	private final String password;
 	
 	public BotManager(final ConfigParser cfg) {
 		
 		bot = new PircBotX(configure(cfg));
 		handlers = new ArrayList<DataHandler>();
-		
 		password = cfg.getProperty("adminpass");
 		
 	}
@@ -40,10 +42,13 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			
 		}
 		
+		LOG.info("Added handler: " + handler.getClass().getSimpleName());
+		
 	}
 	
 	public void start() throws IOException, IrcException {
 		
+		LOG.info("Starting IRC bot...");
 		bot.startBot();
 		
 	}
@@ -57,12 +62,20 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			if (handler.isHandlerOf(msg))
 				try {
 					
+					LOG.info("Handling query '" + msg + "' by " + userIdentifier(eve.getUser()) + " with handler " + handler.getClass().getSimpleName());
+					
 					eve.getChannel().send()
 						.message(handler.getData(msg).ircString());
 					
 				} catch (final NoResultsException e) {
 					
-					eve.getChannel().send().message("No results found");
+					if (e.getCause() != null) {
+						
+						LOG.error("Error while handing query: ", e.getCause());
+						eve.getChannel().send().message("Error: " + e.getCause().getMessage());
+						
+					} else
+						eve.getChannel().send().message("No results found");
 					
 				}
 		
@@ -71,12 +84,21 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onPrivateMessage(final PrivateMessageEvent<PircBotX> eve) {
 		
-		if (!eve.getMessage().equals(".quit " + password))
-			eve.respond("Unknown command");
+		if (!eve.getMessage().startsWith(".quit"))
+			return;
+		
+		if (!eve.getMessage().equals(".quit " + password)) {
+			
+			LOG.warn("Failed authentication attempt by " + userIdentifier(eve.getUser()) + " (" + eve.getMessage() + ")");
+			return;
+			
+		}
+		
+		LOG.info("Quit requested by " + userIdentifier(eve.getUser()));
 		
 		eve.respond("Understood, quitting.");
 		bot.stopBotReconnect();
-		bot.sendIRC().quitServer("Requested by admin");
+		bot.sendIRC().quitServer("Requested");
 		
 	}
 	
@@ -85,6 +107,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		final Builder<PircBotX> build = new Configuration.Builder<PircBotX>();
 		
 		build
+			.addListener(new BotLogger())
 			.addListener(this)
 			.setAutoReconnect(true)
 			.setName(cfg.getProperty("ircnick"))
@@ -116,6 +139,12 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		}
 		
 		return build.buildConfiguration();
+		
+	}
+	
+	private String userIdentifier(User user) {
+		
+		return user.getNick() + "!" + user.getLogin() + "@" + user.getHostmask();
 		
 	}
 	

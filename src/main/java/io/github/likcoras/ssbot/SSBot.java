@@ -8,12 +8,17 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.pircbotx.exception.IrcException;
 import org.xml.sax.SAXException;
 
 public class SSBot {
 	
+	private static final Logger LOG = Logger.getLogger(SSBot.class);
+	
 	public static void main(final String[] args) {
+		
+		LOG.info("Starting SSBot...");
 		
 		final ConfigParser cfg = new ConfigParser();
 		
@@ -23,7 +28,7 @@ public class SSBot {
 			
 		} catch (final IOException e) {
 			
-			e.printStackTrace();
+			LOG.fatal("Error while loading config:", e);
 			
 		}
 		
@@ -36,7 +41,7 @@ public class SSBot {
 			
 		} catch (final ClassNotFoundException e) {
 			
-			e.printStackTrace();
+			LOG.warn("Error while loading MuHandler:", e);
 			
 		}
 		
@@ -48,20 +53,23 @@ public class SSBot {
 			
 		} catch (IOException | SAXException | ParserConfigurationException e) {
 			
-			e.printStackTrace();
+			LOG.warn("Error while loading XmlHandler:", e);
 			
 		}
 		
 		bot.registerHandler(xml);
 		
 		try {
+			
 			bot.start();
+			
 		} catch (IOException | IrcException e) {
 			
-			e.printStackTrace();
+			LOG.warn("Error while running IRC bot:", e);
 			
 		}
 		
+		LOG.info("Bot stopped, exiting.");
 		System.exit(0);
 		
 	}

@@ -10,7 +10,11 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 public class ConfigParser {
+	
+	private static final Logger LOG = Logger.getLogger(ConfigParser.class);
 	
 	private final String[] keys = { "dbhost", "dbport", "dbuser", "#dbpass",
 			"dbdatabase", "dbtable", "dbcolumntitle", "dbcolumnid", "xmlfile",
@@ -30,9 +34,13 @@ public class ConfigParser {
 	
 	public void parse() throws IOException {
 		
+		LOG.info("Loading configuration...");
+		
 		createDefault();
 		load();
 		check();
+		
+		LOG.info("Configuration loaded successfully!");
 		
 	}
 	
@@ -46,6 +54,8 @@ public class ConfigParser {
 		
 		if (conf.exists())
 			return;
+		
+		LOG.info("No configuration file found, writing default configuration...");
 		
 		conf.createNewFile();
 		
@@ -62,11 +72,15 @@ public class ConfigParser {
 		out.flush();
 		out.close();
 		
+		LOG.info("Default configuration written, please edit the config.txt file.");
+		
 		System.exit(1);
 		
 	}
 	
 	private void load() throws IOException {
+		
+		LOG.info("Reading configuration...");
 		
 		final BufferedReader in = new BufferedReader(new FileReader(conf));
 		
@@ -90,6 +104,9 @@ public class ConfigParser {
 	
 	private void check() {
 		
+		LOG.info("Checking configuration...");
+		
+		boolean fail = false;
 		for (String key : keys) {
 			
 			boolean notRequired = false;
@@ -101,11 +118,18 @@ public class ConfigParser {
 			}
 			
 			if (!prop.containsKey(key) || !notRequired
-				&& prop.get(key).isEmpty())
-				// TODO log
-				System.exit(1);
+				&& prop.get(key).isEmpty()) {
+				
+				LOG.error("Required configuration value '" + key + "' was not found!");
+				
+				fail = true;
+			
+			}
 			
 		}
+		
+		if (fail)
+			System.exit(1);
 		
 	}
 	
