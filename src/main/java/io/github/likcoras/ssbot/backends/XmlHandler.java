@@ -35,7 +35,9 @@ public class XmlHandler implements DataHandler {
 	@Override
 	public boolean isHandlerOf(final String query) {
 		
-		return query.equals(".update") || HandlerUtils.checkHandler(query, HANDLE_PATTERN) && data.containsKey(query.substring(1));
+		return query.equals(".update")
+			|| HandlerUtils.checkHandler(query, HANDLE_PATTERN)
+			&& data.containsKey(query.substring(1));
 		
 	}
 	

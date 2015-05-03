@@ -50,10 +50,8 @@ public class ConfigParser {
 		conf.createNewFile();
 		
 		final BufferedReader def =
-				new BufferedReader(
-						new InputStreamReader(this.getClass()
-								.getClassLoader()
-								.getResourceAsStream("config.txt")));
+			new BufferedReader(new InputStreamReader(this.getClass()
+				.getClassLoader().getResourceAsStream("config.txt")));
 		final BufferedWriter out = new BufferedWriter(new FileWriter(conf));
 		
 		String line;
@@ -70,7 +68,7 @@ public class ConfigParser {
 	
 	private void load() throws IOException {
 		
-		BufferedReader in = new BufferedReader(new FileReader(conf));
+		final BufferedReader in = new BufferedReader(new FileReader(conf));
 		
 		String line;
 		while ((line = in.readLine()) != null) {
@@ -100,13 +98,10 @@ public class ConfigParser {
 				
 			}
 			
-			if (!prop.containsKey(key)
-					|| (!notRequired && prop.get(key).isEmpty())) {
-				
+			if (!prop.containsKey(key) || !notRequired
+				&& prop.get(key).isEmpty())
 				// TODO log
 				System.exit(1);
-				
-			}
 			
 		}
 		

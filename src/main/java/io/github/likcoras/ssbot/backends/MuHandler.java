@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -113,9 +112,8 @@ public class MuHandler implements DataHandler {
 		final Elements sidebar =
 			doc.getElementsByTag("dl").get(0).getElementsByTag("dd");
 		
-		for (final Iterator<Element> it = sidebar.iterator(); it.hasNext();) {
+		for (Element header : sidebar) {
 			
-			final Element header = it.next();
 			final String text = header.text();
 			
 			if (text.equals("Author"))
