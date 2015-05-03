@@ -64,9 +64,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 					
 					eve.getChannel()
 						.send()
-						.message(
-							"[{}] No results found".replace("{}", handler
-								.getClass().getName()));
+						.message("No results found");
 					
 				}
 		
