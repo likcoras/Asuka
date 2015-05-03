@@ -15,7 +15,7 @@ dbuser:root
 dbpass:
 dbdatabase:database
 dbtable:series
-dbcolumntitle:titles
+dbcolumntitle:title
 dbcolumnid:id
 
 # The location of the xml file to parse
