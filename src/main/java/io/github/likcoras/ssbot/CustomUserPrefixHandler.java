@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
+import org.pircbotx.User;
 import org.pircbotx.UserLevel;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.HalfOpEvent;
@@ -107,10 +109,9 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	public synchronized UserLevel
-		getLevel(final String chan, final String user) {
+	public synchronized UserLevel getLevel(final Channel chan, final User user) {
 		
-		return data.get(chan).get(user);
+		return data.get(chan.getName()).get(user.getNick());
 		
 	}
 	

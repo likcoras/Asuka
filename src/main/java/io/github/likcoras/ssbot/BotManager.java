@@ -1,5 +1,6 @@
 package io.github.likcoras.ssbot;
 
+import io.github.likcoras.ssbot.backends.AuthDataHandler;
 import io.github.likcoras.ssbot.backends.DataHandler;
 import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
 
@@ -62,8 +63,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		if (msg.equalsIgnoreCase(".quit")) {
 			
-			final UserLevel level =
-				customPrefix.getLevel(chan.getName(), user.getNick());
+			final UserLevel level = customPrefix.getLevel(chan, user);
 			
 			if (level != null && UserLevel.OP.compareTo(level) <= 0)
 				quit(user, chan);
@@ -81,6 +81,16 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 					HANDLE.info("Handling query '" + msg + "' by "
 						+ userIdentifier(user) + " with handler "
 						+ handler.getClass().getSimpleName());
+					
+					if (!checkAuth(handler, msg, user, chan)) {
+						
+						HANDLE
+							.info("User did not have a high enough access level for executing the query '"
+								+ msg + "'");
+						eve.respond("Sorry, you're not allowed to do that!");
+						return;
+						
+					}
 					
 					chan.send().message(handler.getData(msg).ircString());
 					
@@ -163,6 +173,28 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		LOG.info("Failed quit attempt by " + userIdentifier(user) + " in  "
 			+ chan.getName());
+		chan.send().message(user, "Sorry, you're not allowed to do that!");
+		
+	}
+	
+	private boolean checkAuth(final DataHandler handler, final String msg,
+		final User user, final Channel chan) {
+		
+		if (!(handler instanceof AuthDataHandler))
+			return true;
+		
+		final UserLevel required =
+			((AuthDataHandler) handler).getAuthLevel(msg);
+		
+		if (required == null)
+			return true;
+		
+		final UserLevel level = customPrefix.getLevel(chan, user);
+		
+		if (level != null && required.compareTo(level) <= 0)
+			return true;
+		
+		return false;
 		
 	}
 	

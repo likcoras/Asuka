@@ -15,12 +15,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.pircbotx.UserLevel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class XmlHandler implements DataHandler {
+public class XmlHandler implements AuthDataHandler {
 	
 	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
@@ -40,9 +41,19 @@ public class XmlHandler implements DataHandler {
 	@Override
 	public boolean isHandlerOf(final String query) {
 		
-		return query.equals(".update")
+		return query.equalsIgnoreCase(".update")
 			|| HandlerUtils.checkHandler(query, HANDLE_PATTERN)
 			&& data.containsKey(query.substring(1));
+		
+	}
+	
+	@Override
+	public UserLevel getAuthLevel(final String query) {
+		
+		if (query.equalsIgnoreCase(".update"))
+			return UserLevel.OP;
+		
+		return null;
 		
 	}
 	
@@ -51,7 +62,7 @@ public class XmlHandler implements DataHandler {
 		
 		if (!isHandlerOf(query))
 			throw new InvalidHandlerException(query);
-		else if (query.equals(".update"))
+		else if (query.equalsIgnoreCase(".update"))
 			try {
 				
 				update();
