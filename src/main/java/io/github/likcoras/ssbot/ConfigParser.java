@@ -80,8 +80,6 @@ public class ConfigParser {
 	
 	private void load() throws IOException {
 		
-		LOG.info("Reading configuration...");
-		
 		final BufferedReader in = new BufferedReader(new FileReader(conf));
 		
 		String line;
@@ -103,8 +101,6 @@ public class ConfigParser {
 	}
 	
 	private void check() {
-		
-		LOG.info("Checking configuration...");
 		
 		boolean fail = false;
 		for (String key : keys) {

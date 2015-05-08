@@ -81,8 +81,6 @@ public class XmlHandler implements DataHandler {
 	public void update() throws IOException, SAXException,
 		ParserConfigurationException {
 		
-		HANDLE.info("Updating xml...");
-		
 		final Map<String, XmlData> tmpData = new HashMap<String, XmlData>();
 		addData(tmpData);
 		
