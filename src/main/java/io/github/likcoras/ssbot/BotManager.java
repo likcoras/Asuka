@@ -8,15 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.Configuration.Builder;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
+import org.pircbotx.UserLevel;
 import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.MessageEvent;
-import org.pircbotx.hooks.events.PrivateMessageEvent;
 
 public class BotManager extends ListenerAdapter<PircBotX> {
 	
@@ -25,13 +26,13 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	
 	private final PircBotX bot;
 	private final List<DataHandler> handlers;
-	private final String password;
+	
+	private CustomUserPrefixHandler customPrefix;
 	
 	public BotManager(final ConfigParser cfg) {
 		
 		bot = new PircBotX(configure(cfg));
 		handlers = new ArrayList<DataHandler>();
-		password = cfg.getProperty("adminpass");
 		
 	}
 	
@@ -42,8 +43,6 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			handlers.add(handler);
 			
 		}
-		
-		LOG.info("Added handler: " + handler.getClass().getSimpleName());
 		
 	}
 	
@@ -58,16 +57,31 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	public void onMessage(final MessageEvent<PircBotX> eve) {
 		
 		final String msg = eve.getMessage();
+		final User user = eve.getUser();
+		final Channel chan = eve.getChannel();
+		
+		if (msg.equalsIgnoreCase(".quit")) {
+			
+			UserLevel level = customPrefix.getLevel(chan.getName(), user.getNick());
+			
+			if (level != null && UserLevel.OP.compareTo(level) <= 0)
+				quit(user, chan);
+			else
+				failQuit(user, chan);
+			
+			return;
+			
+		}
 		
 		for (final DataHandler handler : handlers)
 			if (handler.isHandlerOf(msg))
 				try {
 					
 					HANDLE.info("Handling query '" + msg + "' by "
-						+ userIdentifier(eve.getUser()) + " with handler "
+						+ userIdentifier(user) + " with handler "
 						+ handler.getClass().getSimpleName());
 					
-					eve.getChannel().send()
+					chan.send()
 						.message(handler.getData(msg).ircString());
 					
 				} catch (final NoResultsException e) {
@@ -76,7 +90,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 						
 						HANDLE.error("Error while handing query: ",
 							e.getCause());
-						eve.getChannel()
+						chan
 							.send()
 							.message(
 								"Error("
@@ -90,34 +104,13 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	@Override
-	public void onPrivateMessage(final PrivateMessageEvent<PircBotX> eve) {
-		
-		if (!eve.getMessage().startsWith(".quit"))
-			return;
-		
-		if (!eve.getMessage().equals(".quit " + password)) {
-			
-			LOG.warn("Failed authentication attempt by "
-				+ userIdentifier(eve.getUser()) + " (" + eve.getMessage() + ")");
-			return;
-			
-		}
-		
-		LOG.info("Quit requested by " + userIdentifier(eve.getUser()));
-		
-		eve.respond("Understood, quitting.");
-		bot.stopBotReconnect();
-		bot.sendIRC().quitServer("Requested");
-		
-	}
-	
 	private Configuration<PircBotX> configure(final ConfigParser cfg) {
 		
 		final Builder<PircBotX> build = new Configuration.Builder<PircBotX>();
 		
 		build
 			.addListener(new BotLogger())
+			.addListener(customPrefix = new CustomUserPrefixHandler())
 			.addListener(this)
 			.setAutoReconnect(true)
 			.setName(cfg.getProperty("ircnick"))
@@ -156,6 +149,22 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		return user.getNick() + "!" + user.getLogin() + "@"
 			+ user.getHostmask();
+		
+	}
+	
+	private void quit(User user, Channel chan) {
+		
+		LOG.info("Quit requested by " + userIdentifier(user));
+		
+		chan.send().message("Understood, quitting.");
+		bot.stopBotReconnect();
+		bot.sendIRC().quitServer("Requested");
+		
+	}
+	
+	private void failQuit(User user, Channel chan) {
+		
+		LOG.info("Failed quit attempt by " + userIdentifier(user) + " in  " + chan.getName());
 		
 	}
 	
