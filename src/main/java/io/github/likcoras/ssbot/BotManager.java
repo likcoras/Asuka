@@ -62,7 +62,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		if (msg.equalsIgnoreCase(".quit")) {
 			
-			UserLevel level = customPrefix.getLevel(chan.getName(), user.getNick());
+			final UserLevel level =
+				customPrefix.getLevel(chan.getName(), user.getNick());
 			
 			if (level != null && UserLevel.OP.compareTo(level) <= 0)
 				quit(user, chan);
@@ -81,8 +82,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 						+ userIdentifier(user) + " with handler "
 						+ handler.getClass().getSimpleName());
 					
-					chan.send()
-						.message(handler.getData(msg).ircString());
+					chan.send().message(handler.getData(msg).ircString());
 					
 				} catch (final NoResultsException e) {
 					
@@ -90,12 +90,9 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 						
 						HANDLE.error("Error while handing query: ",
 							e.getCause());
-						chan
-							.send()
-							.message(
-								"Error("
-									+ e.getCause().getClass().getSimpleName()
-									+ "): " + e.getCause().getMessage());
+						chan.send().message(
+							"Error(" + e.getCause().getClass().getSimpleName()
+								+ "): " + e.getCause().getMessage());
 						
 					} else
 						eve.getChannel().send().message("No results found");
@@ -152,7 +149,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private void quit(User user, Channel chan) {
+	private void quit(final User user, final Channel chan) {
 		
 		LOG.info("Quit requested by " + userIdentifier(user));
 		
@@ -162,9 +159,10 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private void failQuit(User user, Channel chan) {
+	private void failQuit(final User user, final Channel chan) {
 		
-		LOG.info("Failed quit attempt by " + userIdentifier(user) + " in  " + chan.getName());
+		LOG.info("Failed quit attempt by " + userIdentifier(user) + " in  "
+			+ chan.getName());
 		
 	}
 	
