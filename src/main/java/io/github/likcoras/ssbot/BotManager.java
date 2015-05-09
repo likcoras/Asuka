@@ -1,8 +1,11 @@
 package io.github.likcoras.ssbot;
 
+import io.github.likcoras.ssbot.auth.AuthListener;
+import io.github.likcoras.ssbot.auth.CustomUserPrefixHandler;
 import io.github.likcoras.ssbot.backends.AuthDataHandler;
 import io.github.likcoras.ssbot.backends.DataHandler;
 import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
+import io.github.likcoras.ssbot.ignore.IgnoreHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +37,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		bot = new PircBotX(configure(cfg));
 		handlers = new ArrayList<DataHandler>();
+		
+		customPrefix = new CustomUserPrefixHandler();
 		
 	}
 	
@@ -117,7 +122,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		build
 			.addListener(new BotLogger())
-			.addListener(customPrefix = new CustomUserPrefixHandler())
+			.addListener(new AuthListener(customPrefix))
 			.addListener(this)
 			.setAutoReconnect(true)
 			.setName(cfg.getProperty("ircnick"))
