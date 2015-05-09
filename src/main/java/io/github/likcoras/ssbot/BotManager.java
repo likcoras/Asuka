@@ -63,7 +63,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		if (msg.equalsIgnoreCase(".quit")) {
 			
-			final UserLevel level = customPrefix.getLevel(chan, user);
+			final UserLevel level = customPrefix.getLevel(user, chan);
 			
 			if (level != null && UserLevel.OP.compareTo(level) <= 0)
 				quit(user, chan);
@@ -189,7 +189,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		if (required == null)
 			return true;
 		
-		final UserLevel level = customPrefix.getLevel(chan, user);
+		final UserLevel level = customPrefix.getLevel(user, chan);
 		
 		if (level != null && required.compareTo(level) <= 0)
 			return true;

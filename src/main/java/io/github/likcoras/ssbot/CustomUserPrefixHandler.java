@@ -1,9 +1,11 @@
 package io.github.likcoras.ssbot;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
@@ -23,7 +25,7 @@ import org.pircbotx.hooks.events.VoiceEvent;
 public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 	
 	private final Map<Character, UserLevel> prefix;
-	private final Map<String, Map<String, UserLevel>> data;
+	private final Map<String, Map<String, Set<UserLevel>>> data;
 	
 	public CustomUserPrefixHandler() {
 		
@@ -34,7 +36,7 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 		prefix.put('%', UserLevel.HALFOP);
 		prefix.put('+', UserLevel.VOICE);
 		
-		data = new HashMap<String, Map<String, UserLevel>>();
+		data = new HashMap<String, Map<String, Set<UserLevel>>>();
 		
 	}
 	
@@ -58,60 +60,54 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onPart(final PartEvent<PircBotX> eve) {
 		
-		delMode(eve.getChannel().getName(), eve.getUser().getNick());
+		delUser(eve.getUser(), eve.getChannel());
 		
 	}
 	
 	@Override
 	public void onKick(final KickEvent<PircBotX> eve) {
 		
-		delMode(eve.getChannel().getName(), eve.getRecipient().getNick());
+		delUser(eve.getRecipient(), eve.getChannel());
 		
 	}
 	
 	@Override
 	public void onOwner(final OwnerEvent<PircBotX> eve) {
 		
-		setMode(eve.getChannel().getName(), eve.getRecipient().getNick(),
-			UserLevel.OWNER);
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.OWNER, eve.isOwner());
 		
 	}
 	
 	@Override
 	public void onSuperOp(final SuperOpEvent<PircBotX> eve) {
 		
-		setMode(eve.getChannel().getName(), eve.getRecipient().getNick(),
-			UserLevel.SUPEROP);
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.SUPEROP, eve.isSuperOp());
 		
 	}
 	
 	@Override
 	public void onOp(final OpEvent<PircBotX> eve) {
-		
-		setMode(eve.getChannel().getName(), eve.getRecipient().getNick(),
-			UserLevel.OP);
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.OP, eve.isOp());
 		
 	}
 	
 	@Override
 	public void onHalfOp(final HalfOpEvent<PircBotX> eve) {
 		
-		setMode(eve.getChannel().getName(), eve.getRecipient().getNick(),
-			UserLevel.HALFOP);
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.HALFOP, eve.isHalfOp());
 		
 	}
 	
 	@Override
 	public void onVoice(final VoiceEvent<PircBotX> eve) {
 		
-		setMode(eve.getChannel().getName(), eve.getRecipient().getNick(),
-			UserLevel.VOICE);
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.VOICE, eve.hasVoice());
 		
 	}
 	
-	public synchronized UserLevel getLevel(final Channel chan, final User user) {
+	public synchronized UserLevel getLevel(final User user, final Channel chan) {
 		
-		return data.get(chan.getName()).get(user.getNick());
+		return getHighest(user, chan);
 		
 	}
 	
@@ -180,40 +176,112 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 		if (users.length < 1)
 			return;
 		
-		final Map<String, UserLevel> userData =
-			new HashMap<String, UserLevel>();
+		final Map<String, Set<UserLevel>> userData =
+			new HashMap<String, Set<UserLevel>>();
+		
 		for (final String user : users)
-			if (prefix.containsKey(user.charAt(0)))
-				userData.put(user.substring(1), prefix.get(user.charAt(0)));
+			if (prefix.containsKey(user.charAt(0))) {
+				
+				Set<UserLevel> levels = new HashSet<UserLevel>();
+				levels.add(prefix.get(user.charAt(0)));
+				userData.put(user.substring(1), levels);
+				
+			}
 		
 		if (!userData.isEmpty())
 			data.put(msg.get(2), userData);
 		
 	}
 	
+	private synchronized void modUser(User user, Channel chan, UserLevel level, boolean get) {
+		
+		if (get)
+			setMode(user, chan, level);
+		else
+			delMode(user, chan, level);
+		
+	}
+	
+	private synchronized Map<String, Set<UserLevel>> getChan(Channel chan) {
+		
+		Map<String, Set<UserLevel>> chanData = data.get(chan.getName());
+		
+		if (chanData == null) {
+			
+			chanData = new HashMap<String, Set<UserLevel>>();
+			data.put(chan.getName(), chanData);
+			
+		}
+		
+		return chanData;
+		
+	}
+	
+	private synchronized Set<UserLevel> getUser(Map<String, Set<UserLevel>> chan, User user) {
+		
+		Set<UserLevel> userLevels = chan.get(user.getNick());
+		
+		if (userLevels == null) {
+			
+			userLevels = new HashSet<UserLevel>();
+			chan.put(user.getNick(), userLevels);
+			
+		}
+		
+		return userLevels;
+		
+	}
+	
 	private synchronized void swapNick(final String old, final String user) {
 		
-		for (final Entry<String, Map<String, UserLevel>> e : data.entrySet())
-			if (e.getValue().containsKey(old)) {
+		for (final Entry<String, Map<String, Set<UserLevel>>> e : data.entrySet()) {
+			
+			Map<String, Set<UserLevel>> chanData = e.getValue();
+			
+			if (chanData.containsKey(old)) {
 				
-				final UserLevel temp = e.getValue().get(old);
-				e.getValue().remove(old);
-				e.getValue().put(user, temp);
+				final Set<UserLevel> temp = chanData.get(old);
+				chanData.remove(old);
+				chanData.put(user, temp);
 				
 			}
+			
+		}
 		
 	}
 	
-	private synchronized void delMode(final String chan, final String user) {
+	private synchronized void delUser(final User user, final Channel chan) {
 		
-		data.get(chan).remove(user);
+		getChan(chan).remove(user.getNick());
 		
 	}
 	
-	private synchronized void setMode(final String chan, final String user,
+	private synchronized void delMode(final User user, final Channel chan, UserLevel level) {
+		
+		getUser(getChan(chan), user).remove(level);
+		
+	}
+	
+	private synchronized void setMode(final User user, final Channel chan,
 		final UserLevel level) {
 		
-		data.get(chan).put(user, level);
+		Set<UserLevel> levels = getUser(getChan(chan), user);
+		levels.add(level);
+		
+		getChan(chan).put(user.getNick(), levels);
+		
+	}
+	
+	private synchronized UserLevel getHighest(User user, Channel chan) {
+		
+		Set<UserLevel> userLevels = getUser(getChan(chan), user);
+		
+		UserLevel level = null;
+		for (UserLevel current : userLevels)
+			if (level == null || level.compareTo(current) < 0)
+				level = current;
+		
+		return level;
 		
 	}
 	
