@@ -15,11 +15,11 @@ import org.pircbotx.hooks.events.VoiceEvent;
 
 public class AuthListener extends ListenerAdapter<PircBotX> {
 	
-	private final CustomUserPrefixHandler customPrefix;
+	private final AuthHandler auth;
 	
-	public AuthListener(final CustomUserPrefixHandler customPrefix) {
+	public AuthListener(final AuthHandler auth) {
 		
-		this.customPrefix = customPrefix;
+		this.auth = auth;
 		
 	}
 	
@@ -27,37 +27,37 @@ public class AuthListener extends ListenerAdapter<PircBotX> {
 	public void onServerResponse(final ServerResponseEvent<PircBotX> eve) {
 		
 		if (eve.getCode() == 005)
-			customPrefix.parsePrefix(eve.getParsedResponse());
+			auth.customPrefix.parsePrefix(eve.getParsedResponse());
 		else if (eve.getCode() == 353)
-			customPrefix.parseNames(eve.getParsedResponse());
+			auth.customPrefix.parseNames(eve.getParsedResponse());
 		
 	}
 	
 	@Override
 	public void onNickChange(final NickChangeEvent<PircBotX> eve) {
 		
-		customPrefix.swapNick(eve.getOldNick(), eve.getNewNick());
+		auth.customPrefix.swapNick(eve.getOldNick(), eve.getNewNick());
 		
 	}
 	
 	@Override
 	public void onPart(final PartEvent<PircBotX> eve) {
 		
-		customPrefix.delUser(eve.getUser(), eve.getChannel());
+		auth.customPrefix.delUser(eve.getUser(), eve.getChannel());
 		
 	}
 	
 	@Override
 	public void onKick(final KickEvent<PircBotX> eve) {
 		
-		customPrefix.delUser(eve.getRecipient(), eve.getChannel());
+		auth.customPrefix.delUser(eve.getRecipient(), eve.getChannel());
 		
 	}
 	
 	@Override
 	public void onOwner(final OwnerEvent<PircBotX> eve) {
 		
-		customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
+		auth.customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
 			UserLevel.OWNER, eve.isOwner());
 		
 	}
@@ -65,7 +65,7 @@ public class AuthListener extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onSuperOp(final SuperOpEvent<PircBotX> eve) {
 		
-		customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
+		auth.customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
 			UserLevel.SUPEROP, eve.isSuperOp());
 		
 	}
@@ -73,7 +73,7 @@ public class AuthListener extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onOp(final OpEvent<PircBotX> eve) {
 		
-		customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
+		auth.customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
 			UserLevel.OP, eve.isOp());
 		
 	}
@@ -81,7 +81,7 @@ public class AuthListener extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onHalfOp(final HalfOpEvent<PircBotX> eve) {
 		
-		customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
+		auth.customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
 			UserLevel.HALFOP, eve.isHalfOp());
 		
 	}
@@ -89,7 +89,7 @@ public class AuthListener extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onVoice(final VoiceEvent<PircBotX> eve) {
 		
-		customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
+		auth.customPrefix.modUser(eve.getRecipient(), eve.getChannel(),
 			UserLevel.VOICE, eve.hasVoice());
 		
 	}

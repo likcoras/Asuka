@@ -13,12 +13,10 @@ import org.pircbotx.UserLevel;
 
 public class CustomUserPrefixHandler {
 	
-	static CustomUserPrefixHandler instance;
-	
 	private final Map<Character, UserLevel> prefix;
 	private final Map<String, Map<String, Set<UserLevel>>> data;
 	
-	public CustomUserPrefixHandler() {
+	CustomUserPrefixHandler() {
 		
 		prefix = new HashMap<Character, UserLevel>();
 		prefix.put('~', UserLevel.OWNER);
@@ -31,7 +29,7 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	public synchronized UserLevel getLevel(final User user, final Channel chan) {
+	synchronized UserLevel getLevel(final User user, final Channel chan) {
 		
 		return getHighest(user, chan);
 		

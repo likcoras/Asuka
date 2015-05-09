@@ -1,11 +1,9 @@
 package io.github.likcoras.ssbot;
 
+import io.github.likcoras.ssbot.auth.AuthHandler;
 import io.github.likcoras.ssbot.auth.AuthListener;
-import io.github.likcoras.ssbot.auth.CustomUserPrefixHandler;
-import io.github.likcoras.ssbot.backends.AuthDataHandler;
 import io.github.likcoras.ssbot.backends.DataHandler;
 import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
-import io.github.likcoras.ssbot.ignore.IgnoreHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,14 +29,14 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	private final PircBotX bot;
 	private final List<DataHandler> handlers;
 	
-	private CustomUserPrefixHandler customPrefix;
+	private final AuthHandler auth;
 	
 	public BotManager(final ConfigParser cfg) {
 		
 		bot = new PircBotX(configure(cfg));
 		handlers = new ArrayList<DataHandler>();
 		
-		customPrefix = new CustomUserPrefixHandler();
+		auth = new AuthHandler();
 		
 	}
 	
@@ -68,9 +66,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		if (msg.equalsIgnoreCase(".quit")) {
 			
-			final UserLevel level = customPrefix.getLevel(user, chan);
-			
-			if (level != null && UserLevel.OP.compareTo(level) <= 0)
+			if (auth.checkAuth(UserLevel.OP, user, chan))
 				quit(user, chan);
 			else
 				failQuit(user, chan);
@@ -87,7 +83,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 						+ userIdentifier(user) + " with handler "
 						+ handler.getClass().getSimpleName());
 					
-					if (!checkAuth(handler, msg, user, chan)) {
+					if (auth.checkAuth(handler, msg, user, chan)) {
 						
 						HANDLE
 							.info("User did not have a high enough access level for executing the query '"
@@ -122,7 +118,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 		build
 			.addListener(new BotLogger())
-			.addListener(new AuthListener(customPrefix))
+			.addListener(new AuthListener(auth))
 			.addListener(this)
 			.setAutoReconnect(true)
 			.setName(cfg.getProperty("ircnick"))
@@ -179,27 +175,6 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		LOG.info("Failed quit attempt by " + userIdentifier(user) + " in  "
 			+ chan.getName());
 		chan.send().message(user, "Sorry, you're not allowed to do that!");
-		
-	}
-	
-	private boolean checkAuth(final DataHandler handler, final String msg,
-		final User user, final Channel chan) {
-		
-		if (!(handler instanceof AuthDataHandler))
-			return true;
-		
-		final UserLevel required =
-			((AuthDataHandler) handler).getAuthLevel(msg);
-		
-		if (required == null)
-			return true;
-		
-		final UserLevel level = customPrefix.getLevel(user, chan);
-		
-		if (level != null && required.compareTo(level) <= 0)
-			return true;
-		
-		return false;
 		
 	}
 	
