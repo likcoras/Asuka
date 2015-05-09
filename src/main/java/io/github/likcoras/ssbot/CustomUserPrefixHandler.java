@@ -74,14 +74,16 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onOwner(final OwnerEvent<PircBotX> eve) {
 		
-		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.OWNER, eve.isOwner());
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.OWNER,
+			eve.isOwner());
 		
 	}
 	
 	@Override
 	public void onSuperOp(final SuperOpEvent<PircBotX> eve) {
 		
-		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.SUPEROP, eve.isSuperOp());
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.SUPEROP,
+			eve.isSuperOp());
 		
 	}
 	
@@ -94,14 +96,16 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onHalfOp(final HalfOpEvent<PircBotX> eve) {
 		
-		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.HALFOP, eve.isHalfOp());
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.HALFOP,
+			eve.isHalfOp());
 		
 	}
 	
 	@Override
 	public void onVoice(final VoiceEvent<PircBotX> eve) {
 		
-		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.VOICE, eve.hasVoice());
+		modUser(eve.getRecipient(), eve.getChannel(), UserLevel.VOICE,
+			eve.hasVoice());
 		
 	}
 	
@@ -182,7 +186,7 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 		for (final String user : users)
 			if (prefix.containsKey(user.charAt(0))) {
 				
-				Set<UserLevel> levels = new HashSet<UserLevel>();
+				final Set<UserLevel> levels = new HashSet<UserLevel>();
 				levels.add(prefix.get(user.charAt(0)));
 				userData.put(user.substring(1), levels);
 				
@@ -193,7 +197,8 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private synchronized void modUser(User user, Channel chan, UserLevel level, boolean get) {
+	private synchronized void modUser(final User user, final Channel chan,
+		final UserLevel level, final boolean get) {
 		
 		if (get)
 			setMode(user, chan, level);
@@ -202,7 +207,8 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private synchronized Map<String, Set<UserLevel>> getChan(Channel chan) {
+	private synchronized Map<String, Set<UserLevel>>
+		getChan(final Channel chan) {
 		
 		Map<String, Set<UserLevel>> chanData = data.get(chan.getName());
 		
@@ -217,7 +223,8 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private synchronized Set<UserLevel> getUser(Map<String, Set<UserLevel>> chan, User user) {
+	private synchronized Set<UserLevel> getUser(
+		final Map<String, Set<UserLevel>> chan, final User user) {
 		
 		Set<UserLevel> userLevels = chan.get(user.getNick());
 		
@@ -234,9 +241,10 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 	
 	private synchronized void swapNick(final String old, final String user) {
 		
-		for (final Entry<String, Map<String, Set<UserLevel>>> e : data.entrySet()) {
+		for (final Entry<String, Map<String, Set<UserLevel>>> e : data
+			.entrySet()) {
 			
-			Map<String, Set<UserLevel>> chanData = e.getValue();
+			final Map<String, Set<UserLevel>> chanData = e.getValue();
 			
 			if (chanData.containsKey(old)) {
 				
@@ -256,7 +264,8 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private synchronized void delMode(final User user, final Channel chan, UserLevel level) {
+	private synchronized void delMode(final User user, final Channel chan,
+		final UserLevel level) {
 		
 		getUser(getChan(chan), user).remove(level);
 		
@@ -265,19 +274,20 @@ public class CustomUserPrefixHandler extends ListenerAdapter<PircBotX> {
 	private synchronized void setMode(final User user, final Channel chan,
 		final UserLevel level) {
 		
-		Set<UserLevel> levels = getUser(getChan(chan), user);
+		final Set<UserLevel> levels = getUser(getChan(chan), user);
 		levels.add(level);
 		
 		getChan(chan).put(user.getNick(), levels);
 		
 	}
 	
-	private synchronized UserLevel getHighest(User user, Channel chan) {
+	private synchronized UserLevel getHighest(final User user,
+		final Channel chan) {
 		
-		Set<UserLevel> userLevels = getUser(getChan(chan), user);
+		final Set<UserLevel> userLevels = getUser(getChan(chan), user);
 		
 		UserLevel level = null;
-		for (UserLevel current : userLevels)
+		for (final UserLevel current : userLevels)
 			if (level == null || level.compareTo(current) < 0)
 				level = current;
 		
