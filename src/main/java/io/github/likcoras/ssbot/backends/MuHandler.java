@@ -4,7 +4,7 @@ import io.github.likcoras.ssbot.ConfigParser;
 import io.github.likcoras.ssbot.backends.exceptions.InvalidHandlerException;
 import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
 import io.github.likcoras.ssbot.data.MuData;
-import io.github.likcoras.ssbot.data.Release;
+import io.github.likcoras.ssbot.data.values.Release;
 
 import java.io.IOException;
 import java.sql.SQLException;

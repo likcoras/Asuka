@@ -1,4 +1,4 @@
-package io.github.likcoras.ssbot.data;
+package io.github.likcoras.ssbot.data.values;
 
 public enum Status {
 	

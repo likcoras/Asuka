@@ -4,7 +4,7 @@ import io.github.likcoras.ssbot.ConfigParser;
 import io.github.likcoras.ssbot.backends.exceptions.InvalidHandlerException;
 import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
 import io.github.likcoras.ssbot.data.BttData;
-import io.github.likcoras.ssbot.data.Status;
+import io.github.likcoras.ssbot.data.values.Status;
 
 import java.io.IOException;
 import java.util.regex.Matcher;

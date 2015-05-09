@@ -1,5 +1,7 @@
 package io.github.likcoras.ssbot.data;
 
+import io.github.likcoras.ssbot.data.values.Release;
+
 import java.util.ArrayList;
 import java.util.List;
 
