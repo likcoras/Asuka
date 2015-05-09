@@ -52,12 +52,10 @@ public class ConfigParser {
 	
 	private void createDefault() throws IOException {
 		
-		if (conf.exists())
+		if (!conf.createNewFile())
 			return;
 		
 		LOG.info("No configuration file found, writing default configuration...");
-		
-		conf.createNewFile();
 		
 		final BufferedReader def =
 			new BufferedReader(new InputStreamReader(this.getClass()
