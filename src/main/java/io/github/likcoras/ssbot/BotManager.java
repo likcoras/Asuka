@@ -40,23 +40,6 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	public void registerHandler(final DataHandler handler) {
-		
-		synchronized (handlers) {
-			
-			handlers.add(handler);
-			
-		}
-		
-	}
-	
-	public void start() throws IOException, IrcException {
-		
-		LOG.info("Starting IRC bot...");
-		bot.startBot();
-		
-	}
-	
 	@Override
 	public void onMessage(final MessageEvent<PircBotX> eve) {
 		
@@ -109,6 +92,23 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 						eve.getChannel().send().message("No results found");
 					
 				}
+		
+	}
+	
+	public void registerHandler(final DataHandler handler) {
+		
+		synchronized (handlers) {
+			
+			handlers.add(handler);
+			
+		}
+		
+	}
+	
+	public void start() throws IOException, IrcException {
+		
+		LOG.info("Starting IRC bot...");
+		bot.startBot();
 		
 	}
 	
