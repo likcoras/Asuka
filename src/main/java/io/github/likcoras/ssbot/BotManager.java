@@ -223,8 +223,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	private void ignoreList(final User user) {
 		
 		String ignores = "";
-		for (final String ignore : ignore.listIgnores())
-			ignores += ignore + ", ";
+		for (final String ignored : ignore.listIgnores())
+			ignores += ignored + ", ";
 		
 		ignores = ignores.substring(0, ignores.length() - 2);
 		user.send().notice("Ignored Users: " + ignores);
