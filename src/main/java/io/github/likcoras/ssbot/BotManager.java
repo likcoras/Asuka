@@ -74,46 +74,10 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			
 		}
 		
-		if (ignore.isIgnored(user.getNick())) {
-			
+		if (ignore.isIgnored(user.getNick()))
 			return;
-			
-		}
 		
-		for (final DataHandler handler : handlers)
-			if (handler.isHandlerOf(msg))
-				try {
-					
-					HANDLE.info("Handling query '" + msg + "' by "
-						+ userIdentifier(user) + " with handler "
-						+ handler.getClass().getSimpleName());
-					
-					if (!auth.checkAuth(handler, msg, user, chan)) {
-						
-						HANDLE
-							.info("User did not have a high enough access level for executing the query '"
-								+ msg + "'");
-						eve.respond("Sorry, you're not allowed to do that!");
-						return;
-						
-					}
-					
-					chan.send().message(handler.getData(msg).ircString());
-					
-				} catch (final NoResultsException e) {
-					
-					if (e.getCause() != null) {
-						
-						HANDLE.error("Error while handing query: ",
-							e.getCause());
-						chan.send().message(
-							"Error(" + e.getCause().getClass().getSimpleName()
-								+ "): " + e.getCause().getMessage());
-						
-					} else
-						eve.getChannel().send().message("No results found");
-					
-				}
+		doHandlers(user, chan, msg);
 		
 	}
 	
@@ -183,7 +147,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			
 			ignore.loadIgnores();
 			
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			
 			LOG.error("Error while loading ignores: ", e);
 			
@@ -198,11 +162,11 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private void ignore(User user, Channel chan, String msg) {
+	private void ignore(final User user, final Channel chan, final String msg) {
 		
 		LOG.info("Ignore command by " + userIdentifier(user) + ": " + msg);
 		
-		String[] command = msg.split("\\s+");
+		final String[] command = msg.split("\\s+");
 		
 		try {
 			
@@ -217,7 +181,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			else
 				ignoreUsage(user);
 			
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			
 			LOG.error("Error while handling ignore command '" + msg + "'", e);
 			
@@ -225,33 +189,41 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private void ignoreUsage(User user) {
+	private void ignoreUsage(final User user) {
 		
 		user.send().notice(Colors.BOLD + ".ignore usage:");
-		user.send().notice(Colors.BOLD + ".ignore add [nick]:" + Colors.BOLD + " makes the bot ignore the user");
-		user.send().notice(Colors.BOLD + ".ignore rem [nick]:" + Colors.BOLD + " removes the ignore from the user");
-		user.send().notice(Colors.BOLD + ".ignore list:" + Colors.BOLD + " lists the ignored users");
+		user.send().notice(
+			Colors.BOLD + ".ignore add [nick]:" + Colors.BOLD
+				+ " makes the bot ignore the user");
+		user.send().notice(
+			Colors.BOLD + ".ignore rem [nick]:" + Colors.BOLD
+				+ " removes the ignore from the user");
+		user.send().notice(
+			Colors.BOLD + ".ignore list:" + Colors.BOLD
+				+ " lists the ignored users");
 		
 	}
 	
-	private void ignoreAdd(Channel chan, String target) throws IOException {
+	private void ignoreAdd(final Channel chan, final String target)
+		throws IOException {
 		
 		ignore.addIgnore(target);
 		chan.send().message("User " + target + " was added to the ignore list");
 		
 	}
 	
-	private void ignoreRem(Channel chan, String target) throws IOException {
+	private void ignoreRem(final Channel chan, final String target)
+		throws IOException {
 		
 		ignore.delIgnore(target);
 		chan.send().message("User " + target + " removed from ignore list");
 		
 	}
 	
-	private void ignoreList(User user) {
+	private void ignoreList(final User user) {
 		
 		String ignores = "";
-		for (String ignore: ignore.listIgnores())
+		for (final String ignore : ignore.listIgnores())
 			ignores += ignore + ", ";
 		
 		ignores = ignores.substring(0, ignores.length() - 2);
@@ -259,7 +231,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private void failIgnore(User user, Channel chan, String msg) {
+	private void failIgnore(final User user, final Channel chan,
+		final String msg) {
 		
 		LOG.info("Failed ignore attempt by " + userIdentifier(user) + " in  "
 			+ chan.getName() + ": " + msg);
@@ -282,6 +255,47 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		LOG.info("Failed quit attempt by " + userIdentifier(user) + " in  "
 			+ chan.getName());
 		chan.send().message(user, "Sorry, you're not allowed to do that!");
+		
+	}
+	
+	private void doHandlers(final User user, final Channel chan,
+		final String msg) {
+		
+		for (final DataHandler handler : handlers)
+			if (handler.isHandlerOf(msg))
+				try {
+					
+					HANDLE.info("Handling query '" + msg + "' by "
+						+ userIdentifier(user) + " with handler "
+						+ handler.getClass().getSimpleName());
+					
+					if (!auth.checkAuth(handler, msg, user, chan)) {
+						
+						HANDLE
+							.info("User did not have a high enough access level for executing the query '"
+								+ msg + "'");
+						chan.send().message(user,
+							"Sorry, you're not allowed to do that!");
+						return;
+						
+					}
+					
+					chan.send().message(handler.getData(msg).ircString());
+					
+				} catch (final NoResultsException e) {
+					
+					if (e.getCause() != null) {
+						
+						HANDLE.error("Error while handing query: ",
+							e.getCause());
+						chan.send().message(
+							"Error(" + e.getCause().getClass().getSimpleName()
+								+ "): " + e.getCause().getMessage());
+						
+					} else
+						chan.send().message("No results found");
+					
+				}
 		
 	}
 	
