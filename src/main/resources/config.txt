@@ -21,6 +21,9 @@ dbcolumnid:id
 # The location of the xml file to parse
 xmlfile:http://everath.net/sslist/csparse.xml
 
+# The location of the rss feed with the latest releases
+latestfile:http://www.silentsky-scans.net/feed/
+
 # The base url for the mangaupdate(rlstrackr) search
 muurl:https://rlstrackr.com/series/info/
 
