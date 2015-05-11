@@ -108,7 +108,7 @@ public class CustomUserPrefixHandler {
 	
 	synchronized void delUser(final User user, final Channel chan) {
 		
-		Map<String, Set<UserLevel>> chanData = getChan(chan);
+		final Map<String, Set<UserLevel>> chanData = getChan(chan);
 		chanData.remove(user.getNick());
 		
 		if (chanData.isEmpty())
@@ -191,8 +191,8 @@ public class CustomUserPrefixHandler {
 	private synchronized void delMode(final User user, final Channel chan,
 		final UserLevel level) {
 		
-		Map<String, Set<UserLevel>> chanData = getChan(chan);
-		Set<UserLevel> userLevels = getUser(chanData, user);
+		final Map<String, Set<UserLevel>> chanData = getChan(chan);
+		final Set<UserLevel> userLevels = getUser(chanData, user);
 		userLevels.remove(level);
 		
 		if (userLevels.isEmpty())

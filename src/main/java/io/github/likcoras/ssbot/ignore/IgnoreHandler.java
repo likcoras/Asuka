@@ -26,7 +26,7 @@ public class IgnoreHandler {
 		
 		file.createNewFile();
 		
-		BufferedReader in = new BufferedReader(new FileReader(file));
+		final BufferedReader in = new BufferedReader(new FileReader(file));
 		
 		ignored.clear();
 		
@@ -44,20 +44,20 @@ public class IgnoreHandler {
 		
 	}
 	
-	public boolean isIgnored(String user) {
+	public boolean isIgnored(final String user) {
 		
 		return ignored.contains(user.toLowerCase());
 		
 	}
 	
-	public synchronized void addIgnore(String user) throws IOException {
+	public synchronized void addIgnore(final String user) throws IOException {
 		
 		if (ignored.add(user))
 			flush();
 		
 	}
 	
-	public synchronized void delIgnore(String user) throws IOException {
+	public synchronized void delIgnore(final String user) throws IOException {
 		
 		if (ignored.remove(user))
 			flush();
@@ -66,9 +66,9 @@ public class IgnoreHandler {
 	
 	private synchronized void flush() throws IOException {
 		
-		BufferedWriter out = new BufferedWriter(new FileWriter(file));
+		final BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		
-		for (String ignore : ignored)
+		for (final String ignore : ignored)
 			out.write(ignore + "\n");
 		
 		out.flush();
