@@ -10,3 +10,4 @@ dependency-reduced-pom.xml
 # Files generated while testing
 /config.txt
 /logs/
+/ignore.txt
