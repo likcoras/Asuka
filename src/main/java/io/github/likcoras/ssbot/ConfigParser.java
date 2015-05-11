@@ -18,9 +18,9 @@ public class ConfigParser {
 	
 	private final String[] keys = { "dbhost", "dbport", "dbuser", "#dbpass",
 			"dbdatabase", "dbtable", "dbcolumntitle", "dbcolumnid", "xmlfile",
-			"latestfile", "muurl", "bturl", "ircnick", "irclogin", "ircrealname", "irchost",
-			"ircport", "ircssl", "#ircnickserv", "#ircpass", "ircchannels" };
-
+			"latestfile", "muurl", "bturl", "ircnick", "irclogin",
+			"ircrealname", "irchost", "ircport", "ircssl", "#ircnickserv",
+			"#ircpass", "ircchannels" };
 	
 	private final Map<String, String> prop;
 	private final File conf;
