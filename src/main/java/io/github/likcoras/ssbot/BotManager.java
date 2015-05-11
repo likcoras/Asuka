@@ -4,6 +4,7 @@ import io.github.likcoras.ssbot.auth.AuthHandler;
 import io.github.likcoras.ssbot.auth.AuthListener;
 import io.github.likcoras.ssbot.backends.DataHandler;
 import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
+import io.github.likcoras.ssbot.ignore.IgnoreHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.Configuration;
 import org.pircbotx.Configuration.Builder;
 import org.pircbotx.PircBotX;
@@ -30,13 +32,16 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	private final List<DataHandler> handlers;
 	
 	private final AuthHandler auth;
+	private final IgnoreHandler ignore;
 	
 	public BotManager(final ConfigParser cfg) {
 		
-		bot = new PircBotX(configure(cfg));
 		handlers = new ArrayList<DataHandler>();
 		
 		auth = new AuthHandler();
+		ignore = new IgnoreHandler();
+		
+		bot = new PircBotX(configure(cfg));
 		
 	}
 	
@@ -47,12 +52,29 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		final User user = eve.getUser();
 		final Channel chan = eve.getChannel();
 		
+		if (msg.toLowerCase().startsWith(".ignore")) {
+			
+			if (auth.checkAuth(UserLevel.OP, user, chan))
+				ignore(user, chan, msg);
+			else
+				failIgnore(user, chan, msg);
+			
+			return;
+			
+		}
+		
 		if (msg.equalsIgnoreCase(".quit")) {
 			
 			if (auth.checkAuth(UserLevel.OP, user, chan))
 				quit(user, chan);
 			else
 				failQuit(user, chan);
+			
+			return;
+			
+		}
+		
+		if (ignore.isIgnored(user.getNick())) {
 			
 			return;
 			
@@ -66,7 +88,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 						+ userIdentifier(user) + " with handler "
 						+ handler.getClass().getSimpleName());
 					
-					if (auth.checkAuth(handler, msg, user, chan)) {
+					if (!auth.checkAuth(handler, msg, user, chan)) {
 						
 						HANDLE
 							.info("User did not have a high enough access level for executing the query '"
@@ -106,6 +128,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	}
 	
 	public void start() throws IOException, IrcException {
+		
+		initialize();
 		
 		LOG.info("Starting IRC bot...");
 		bot.startBot();
@@ -153,10 +177,93 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
+	private void initialize() {
+		
+		try {
+			
+			ignore.loadIgnores();
+			
+		} catch (IOException e) {
+			
+			LOG.error("Error while loading ignores: ", e);
+			
+		}
+		
+	}
+	
 	private String userIdentifier(final User user) {
 		
 		return user.getNick() + "!" + user.getLogin() + "@"
 			+ user.getHostmask();
+		
+	}
+	
+	private void ignore(User user, Channel chan, String msg) {
+		
+		LOG.info("Ignore command by " + userIdentifier(user) + ": " + msg);
+		
+		String[] command = msg.split("\\s+");
+		
+		try {
+			
+			if (command.length < 2)
+				ignoreUsage(user);
+			else if (command[1].equalsIgnoreCase("add"))
+				ignoreAdd(chan, command[2]);
+			else if (command[1].equalsIgnoreCase("rem"))
+				ignoreRem(chan, command[2]);
+			else if (command[1].equalsIgnoreCase("list"))
+				ignoreList(user);
+			else
+				ignoreUsage(user);
+			
+		} catch (IOException e) {
+			
+			LOG.error("Error while handling ignore command '" + msg + "'", e);
+			
+		}
+		
+	}
+	
+	private void ignoreUsage(User user) {
+		
+		user.send().notice(Colors.BOLD + ".ignore usage:");
+		user.send().notice(Colors.BOLD + ".ignore add [nick]:" + Colors.BOLD + " makes the bot ignore the user");
+		user.send().notice(Colors.BOLD + ".ignore rem [nick]:" + Colors.BOLD + " removes the ignore from the user");
+		user.send().notice(Colors.BOLD + ".ignore list:" + Colors.BOLD + " lists the ignored users");
+		
+	}
+	
+	private void ignoreAdd(Channel chan, String target) throws IOException {
+		
+		ignore.addIgnore(target);
+		chan.send().message("User " + target + " was added to the ignore list");
+		
+	}
+	
+	private void ignoreRem(Channel chan, String target) throws IOException {
+		
+		ignore.delIgnore(target);
+		chan.send().message("User " + target + " removed from ignore list");
+		
+	}
+	
+	private void ignoreList(User user) {
+		
+		String ignores = "";
+		for (String ignore: ignore.listIgnores())
+			ignores += ignore + ", ";
+		
+		ignores = ignores.substring(0, ignores.length() - 2);
+		user.send().notice("Ignored Users: " + ignores);
+		
+	}
+	
+	private void failIgnore(User user, Channel chan, String msg) {
+		
+		LOG.info("Failed ignore attempt by " + userIdentifier(user) + " in  "
+			+ chan.getName() + ": " + msg);
+		chan.send().message(user, "Sorry, you're not allowed to do that!");
 		
 	}
 	
