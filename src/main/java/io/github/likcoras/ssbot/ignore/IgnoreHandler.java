@@ -22,21 +22,17 @@ public class IgnoreHandler {
 		
 	}
 	
-	public void loadIgnores() throws IOException {
+	public synchronized void loadIgnores() throws IOException {
 		
 		file.createNewFile();
 		
 		BufferedReader in = new BufferedReader(new FileReader(file));
 		
-		synchronized (ignored) {
-			
-			ignored.clear();
-			
-			String line;
-			while ((line = in.readLine()) != null)
-				ignored.add(line.toLowerCase());
-			
-		}
+		ignored.clear();
+		
+		String line;
+		while ((line = in.readLine()) != null)
+			ignored.add(line.toLowerCase());
 		
 		in.close();
 		
@@ -54,29 +50,29 @@ public class IgnoreHandler {
 		
 	}
 	
-	public void addIgnore(String user) throws IOException {
+	public synchronized void addIgnore(String user) throws IOException {
 		
-		BufferedWriter out = new BufferedWriter(new FileWriter(file, true));
-		out.write(user + "\n");
-		out.flush();
-		out.close();
-		
-		loadIgnores();
+		if (ignored.add(user))
+			flush();
 		
 	}
 	
-	public void delIgnore(String user) throws IOException {
+	public synchronized void delIgnore(String user) throws IOException {
+		
+		if (ignored.remove(user))
+			flush();
+		
+	}
+	
+	private synchronized void flush() throws IOException {
 		
 		BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		
 		for (String ignore : ignored)
-			if (!ignore.equalsIgnoreCase(user))
-				out.write(ignore + "\n");
+			out.write(ignore + "\n");
 		
 		out.flush();
 		out.close();
-		
-		loadIgnores();
 		
 	}
 	
