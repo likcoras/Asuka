@@ -44,21 +44,6 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	void loadNames(List<String> msg) {
-		// TODO parse NAMES
-	}
-	
-	UserLevel getLevel(Channel chan, User user) {
-		
-		AuthChannelData chanData = data.get(chan.getName());
-		
-		if (chanData == null)
-			return null;
-		
-		return chanData.getLevel(user);
-		
-	}
-	
 	private void setPrefix(final String prefixMsg) {
 		
 		final String modes =
@@ -96,6 +81,86 @@ public class CustomUserPrefixHandler {
 			return UserLevel.VOICE;
 		
 		return null;
+		
+	}
+	
+	void loadNames(List<String> msg) {
+		
+		AuthChannelData chanData = new AuthChannelData();
+		for (String name : msg.get(3).split(" ")) {
+			
+			char prefixChar = name.charAt(0);
+			
+			if (prefix.containsKey(prefixChar))
+				chanData.setUser(name.substring(1), prefix.get(prefixChar), true);
+			
+		}
+		
+		if (!chanData.isEmpty())
+			data.put(msg.get(2), chanData);
+		
+	}
+	
+	void swapNick(String old, String user) {
+		
+		for (AuthChannelData chanData : data.values())
+			chanData.swapNick(old, user);
+		
+	}
+	
+	void toggleLevel(Channel chan, User user, UserLevel level, boolean set) {
+		
+		AuthChannelData chanData = data.get(chan.getName());
+		
+		if (chanData == null) {
+			
+			if (!set)
+				return;
+			
+			chanData = new AuthChannelData();
+			data.put(chan.getName(), chanData);
+			
+		}
+		
+		chanData.setUser(user.getNick(), level, set);
+		purgeChan(chan.getName());
+		
+	}
+	
+	void delUser(Channel chan, User user) {
+		
+		AuthChannelData chanData = data.get(chan.getName());
+		
+		if (chanData == null)
+			return;
+		
+		chanData.delUser(user.getNick());
+		purgeChan(chan.getName());
+		
+	}
+	
+	private void purgeChan(String chan) {
+		
+		if (data.get(chan).isEmpty())
+			data.remove(chan);
+		
+	}
+	
+	void delUserAll(User user) {
+		
+		for (AuthChannelData chanData : data.values())
+			chanData.delUser(user.getNick());
+		
+	}
+	
+	UserLevel getLevel(Channel chan, User user) {
+		
+		AuthChannelData chanData = data.get(chan.getName());
+		
+		if (chanData == null)
+			return null;
+		
+		return chanData.getLevel(user.getNick());
 		
 	}
 	

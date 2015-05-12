@@ -14,6 +14,21 @@ public class AuthUserData {
 		
 	}
 	
+	boolean isEmpty() {
+		
+		return levels.isEmpty();
+		
+	}
+	
+	void setUserLevel(UserLevel level, boolean set) {
+		
+		if (set)
+			levels.add(level);
+		else
+			levels.remove(level);
+		
+	}
+	
 	UserLevel getLevel() {
 		
 		return levels.last();

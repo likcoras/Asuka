@@ -3,7 +3,6 @@ package io.github.likcoras.ssbot.auth;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.pircbotx.User;
 import org.pircbotx.UserLevel;
 
 public class AuthChannelData {
@@ -16,9 +15,56 @@ public class AuthChannelData {
 		
 	}
 	
-	UserLevel getLevel(User user) {
+	boolean isEmpty() {
 		
-		AuthUserData userData = users.get(user.getNick());
+		return users.isEmpty();
+		
+	}
+	
+	void swapNick(String old, String user) {
+		
+		AuthUserData userData = users.get(old);
+		
+		if (userData != null)
+			users.put(user, userData);
+		
+	}
+	
+	void setUser(String user, UserLevel level, boolean set) {
+		
+		AuthUserData userData = users.get(user);
+		if (userData == null) {
+			
+			if (!set)
+				return;
+			
+			userData = new AuthUserData();
+			users.put(user, userData);
+			
+		}
+		
+		userData.setUserLevel(level, set);
+		
+		purgeUser(user);
+		
+	}
+	
+	private void purgeUser(String user) {
+		
+		if (users.get(user).isEmpty())
+			users.remove(user);
+		
+	}
+	
+	void delUser(String user) {
+		
+		users.remove(user);
+		
+	}
+	
+	UserLevel getLevel(String user) {
+		
+		AuthUserData userData = users.get(user);
 		
 		if (userData == null)
 			return null;
