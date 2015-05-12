@@ -1,11 +1,8 @@
 package io.github.likcoras.ssbot.auth;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.pircbotx.Channel;
 import org.pircbotx.User;
@@ -14,7 +11,7 @@ import org.pircbotx.UserLevel;
 public class CustomUserPrefixHandler {
 	
 	private final Map<Character, UserLevel> prefix;
-	private final Map<String, Map<String, Set<UserLevel>>> data;
+	private final Map<String, AuthChannelData> data;
 	
 	CustomUserPrefixHandler() {
 		
@@ -25,17 +22,11 @@ public class CustomUserPrefixHandler {
 		prefix.put('%', UserLevel.HALFOP);
 		prefix.put('+', UserLevel.VOICE);
 		
-		data = new HashMap<String, Map<String, Set<UserLevel>>>();
+		data = new HashMap<String, AuthChannelData>();
 		
 	}
 	
-	synchronized UserLevel getLevel(final User user, final Channel chan) {
-		
-		return getHighest(user, chan);
-		
-	}
-	
-	synchronized void parsePrefix(final List<String> msg) {
+	void loadPrefix(final List<String> msg) {
 		
 		String prefixMsg = null;
 		for (final String item : msg)
@@ -53,70 +44,7 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	synchronized void parseNames(final List<String> msg) {
-		
-		final String[] users = msg.get(3).split(" ");
-		
-		if (users.length < 1)
-			return;
-		
-		final Map<String, Set<UserLevel>> userData =
-			new HashMap<String, Set<UserLevel>>();
-		
-		for (final String user : users)
-			if (prefix.containsKey(user.charAt(0))) {
-				
-				final Set<UserLevel> levels = new HashSet<UserLevel>();
-				levels.add(prefix.get(user.charAt(0)));
-				userData.put(user.substring(1), levels);
-				
-			}
-		
-		if (!userData.isEmpty())
-			data.put(msg.get(2), userData);
-		
-	}
-	
-	synchronized void modUser(final User user, final Channel chan,
-		final UserLevel level, final boolean get) {
-		
-		if (get)
-			setMode(user, chan, level);
-		else
-			delMode(user, chan, level);
-		
-	}
-	
-	synchronized void swapNick(final String old, final String user) {
-		
-		for (final Entry<String, Map<String, Set<UserLevel>>> e : data
-			.entrySet()) {
-			
-			final Map<String, Set<UserLevel>> chanData = e.getValue();
-			
-			if (chanData.containsKey(old)) {
-				
-				final Set<UserLevel> temp = chanData.get(old);
-				chanData.remove(old);
-				chanData.put(user, temp);
-				
-			}
-			
-		}
-		
-	}
-	
-	synchronized void delUser(final User user, final Channel chan) {
-		
-		final Map<String, Set<UserLevel>> chanData = getChan(chan);
-		chanData.remove(user.getNick());
-		
-		if (chanData.isEmpty())
-			data.remove(chan.getName());
-		
-	}
-	
-	private synchronized void setPrefix(final String prefixMsg) {
+	private void setPrefix(final String prefixMsg) {
 		
 		final String modes =
 			prefixMsg.substring(prefixMsg.indexOf("(") + 1,
@@ -139,7 +67,7 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	private synchronized UserLevel levelForMode(final char mode) {
+	private UserLevel levelForMode(final char mode) {
 		
 		if (mode == 'q')
 			return UserLevel.OWNER;
@@ -156,71 +84,85 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	private synchronized Map<String, Set<UserLevel>>
-		getChan(final Channel chan) {
+	void loadNames(final List<String> msg) {
 		
-		Map<String, Set<UserLevel>> chanData = data.get(chan.getName());
+		final AuthChannelData chanData = new AuthChannelData();
+		for (final String name : msg.get(3).split(" ")) {
+			
+			final char prefixChar = name.charAt(0);
+			
+			if (prefix.containsKey(prefixChar))
+				chanData.setUser(name.substring(1), prefix.get(prefixChar),
+					true);
+			
+		}
+		
+		if (!chanData.isEmpty())
+			data.put(msg.get(2), chanData);
+		
+	}
+	
+	void swapNick(final String old, final String user) {
+		
+		for (final AuthChannelData chanData : data.values())
+			chanData.swapNick(old, user);
+		
+	}
+	
+	void toggleLevel(final Channel chan, final User user,
+		final UserLevel level, final boolean set) {
+		
+		AuthChannelData chanData = data.get(chan.getName());
 		
 		if (chanData == null) {
 			
-			chanData = new HashMap<String, Set<UserLevel>>();
+			if (!set)
+				return;
+			
+			chanData = new AuthChannelData();
 			data.put(chan.getName(), chanData);
 			
 		}
 		
-		return chanData;
+		chanData.setUser(user.getNick(), level, set);
+		purgeChan(chan.getName());
 		
 	}
 	
-	private synchronized Set<UserLevel> getUser(
-		final Map<String, Set<UserLevel>> chan, final User user) {
+	void delUser(final Channel chan, final User user) {
 		
-		Set<UserLevel> userLevels = chan.get(user.getNick());
+		final AuthChannelData chanData = data.get(chan.getName());
 		
-		if (userLevels == null) {
-			
-			userLevels = new HashSet<UserLevel>();
-			chan.put(user.getNick(), userLevels);
-			
-		}
+		if (chanData == null)
+			return;
 		
-		return userLevels;
+		chanData.delUser(user.getNick());
+		purgeChan(chan.getName());
 		
 	}
 	
-	private synchronized void delMode(final User user, final Channel chan,
-		final UserLevel level) {
+	private void purgeChan(final String chan) {
 		
-		final Map<String, Set<UserLevel>> chanData = getChan(chan);
-		final Set<UserLevel> userLevels = getUser(chanData, user);
-		userLevels.remove(level);
-		
-		if (userLevels.isEmpty())
-			delUser(user, chan);
+		if (data.get(chan).isEmpty())
+			data.remove(chan);
 		
 	}
 	
-	private synchronized void setMode(final User user, final Channel chan,
-		final UserLevel level) {
+	void delUserAll(final User user) {
 		
-		final Set<UserLevel> levels = getUser(getChan(chan), user);
-		levels.add(level);
-		
-		getChan(chan).put(user.getNick(), levels);
+		for (final AuthChannelData chanData : data.values())
+			chanData.delUser(user.getNick());
 		
 	}
 	
-	private synchronized UserLevel getHighest(final User user,
-		final Channel chan) {
+	UserLevel getLevel(final Channel chan, final User user) {
 		
-		final Set<UserLevel> userLevels = getUser(getChan(chan), user);
+		final AuthChannelData chanData = data.get(chan.getName());
 		
-		UserLevel level = null;
-		for (final UserLevel current : userLevels)
-			if (level == null || level.compareTo(current) < 0)
-				level = current;
+		if (chanData == null)
+			return null;
 		
-		return level;
+		return chanData.getLevel(user.getNick());
 		
 	}
 	
