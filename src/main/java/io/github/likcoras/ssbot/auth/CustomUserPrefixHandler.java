@@ -45,9 +45,7 @@ public class CustomUserPrefixHandler {
 	}
 	
 	void loadNames(List<String> msg) {
-		
-		
-		
+		// TODO parse NAMES
 	}
 	
 	UserLevel getLevel(Channel chan, User user) {
