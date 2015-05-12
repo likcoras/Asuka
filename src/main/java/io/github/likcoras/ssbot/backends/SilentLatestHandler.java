@@ -52,9 +52,9 @@ public class SilentLatestHandler implements DataHandler {
 			
 			SilentLatestData silent = new SilentLatestData();
 			
-			silent.setTitle(latest.getAuthor());
-			silent.setDescription(latest.getDescription().getValue());
+			silent.setTitle(latest.getTitle());
 			silent.setDate(latest.getPublishedDate());
+			silent.setLink(latest.getLink());
 			
 			return silent;
 			
