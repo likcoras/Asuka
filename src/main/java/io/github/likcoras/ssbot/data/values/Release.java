@@ -14,7 +14,8 @@ public class Release {
 	
 	public static String releaseText(final Release release) {
 		
-		final String days = DataUtils.representDateAs(release.getDate(), DataUtils.DAYS);
+		final String days =
+			DataUtils.representDateAs(release.getDate(), DataUtils.DAYS);
 		
 		return String.format(RELEASE_FORMAT, release.getChapter(),
 			release.getGroup(), days);
