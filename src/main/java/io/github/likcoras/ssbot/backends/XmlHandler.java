@@ -66,7 +66,7 @@ public class XmlHandler implements AuthDataHandler {
 		
 		if (!isHandlerOf(query))
 			throw new InvalidHandlerException(query);
-		else if (query.equalsIgnoreCase(".update"))
+		else if (query.equalsIgnoreCase(".update") || query.equalsIgnoreCase("!update"))
 			try {
 				
 				update();
@@ -96,7 +96,7 @@ public class XmlHandler implements AuthDataHandler {
 	public void update() throws IOException, SAXException,
 		ParserConfigurationException {
 		
-		new URL(updateLink).openConnection().connect();
+		new URL(updateLink).openConnection().getContent();
 		
 		final Map<String, XmlData> tmpData = new HashMap<String, XmlData>();
 		addData(tmpData);
