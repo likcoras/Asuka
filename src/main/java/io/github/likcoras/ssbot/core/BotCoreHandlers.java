@@ -1,6 +1,7 @@
 package io.github.likcoras.ssbot.core;
 
 import java.io.IOException;
+import java.util.Set;
 
 import io.github.likcoras.ssbot.BotUtils;
 import io.github.likcoras.ssbot.ConfigParser;
@@ -128,9 +129,18 @@ public class BotCoreHandlers {
 	
 	private void ignoreList(final User user) {
 		
+		Set<String> ignoreList = ignore.listIgnores();
+		
+		if (ignoreList.isEmpty()) {
+			
+			user.send().notice("There are no ignored users!");
+			return;
+			
+		}
+		
 		String ignores = "";
-		for (final String ignored : ignore.listIgnores())
-			ignores += ignored + ", ";
+		for (final String ignore : ignoreList)
+			ignores += ignore + ", ";
 		
 		ignores = ignores.substring(0, ignores.length() - 2);
 		user.send().notice("Ignored Users: " + ignores);
