@@ -27,6 +27,12 @@ public class DataUtils {
 		
 	}
 	
+	public static int getHours(final Date date) {
+		
+		return (int) (System.currentTimeMillis() - date.getTime()) / HOURS;
+		
+	}
+	
 	public static String addBold(final String format) {
 		
 		return format.replaceAll("%b", Colors.BOLD);
