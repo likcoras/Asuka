@@ -26,6 +26,8 @@ public class BotCoreHandlers {
 	private final String botNick;
 	private final String quitMsg;
 	
+	private final Long startTime;
+	
 	private final AuthHandler auth;
 	private final IgnoreHandler ignore;
 	
@@ -33,6 +35,8 @@ public class BotCoreHandlers {
 		
 		botNick = cfg.getProperty("ircnick");
 		quitMsg = cfg.getProperty("quitmsg");
+		
+		startTime = System.currentTimeMillis();
 		
 		auth = new AuthHandler();
 		ignore = new IgnoreHandler();
@@ -68,6 +72,11 @@ public class BotCoreHandlers {
 				return quit(user, chan);
 			else
 				return failQuit(user, chan);
+			
+		} else if (msg.equalsIgnoreCase(".uptime") || msg.equalsIgnoreCase("!uptime")) {
+			
+			uptime(chan);
+			return BotCoreResult.IGNORE;
 			
 		} else if (ignore.isIgnored(user.getNick()))
 			return BotCoreResult.IGNORE;
@@ -170,6 +179,12 @@ public class BotCoreHandlers {
 		chan.send().message(user, "Sorry, you're not allowed to do that!");
 		
 		return BotCoreResult.IGNORE;
+		
+	}
+	
+	private void uptime(Channel chan) {
+		
+		chan.send().message("Uptime: " + (System.currentTimeMillis() - startTime) / 60000 + " minute(s)");
 		
 	}
 	
