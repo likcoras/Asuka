@@ -20,10 +20,10 @@ public class DataUtils {
 		
 	}
 	
-	public static String representDateAs(Date date, int time) {
+	public static String representDateAs(final Date date, final int time) {
 		
-		return Long.toString((System.currentTimeMillis() - date
-			.getTime()) / time);
+		return Long.toString((System.currentTimeMillis() - date.getTime())
+			/ time);
 		
 	}
 	
