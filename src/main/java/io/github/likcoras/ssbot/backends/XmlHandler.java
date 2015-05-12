@@ -26,7 +26,7 @@ public class XmlHandler implements AuthDataHandler {
 	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private static final Pattern HANDLE_PATTERN = Pattern
-		.compile("^![a-z]+\\d+$");
+		.compile("^[.!][a-z]+\\d+$");
 	
 	private final String link;
 	private final Map<String, XmlData> data;
@@ -42,6 +42,7 @@ public class XmlHandler implements AuthDataHandler {
 	public boolean isHandlerOf(final String query) {
 		
 		return query.equalsIgnoreCase(".update")
+			|| query.equalsIgnoreCase("!update")
 			|| HandlerUtils.checkHandler(query, HANDLE_PATTERN)
 			&& data.containsKey(query.substring(1));
 		
@@ -50,7 +51,7 @@ public class XmlHandler implements AuthDataHandler {
 	@Override
 	public UserLevel getAuthLevel(final String query) {
 		
-		if (query.equalsIgnoreCase(".update"))
+		if (query.equalsIgnoreCase(".update") || query.equalsIgnoreCase("!update"))
 			return UserLevel.OP;
 		
 		return null;

@@ -21,7 +21,7 @@ public class BttHandler implements DataHandler {
 	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private static final Pattern SEARCH_PATTERN = Pattern
-		.compile("^\\.batoto\\s+(\\S+.*)");
+		.compile("^[.!]batoto\\s+(\\S+.*)");
 	private static final Pattern LINK_PATTERN = Pattern
 		.compile("((http(s)?://)?bato.to/comic/_/(comics/)?\\S+(/)?)");
 	

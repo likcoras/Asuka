@@ -26,7 +26,7 @@ public class MuHandler implements DataHandler {
 	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private static final Pattern SEARCH_PATTERN = Pattern
-		.compile("^\\.baka\\s+(\\S+.*)");
+		.compile("^[.!]baka\\s+(\\S+.*)");
 	private static final Pattern LINK_PATTERN =
 		Pattern
 			.compile("((http(s)?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)(/)?)");
