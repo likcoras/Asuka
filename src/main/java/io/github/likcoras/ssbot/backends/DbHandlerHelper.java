@@ -11,7 +11,7 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
-public class DbHandler {
+public class DbHandlerHelper {
 	
 	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
@@ -31,7 +31,7 @@ public class DbHandler {
 	
 	private Connection connection;
 	
-	public DbHandler(final ConfigParser cfg) throws ClassNotFoundException {
+	public DbHandlerHelper(final ConfigParser cfg) throws ClassNotFoundException {
 		
 		host = cfg.getProperty("dbhost");
 		port = Integer.parseInt(cfg.getProperty("dbport"));

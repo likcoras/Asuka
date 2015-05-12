@@ -33,12 +33,12 @@ public class MuHandler implements DataHandler {
 	
 	private final String base;
 	
-	private final DbHandler database;
+	private final DbHandlerHelper database;
 	
 	public MuHandler(final ConfigParser cfg) throws ClassNotFoundException {
 		
 		base = cfg.getProperty("muurl");
-		database = new DbHandler(cfg);
+		database = new DbHandlerHelper(cfg);
 		
 	}
 	
