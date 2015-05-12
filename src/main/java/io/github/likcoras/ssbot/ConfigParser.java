@@ -20,7 +20,7 @@ public class ConfigParser {
 			"dbdatabase", "dbtable", "dbcolumntitle", "dbcolumnid", "xmlfile",
 			"latestfile", "muurl", "bturl", "ircnick", "irclogin",
 			"ircrealname", "irchost", "ircport", "ircssl", "#ircnickserv",
-			"#ircpass", "ircchannels" };
+			"#ircpass", "ircchannels", "quitmsg" };
 	
 	private final Map<String, String> prop;
 	private final File conf;

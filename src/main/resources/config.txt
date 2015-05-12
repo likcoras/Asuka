@@ -48,6 +48,9 @@ ircnickserv:
 ircpass:
 ircchannels:#configureme,#configme:password
 
+# The message to be sent before quitting. %s will be replaced with the requester's name
+quitmsg:Oyasuminasai~
+
 # Note: every single field, except the passwords(ircnickserv, ircpass, and
 # dbpass, if the mysql user does not have a password) must be filled out.
 # The password fields must also exist, at the very least.

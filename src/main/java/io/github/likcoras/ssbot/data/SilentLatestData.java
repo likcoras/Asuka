@@ -1,10 +1,12 @@
 package io.github.likcoras.ssbot.data;
 
+import io.github.likcoras.ssbot.BotUtils;
+
 import java.util.Date;
 
 public class SilentLatestData implements SeriesData {
 	
-	private static final String FORMAT = DataUtils
+	private static final String FORMAT = BotUtils
 		.addBold("%bLatest: %b%s (%s hours ago) %b%s%b");
 	
 	private String title;

@@ -3,8 +3,6 @@ package io.github.likcoras.ssbot.data;
 import java.util.Date;
 import java.util.List;
 
-import org.pircbotx.Colors;
-
 public class DataUtils {
 	
 	public static final int DAYS = 86400000;
@@ -30,12 +28,6 @@ public class DataUtils {
 	public static int getHours(final Date date) {
 		
 		return (int) (System.currentTimeMillis() - date.getTime()) / HOURS;
-		
-	}
-	
-	public static String addBold(final String format) {
-		
-		return format.replaceAll("%b", Colors.BOLD);
 		
 	}
 	

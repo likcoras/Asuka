@@ -52,14 +52,14 @@ public class IgnoreHandler {
 	
 	public synchronized void addIgnore(final String user) throws IOException {
 		
-		if (ignored.add(user))
+		if (ignored.add(user.toLowerCase()))
 			flush();
 		
 	}
 	
 	public synchronized void delIgnore(final String user) throws IOException {
 		
-		if (ignored.remove(user))
+		if (ignored.remove(user.toLowerCase()))
 			flush();
 		
 	}

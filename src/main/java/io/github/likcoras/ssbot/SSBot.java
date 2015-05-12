@@ -4,13 +4,13 @@ import io.github.likcoras.ssbot.backends.BttHandler;
 import io.github.likcoras.ssbot.backends.MuHandler;
 import io.github.likcoras.ssbot.backends.SilentLatestHandler;
 import io.github.likcoras.ssbot.backends.XmlHandler;
+import io.github.likcoras.ssbot.core.BotCoreHandlers;
 
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.pircbotx.exception.IrcException;
 import org.xml.sax.SAXException;
 
 public class SSBot {
@@ -21,28 +21,22 @@ public class SSBot {
 		
 		LOG.info("Starting SSBot...");
 		
-		final ConfigParser cfg = new ConfigParser();
-		
 		try {
 			
+			final ConfigParser cfg = new ConfigParser();
 			cfg.parse();
 			
-		} catch (final IOException e) {
+			final BotCoreHandlers coreHandlers = new BotCoreHandlers(cfg);
+			coreHandlers.initialize();
 			
-			LOG.fatal("Error while loading config:", e);
-			
-		}
-		
-		final BotManager bot = new BotManager(cfg);
-		registerHandlers(bot, cfg);
-		
-		try {
+			final BotManager bot = new BotManager(cfg, coreHandlers);
+			registerHandlers(bot, cfg);
 			
 			bot.start();
 			
-		} catch (IOException | IrcException e) {
+		} catch (Exception e) {
 			
-			LOG.warn("Error while running IRC bot:", e);
+			LOG.error("Error while executing bot", e);
 			
 		}
 		
@@ -52,32 +46,14 @@ public class SSBot {
 	}
 	
 	private static void registerHandlers(final BotManager bot,
-		final ConfigParser cfg) {
+		final ConfigParser cfg) throws ClassNotFoundException, IOException, SAXException, ParserConfigurationException {
 		
 		bot.registerHandler(new BttHandler(cfg));
 		bot.registerHandler(new SilentLatestHandler(cfg));
-		
-		try {
-			
-			bot.registerHandler(new MuHandler(cfg));
-			
-		} catch (final ClassNotFoundException e) {
-			
-			LOG.warn("Error while loading MuHandler:", e);
-			
-		}
+		bot.registerHandler(new MuHandler(cfg));
 		
 		final XmlHandler xml = new XmlHandler(cfg);
-		
-		try {
-			
-			xml.update();
-			
-		} catch (IOException | SAXException | ParserConfigurationException e) {
-			
-			LOG.warn("Error while loading XmlHandler:", e);
-			
-		}
+		xml.update();
 		
 		bot.registerHandler(xml);
 		

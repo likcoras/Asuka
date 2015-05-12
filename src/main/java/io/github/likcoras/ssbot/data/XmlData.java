@@ -1,9 +1,11 @@
 package io.github.likcoras.ssbot.data;
 
+import io.github.likcoras.ssbot.BotUtils;
+
 public class XmlData implements SeriesData {
 	
 	private static final String FORMAT =
-		DataUtils
+		BotUtils
 			.addBold("%b%s%b chapter %b%s%b | %bMediafire: %b%s | %bMega: %b%s | %bReader: %b%s");
 	
 	private String title;

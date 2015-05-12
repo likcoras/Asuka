@@ -1,5 +1,6 @@
 package io.github.likcoras.ssbot.data;
 
+import io.github.likcoras.ssbot.BotUtils;
 import io.github.likcoras.ssbot.data.values.Release;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 public class MuData implements SeriesData {
 	
 	private static final String FORMAT =
-		DataUtils
+		BotUtils
 			.addBold("%bName: %b%s | %bAuthor: %b%s | %bTags: %b%s | %bLatest Release: %b%s | %bLink: %b%s");
 	
 	private String title;
