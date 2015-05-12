@@ -32,23 +32,6 @@
       
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <configuration>
-          <minimizeJar>true</minimizeJar>
-          <filters>
-            <filter>
-              <artifact>mysql:mysql-connector-java</artifact>
-              <includes>
-                <include>**</include>
-              </includes>
-            </filter>
-            <filter>
-              <artifact>log4j</artifact>
-              <includes>
-                <include>**</include>
-              </includes>
-            </filter>
-          </filters>
-        </configuration>
         <executions>
           <execution>
             <goals>
