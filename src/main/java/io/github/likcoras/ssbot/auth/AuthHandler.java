@@ -9,7 +9,7 @@ import org.pircbotx.UserLevel;
 
 public class AuthHandler {
 	
-	private CustomUserPrefixHandler customPrefix;
+	private final CustomUserPrefixHandler customPrefix;
 	
 	public AuthHandler() {
 		

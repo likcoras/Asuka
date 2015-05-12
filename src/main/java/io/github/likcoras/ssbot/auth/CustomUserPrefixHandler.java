@@ -84,15 +84,16 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	void loadNames(List<String> msg) {
+	void loadNames(final List<String> msg) {
 		
-		AuthChannelData chanData = new AuthChannelData();
-		for (String name : msg.get(3).split(" ")) {
+		final AuthChannelData chanData = new AuthChannelData();
+		for (final String name : msg.get(3).split(" ")) {
 			
-			char prefixChar = name.charAt(0);
+			final char prefixChar = name.charAt(0);
 			
 			if (prefix.containsKey(prefixChar))
-				chanData.setUser(name.substring(1), prefix.get(prefixChar), true);
+				chanData.setUser(name.substring(1), prefix.get(prefixChar),
+					true);
 			
 		}
 		
@@ -101,14 +102,15 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	void swapNick(String old, String user) {
+	void swapNick(final String old, final String user) {
 		
-		for (AuthChannelData chanData : data.values())
+		for (final AuthChannelData chanData : data.values())
 			chanData.swapNick(old, user);
 		
 	}
 	
-	void toggleLevel(Channel chan, User user, UserLevel level, boolean set) {
+	void toggleLevel(final Channel chan, final User user,
+		final UserLevel level, final boolean set) {
 		
 		AuthChannelData chanData = data.get(chan.getName());
 		
@@ -127,9 +129,9 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	void delUser(Channel chan, User user) {
+	void delUser(final Channel chan, final User user) {
 		
-		AuthChannelData chanData = data.get(chan.getName());
+		final AuthChannelData chanData = data.get(chan.getName());
 		
 		if (chanData == null)
 			return;
@@ -139,23 +141,23 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	private void purgeChan(String chan) {
+	private void purgeChan(final String chan) {
 		
 		if (data.get(chan).isEmpty())
 			data.remove(chan);
 		
 	}
 	
-	void delUserAll(User user) {
+	void delUserAll(final User user) {
 		
-		for (AuthChannelData chanData : data.values())
+		for (final AuthChannelData chanData : data.values())
 			chanData.delUser(user.getNick());
 		
 	}
 	
-	UserLevel getLevel(Channel chan, User user) {
+	UserLevel getLevel(final Channel chan, final User user) {
 		
-		AuthChannelData chanData = data.get(chan.getName());
+		final AuthChannelData chanData = data.get(chan.getName());
 		
 		if (chanData == null)
 			return null;

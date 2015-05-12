@@ -7,7 +7,7 @@ import org.pircbotx.UserLevel;
 
 public class AuthChannelData {
 	
-	private Map<String, AuthUserData> users;
+	private final Map<String, AuthUserData> users;
 	
 	AuthChannelData() {
 		
@@ -21,16 +21,16 @@ public class AuthChannelData {
 		
 	}
 	
-	void swapNick(String old, String user) {
+	void swapNick(final String old, final String user) {
 		
-		AuthUserData userData = users.get(old);
+		final AuthUserData userData = users.get(old);
 		
 		if (userData != null)
 			users.put(user, userData);
 		
 	}
 	
-	void setUser(String user, UserLevel level, boolean set) {
+	void setUser(final String user, final UserLevel level, final boolean set) {
 		
 		AuthUserData userData = users.get(user);
 		if (userData == null) {
@@ -49,22 +49,22 @@ public class AuthChannelData {
 		
 	}
 	
-	private void purgeUser(String user) {
+	private void purgeUser(final String user) {
 		
 		if (users.get(user).isEmpty())
 			users.remove(user);
 		
 	}
 	
-	void delUser(String user) {
+	void delUser(final String user) {
 		
 		users.remove(user);
 		
 	}
 	
-	UserLevel getLevel(String user) {
+	UserLevel getLevel(final String user) {
 		
-		AuthUserData userData = users.get(user);
+		final AuthUserData userData = users.get(user);
 		
 		if (userData == null)
 			return null;

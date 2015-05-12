@@ -6,7 +6,7 @@ import org.pircbotx.UserLevel;
 
 public class AuthUserData {
 	
-	private TreeSet<UserLevel> levels;
+	private final TreeSet<UserLevel> levels;
 	
 	AuthUserData() {
 		
@@ -20,7 +20,7 @@ public class AuthUserData {
 		
 	}
 	
-	void setUserLevel(UserLevel level, boolean set) {
+	void setUserLevel(final UserLevel level, final boolean set) {
 		
 		if (set)
 			levels.add(level);
