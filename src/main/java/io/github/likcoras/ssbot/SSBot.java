@@ -34,6 +34,25 @@ public class SSBot {
 		}
 		
 		final BotManager bot = new BotManager(cfg);
+		registerHandlers(bot, cfg);
+		
+		try {
+			
+			bot.start();
+			
+		} catch (IOException | IrcException e) {
+			
+			LOG.warn("Error while running IRC bot:", e);
+			
+		}
+		
+		LOG.info("Bot stopped, exiting.");
+		System.exit(0);
+		
+	}
+	
+	private static void registerHandlers(BotManager bot, ConfigParser cfg) {
+		
 		bot.registerHandler(new BttHandler(cfg));
 		bot.registerHandler(new SilentLatestHandler(cfg));
 		
@@ -60,19 +79,6 @@ public class SSBot {
 		}
 		
 		bot.registerHandler(xml);
-		
-		try {
-			
-			bot.start();
-			
-		} catch (IOException | IrcException e) {
-			
-			LOG.warn("Error while running IRC bot:", e);
-			
-		}
-		
-		LOG.info("Bot stopped, exiting.");
-		System.exit(0);
 		
 	}
 	
