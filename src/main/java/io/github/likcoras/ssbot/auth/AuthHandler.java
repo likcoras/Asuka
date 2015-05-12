@@ -9,7 +9,7 @@ import org.pircbotx.UserLevel;
 
 public class AuthHandler {
 	
-	CustomUserPrefixHandler customPrefix;
+	private CustomUserPrefixHandler customPrefix;
 	
 	public AuthHandler() {
 		
@@ -20,7 +20,7 @@ public class AuthHandler {
 	public boolean checkAuth(final UserLevel required, final User user,
 		final Channel chan) {
 		
-		final UserLevel level = customPrefix.getLevel(user, chan);
+		final UserLevel level = customPrefix.getLevel(chan, user);
 		
 		if (level != null && required.compareTo(level) <= 0)
 			return true;
@@ -42,6 +42,12 @@ public class AuthHandler {
 			return true;
 		
 		return checkAuth(required, user, chan);
+		
+	}
+	
+	CustomUserPrefixHandler getCustomPrefix() {
+		
+		return customPrefix;
 		
 	}
 	
