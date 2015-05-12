@@ -51,7 +51,8 @@ public class SSBot {
 		
 	}
 	
-	private static void registerHandlers(BotManager bot, ConfigParser cfg) {
+	private static void registerHandlers(final BotManager bot,
+		final ConfigParser cfg) {
 		
 		bot.registerHandler(new BttHandler(cfg));
 		bot.registerHandler(new SilentLatestHandler(cfg));

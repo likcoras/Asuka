@@ -1,5 +1,10 @@
 package io.github.likcoras.ssbot.backends;
 
+import io.github.likcoras.ssbot.ConfigParser;
+import io.github.likcoras.ssbot.backends.exceptions.InvalidHandlerException;
+import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
+import io.github.likcoras.ssbot.data.SilentLatestData;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -11,11 +16,6 @@ import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 
-import io.github.likcoras.ssbot.ConfigParser;
-import io.github.likcoras.ssbot.backends.exceptions.InvalidHandlerException;
-import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
-import io.github.likcoras.ssbot.data.SilentLatestData;
-
 public class SilentLatestHandler implements DataHandler {
 	
 	private final String link;
@@ -25,32 +25,34 @@ public class SilentLatestHandler implements DataHandler {
 	public SilentLatestHandler(final ConfigParser cfg) {
 		
 		link = cfg.getProperty("latestfile");
-		cachedFetcher = new HttpClientFeedFetcher(HashMapFeedInfoCache.getInstance());
+		cachedFetcher =
+			new HttpClientFeedFetcher(HashMapFeedInfoCache.getInstance());
 		
 	}
 	
 	@Override
-	public boolean isHandlerOf(String query) {
+	public boolean isHandlerOf(final String query) {
 		
 		return query.equalsIgnoreCase(".latest");
 		
 	}
 	
 	@Override
-	public SilentLatestData getData(String query) throws NoResultsException {
+	public SilentLatestData getData(final String query)
+		throws NoResultsException {
 		
 		if (!isHandlerOf(query))
 			throw new InvalidHandlerException(query);
 		
 		try {
 			
-			SyndFeed feed = cachedFetcher.retrieveFeed(new URL(link));
+			final SyndFeed feed = cachedFetcher.retrieveFeed(new URL(link));
 			
 			feed.getEntries();
 			
-			SyndEntry latest = feed.getEntries().get(0);
+			final SyndEntry latest = feed.getEntries().get(0);
 			
-			SilentLatestData silent = new SilentLatestData();
+			final SilentLatestData silent = new SilentLatestData();
 			
 			silent.setTitle(latest.getTitle());
 			silent.setDate(latest.getPublishedDate());

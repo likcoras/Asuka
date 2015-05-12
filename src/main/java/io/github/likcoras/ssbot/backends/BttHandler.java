@@ -48,7 +48,7 @@ public class BttHandler implements DataHandler {
 		
 		try {
 			
-			BttData btt = new BttData();
+			final BttData btt = new BttData();
 			
 			final Matcher searchMatch = SEARCH_PATTERN.matcher(query);
 			if (searchMatch.find())
@@ -70,8 +70,8 @@ public class BttHandler implements DataHandler {
 		
 	}
 	
-	private BttData search(BttData btt, final String query) throws IOException,
-		NoResultsException {
+	private BttData search(final BttData btt, final String query)
+		throws IOException, NoResultsException {
 		
 		final Document doc = Jsoup.connect(base + query).get();
 		final Elements elements = doc.select("strong > a[href]");
@@ -84,7 +84,8 @@ public class BttHandler implements DataHandler {
 		
 	}
 	
-	private BttData fromLink(BttData btt, final String link) throws IOException {
+	private BttData fromLink(final BttData btt, final String link)
+		throws IOException {
 		
 		final Document doc = connect(link);
 		
