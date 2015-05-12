@@ -48,15 +48,15 @@ public class BttHandler implements DataHandler {
 		
 		try {
 			
-			BttData btt = null;
+			BttData btt = new BttData();
 			
 			final Matcher searchMatch = SEARCH_PATTERN.matcher(query);
 			if (searchMatch.find())
-				btt = search(searchMatch.group(1));
+				search(btt, searchMatch.group(1));
 			
 			final Matcher linkMatch = LINK_PATTERN.matcher(query);
 			if (linkMatch.find())
-				btt = fromLink(linkMatch.group(1));
+				fromLink(btt, linkMatch.group(1));
 			
 			HANDLE.info("Query '" + query + "' returned data: "
 				+ btt.toString());
@@ -70,7 +70,7 @@ public class BttHandler implements DataHandler {
 		
 	}
 	
-	private BttData search(final String query) throws IOException,
+	private BttData search(BttData btt, final String query) throws IOException,
 		NoResultsException {
 		
 		final Document doc = Jsoup.connect(base + query).get();
@@ -80,14 +80,13 @@ public class BttHandler implements DataHandler {
 			throw new NoResultsException(query);
 		
 		final Element link = elements.get(0);
-		return fromLink(link.attr("href"));
+		return fromLink(btt, link.attr("href"));
 		
 	}
 	
-	private BttData fromLink(final String link) throws IOException {
+	private BttData fromLink(BttData btt, final String link) throws IOException {
 		
 		final Document doc = connect(link);
-		final BttData btt = new BttData();
 		
 		btt.setLink(link);
 		addTitle(btt, doc);
