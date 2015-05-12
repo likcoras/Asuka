@@ -2,6 +2,7 @@ package io.github.likcoras.ssbot;
 
 import io.github.likcoras.ssbot.backends.BttHandler;
 import io.github.likcoras.ssbot.backends.MuHandler;
+import io.github.likcoras.ssbot.backends.SilentLatestHandler;
 import io.github.likcoras.ssbot.backends.XmlHandler;
 
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class SSBot {
 		
 		final BotManager bot = new BotManager(cfg);
 		bot.registerHandler(new BttHandler(cfg));
+		bot.registerHandler(new SilentLatestHandler(cfg));
 		
 		try {
 			
