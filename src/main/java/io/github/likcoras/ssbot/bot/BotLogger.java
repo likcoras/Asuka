@@ -1,4 +1,4 @@
-package io.github.likcoras.ssbot;
+package io.github.likcoras.ssbot.bot;
 
 import org.apache.log4j.Logger;
 import org.pircbotx.PircBotX;

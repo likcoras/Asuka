@@ -4,6 +4,7 @@ import io.github.likcoras.ssbot.backends.BttHandler;
 import io.github.likcoras.ssbot.backends.MuHandler;
 import io.github.likcoras.ssbot.backends.SilentLatestHandler;
 import io.github.likcoras.ssbot.backends.XmlHandler;
+import io.github.likcoras.ssbot.bot.BotManager;
 import io.github.likcoras.ssbot.core.BotCoreHandlers;
 
 import java.io.IOException;

@@ -1,5 +1,7 @@
-package io.github.likcoras.ssbot;
+package io.github.likcoras.ssbot.bot;
 
+import io.github.likcoras.ssbot.BotUtils;
+import io.github.likcoras.ssbot.ConfigParser;
 import io.github.likcoras.ssbot.auth.AuthListener;
 import io.github.likcoras.ssbot.backends.DataHandler;
 import io.github.likcoras.ssbot.backends.exceptions.NoResultsException;
