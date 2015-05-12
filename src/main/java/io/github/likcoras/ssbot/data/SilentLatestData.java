@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class SilentLatestData implements SeriesData {
 	
-	private static final String FORMAT = DataUtils.addBold("%bLatest: %b%s (%s hours ago) %b%s%b");
+	private static final String FORMAT = DataUtils
+		.addBold("%bLatest: %b%s (%s hours ago) %b%s%b");
 	
 	private String title;
 	private Date date;
@@ -24,13 +25,13 @@ public class SilentLatestData implements SeriesData {
 		
 	}
 	
-	public void setDate(Date date) {
+	public void setDate(final Date date) {
 		
 		this.date = date;
 		
 	}
 	
-	public void setLink(String link) {
+	public void setLink(final String link) {
 		
 		this.link = link;
 		
@@ -40,9 +41,16 @@ public class SilentLatestData implements SeriesData {
 	public String ircString() {
 		
 		if (title.isEmpty() || date == null || link.isEmpty())
-			throw new IllegalStateException("Every field must be set in SilentLatestData");
+			throw new IllegalStateException(
+				"Every field must be set in SilentLatestData");
 		
-		return String.format(FORMAT, title, DataUtils.representDateAs(date, DataUtils.HOURS), link);
+		String time;
+		if (DataUtils.getHours(date) > 100)
+			time = DataUtils.representDateAs(date, DataUtils.DAYS);
+		else
+			time = DataUtils.representDateAs(date, DataUtils.HOURS);
+		
+		return String.format(FORMAT, title, time, link);
 		
 	}
 	
