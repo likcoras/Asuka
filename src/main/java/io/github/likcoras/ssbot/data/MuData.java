@@ -65,7 +65,7 @@ public class MuData implements SeriesData {
 			throw new IllegalStateException("Every field must be set in MuData");
 		
 		return String.format(FORMAT, title, author, DataUtils.tagList(tags),
-			DataUtils.releaseText(latest), link);
+			Release.releaseText(latest), link);
 		
 	}
 	
