@@ -17,10 +17,10 @@ public class ConfigParser {
 	private static final Logger LOG = Logger.getLogger(ConfigParser.class);
 	
 	private final String[] keys = { "dbhost", "dbport", "dbuser", "#dbpass",
-			"dbdatabase", "dbtable", "dbcolumntitle", "dbcolumnid", "xmlfile",
-			"latestfile", "muurl", "bturl", "ircnick", "irclogin",
-			"ircrealname", "irchost", "ircport", "ircssl", "#ircnickserv",
-			"#ircpass", "ircchannels", "quitmsg" };
+			"dbdatabase", "dbtable", "dbcolumntitle", "dbcolumnid",
+			"xmlupdatefile", "xmlfile", "latestfile", "muurl", "bturl",
+			"ircnick", "irclogin", "ircrealname", "irchost", "ircport",
+			"ircssl", "#ircnickserv", "#ircpass", "ircchannels", "quitmsg" };
 	
 	private final Map<String, String> prop;
 	private final File conf;

@@ -21,6 +21,9 @@ dbcolumnid:id
 # The location of the xml file to parse
 xmlfile:http://everath.net/sslist/csparse.xml
 
+# The location to query to update the xml file
+xmlupdatefile:http://everath.net/sslist/index.php
+
 # The location of the rss feed with the latest releases
 latestfile:http://www.silentsky-scans.net/feed/
 

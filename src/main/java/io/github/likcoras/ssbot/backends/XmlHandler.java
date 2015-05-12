@@ -7,6 +7,7 @@ import io.github.likcoras.ssbot.data.XmlData;
 import io.github.likcoras.ssbot.data.XmlUpdateData;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -28,11 +29,13 @@ public class XmlHandler implements AuthDataHandler {
 	private static final Pattern HANDLE_PATTERN = Pattern
 		.compile("^[.!][a-z]+\\d+$");
 	
+	private final String updateLink;
 	private final String link;
 	private final Map<String, XmlData> data;
 	
 	public XmlHandler(final ConfigParser cfg) {
 		
+		updateLink = cfg.getProperty("xmlupdatefile");
 		link = cfg.getProperty("xmlfile");
 		data = new HashMap<String, XmlData>();
 		
@@ -92,6 +95,8 @@ public class XmlHandler implements AuthDataHandler {
 	
 	public void update() throws IOException, SAXException,
 		ParserConfigurationException {
+		
+		new URL(updateLink).openConnection().connect();
 		
 		final Map<String, XmlData> tmpData = new HashMap<String, XmlData>();
 		addData(tmpData);
