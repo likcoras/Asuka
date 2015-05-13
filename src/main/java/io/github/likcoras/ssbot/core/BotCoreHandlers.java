@@ -167,9 +167,18 @@ public class BotCoreHandlers {
 	private BotCoreResult quit(final User user, final Channel chan) {
 		
 		LOG.info("Quit requested by " + BotUtils.userIdentifier(user));
-		chan.send().message(quitMsg);
+		broadcastQuit(user);
 		
 		return BotCoreResult.QUIT;
+		
+	}
+	
+	private void broadcastQuit(User user) {
+		
+		String msg = String.format(quitMsg, user.getNick());
+		
+		for (Channel chan : user.getBot().getUserChannelDao().getAllChannels())
+			chan.send().message(msg);
 		
 	}
 	
