@@ -33,7 +33,8 @@ public class SilentLatestHandler implements DataHandler {
 	@Override
 	public boolean isHandlerOf(final String query) {
 		
-		return query.equalsIgnoreCase(".latest") || query.equalsIgnoreCase("!latest");
+		return query.equalsIgnoreCase(".latest")
+			|| query.equalsIgnoreCase("!latest");
 		
 	}
 	

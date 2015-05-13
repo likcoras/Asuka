@@ -47,7 +47,9 @@ public class SilentLatestData implements SeriesData {
 			throw new IllegalStateException(
 				"Every field must be set in SilentLatestData");
 		
-		String time = TimeDiff.getTime(System.currentTimeMillis() - date.getTime()).getSimpleMessage();
+		final String time =
+			TimeDiff.getTime(System.currentTimeMillis() - date.getTime())
+				.getSimpleMessage();
 		
 		return String.format(FORMAT, title, time, link);
 		

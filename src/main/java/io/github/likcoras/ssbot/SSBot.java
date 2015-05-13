@@ -35,7 +35,7 @@ public class SSBot {
 			
 			bot.start();
 			
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			
 			LOG.error("Error while executing bot", e);
 			
@@ -47,7 +47,8 @@ public class SSBot {
 	}
 	
 	private static void registerHandlers(final BotManager bot,
-		final ConfigParser cfg) throws ClassNotFoundException, IOException, SAXException, ParserConfigurationException {
+		final ConfigParser cfg) throws ClassNotFoundException, IOException,
+		SAXException, ParserConfigurationException {
 		
 		bot.registerHandler(new BttHandler(cfg));
 		bot.registerHandler(new SilentLatestHandler(cfg));

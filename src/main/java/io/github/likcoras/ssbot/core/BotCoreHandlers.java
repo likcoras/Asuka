@@ -1,13 +1,13 @@
 package io.github.likcoras.ssbot.core;
 
-import java.io.IOException;
-import java.util.Set;
-
 import io.github.likcoras.ssbot.ConfigParser;
 import io.github.likcoras.ssbot.auth.AuthHandler;
 import io.github.likcoras.ssbot.ignore.IgnoreHandler;
 import io.github.likcoras.ssbot.util.BotUtils;
 import io.github.likcoras.ssbot.util.TimeDiff;
+
+import java.io.IOException;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.pircbotx.Channel;
@@ -18,11 +18,14 @@ public class BotCoreHandlers {
 	
 	private static final Logger LOG = Logger.getLogger(BotCoreHandlers.class);
 	
-	private static final String[] IGNORE_HELP = { 
-		BotUtils.addBold("%b.ignore usage%b"),
-		BotUtils.addBold("%b.ignore add [nick]:%b makes the bot ignore the user"),
-		BotUtils.addBold("%b.ignore rem [nick]:%b removes the ignore from the user"),
-		BotUtils.addBold("%b.ignore list:%b lists the ignored users") };
+	private static final String[] IGNORE_HELP =
+		{
+				BotUtils.addBold("%b.ignore usage%b"),
+				BotUtils
+					.addBold("%b.ignore add [nick]:%b makes the bot ignore the user"),
+				BotUtils
+					.addBold("%b.ignore rem [nick]:%b removes the ignore from the user"),
+				BotUtils.addBold("%b.ignore list:%b lists the ignored users") };
 	
 	private final String botNick;
 	private final String quitMsg;
@@ -32,7 +35,7 @@ public class BotCoreHandlers {
 	private final AuthHandler auth;
 	private final IgnoreHandler ignore;
 	
-	public BotCoreHandlers(ConfigParser cfg) {
+	public BotCoreHandlers(final ConfigParser cfg) {
 		
 		botNick = cfg.getProperty("ircnick");
 		quitMsg = cfg.getProperty("quitmsg");
@@ -56,9 +59,11 @@ public class BotCoreHandlers {
 		
 	}
 	
-	public BotCoreResult handle(User user, Channel chan, String msg) {
+	public BotCoreResult handle(final User user, final Channel chan,
+		final String msg) {
 		
-		if (msg.toLowerCase().startsWith(".ignore") || msg.toLowerCase().startsWith("!ignore")) {
+		if (msg.toLowerCase().startsWith(".ignore")
+			|| msg.toLowerCase().startsWith("!ignore")) {
 			
 			if (auth.checkAuth(UserLevel.OP, user, chan))
 				ignore(user, chan, msg);
@@ -67,14 +72,16 @@ public class BotCoreHandlers {
 			
 			return BotCoreResult.IGNORE;
 			
-		} else if (msg.equalsIgnoreCase(".quit " + botNick) || msg.equalsIgnoreCase("!quit " + botNick)) {
+		} else if (msg.equalsIgnoreCase(".quit " + botNick)
+			|| msg.equalsIgnoreCase("!quit " + botNick)) {
 			
 			if (auth.checkAuth(UserLevel.OP, user, chan))
 				return quit(user, chan);
 			else
 				return failQuit(user, chan);
 			
-		} else if (msg.equalsIgnoreCase(".uptime") || msg.equalsIgnoreCase("!uptime")) {
+		} else if (msg.equalsIgnoreCase(".uptime")
+			|| msg.equalsIgnoreCase("!uptime")) {
 			
 			uptime(chan);
 			return BotCoreResult.IGNORE;
@@ -86,10 +93,10 @@ public class BotCoreHandlers {
 		
 	}
 	
-
 	private void ignore(final User user, final Channel chan, final String msg) {
 		
-		LOG.info("Ignore command by " + BotUtils.userIdentifier(user) + ": " + msg);
+		LOG.info("Ignore command by " + BotUtils.userIdentifier(user) + ": "
+			+ msg);
 		
 		final String[] command = msg.split("\\s+");
 		
@@ -124,7 +131,7 @@ public class BotCoreHandlers {
 	
 	private void ignoreUsage(final User user) {
 		
-		for (String help : IGNORE_HELP)
+		for (final String help : IGNORE_HELP)
 			user.send().notice(help);
 		
 	}
@@ -147,7 +154,7 @@ public class BotCoreHandlers {
 	
 	private void ignoreList(final User user) {
 		
-		Set<String> ignoreList = ignore.listIgnores();
+		final Set<String> ignoreList = ignore.listIgnores();
 		
 		if (ignoreList.isEmpty()) {
 			
@@ -182,11 +189,12 @@ public class BotCoreHandlers {
 		
 	}
 	
-	private void broadcastQuit(User user) {
+	private void broadcastQuit(final User user) {
 		
-		String msg = String.format(quitMsg, user.getNick());
+		final String msg = String.format(quitMsg, user.getNick());
 		
-		for (Channel chan : user.getBot().getUserChannelDao().getAllChannels())
+		for (final Channel chan : user.getBot().getUserChannelDao()
+			.getAllChannels())
 			chan.send().message(msg);
 		
 	}
@@ -200,9 +208,11 @@ public class BotCoreHandlers {
 		
 	}
 	
-	private void uptime(Channel chan) {
+	private void uptime(final Channel chan) {
 		
-		String uptime = TimeDiff.getTime(System.currentTimeMillis() - startTime).getComplexMessage();
+		final String uptime =
+			TimeDiff.getTime(System.currentTimeMillis() - startTime)
+				.getComplexMessage();
 		chan.send().message("Uptime: " + uptime);
 		
 	}

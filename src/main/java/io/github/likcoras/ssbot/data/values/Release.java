@@ -14,7 +14,10 @@ public class Release {
 	
 	public static String releaseText(final Release release) {
 		
-		final String time = TimeDiff.getTime(System.currentTimeMillis() - release.getDate().getTime()).getSimpleMessage();
+		final String time =
+			TimeDiff.getTime(
+				System.currentTimeMillis() - release.getDate().getTime())
+				.getSimpleMessage();
 		
 		return String.format(RELEASE_FORMAT, release.getChapter(),
 			release.getGroup(), time);

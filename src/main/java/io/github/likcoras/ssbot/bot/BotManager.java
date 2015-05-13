@@ -33,7 +33,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 	private final PircBotX bot;
 	private final List<DataHandler> handlers;
 	
-	public BotManager(final ConfigParser cfg, BotCoreHandlers coreHandlers) {
+	public BotManager(final ConfigParser cfg, final BotCoreHandlers coreHandlers) {
 		
 		this.coreHandlers = coreHandlers;
 		
@@ -49,7 +49,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		final User user = eve.getUser();
 		final Channel chan = eve.getChannel();
 		
-		BotCoreResult core = coreHandlers.handle(user, chan, msg);
+		final BotCoreResult core = coreHandlers.handle(user, chan, msg);
 		
 		if (core.equals(BotCoreResult.QUIT)) {
 			
@@ -136,7 +136,8 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private void useHandler(User user, Channel chan, String msg, DataHandler handler) throws NoResultsException {
+	private void useHandler(final User user, final Channel chan,
+		final String msg, final DataHandler handler) throws NoResultsException {
 		
 		HANDLE.info("Handling query '" + msg + "' by "
 			+ BotUtils.userIdentifier(user) + " with handler "
@@ -147,8 +148,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			HANDLE
 				.info("User did not have a high enough access level for executing the query '"
 					+ msg + "'");
-			chan.send().message(user,
-				"Sorry, you're not allowed to do that!");
+			chan.send().message(user, "Sorry, you're not allowed to do that!");
 			return;
 			
 		}
@@ -157,15 +157,14 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		
 	}
 	
-	private void handleNoResult(Channel chan, NoResultsException e) {
+	private void handleNoResult(final Channel chan, final NoResultsException e) {
 		
 		if (e.getCause() != null) {
 			
-			HANDLE.error("Error while handing query: ",
-				e.getCause());
+			HANDLE.error("Error while handing query: ", e.getCause());
 			chan.send().message(
-				"Error(" + e.getCause().getClass().getSimpleName()
-					+ "): " + e.getCause().getMessage());
+				"Error(" + e.getCause().getClass().getSimpleName() + "): "
+					+ e.getCause().getMessage());
 			
 		} else
 			chan.send().message("No results found");

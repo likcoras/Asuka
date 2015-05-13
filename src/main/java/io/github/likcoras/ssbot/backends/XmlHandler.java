@@ -54,7 +54,8 @@ public class XmlHandler implements AuthDataHandler {
 	@Override
 	public UserLevel getAuthLevel(final String query) {
 		
-		if (query.equalsIgnoreCase(".update") || query.equalsIgnoreCase("!update"))
+		if (query.equalsIgnoreCase(".update")
+			|| query.equalsIgnoreCase("!update"))
 			return UserLevel.OP;
 		
 		return null;
@@ -66,7 +67,8 @@ public class XmlHandler implements AuthDataHandler {
 		
 		if (!isHandlerOf(query))
 			throw new InvalidHandlerException(query);
-		else if (query.equalsIgnoreCase(".update") || query.equalsIgnoreCase("!update"))
+		else if (query.equalsIgnoreCase(".update")
+			|| query.equalsIgnoreCase("!update"))
 			try {
 				
 				update();

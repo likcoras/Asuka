@@ -5,7 +5,7 @@ import org.pircbotx.User;
 
 public class BotUtils {
 	
-	public static String userIdentifier(User user) {
+	public static String userIdentifier(final User user) {
 		
 		return user.getNick() + "!" + user.getLogin() + "@"
 			+ user.getHostmask();
