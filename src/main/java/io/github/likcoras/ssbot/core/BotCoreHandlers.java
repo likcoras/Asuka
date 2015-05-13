@@ -96,21 +96,29 @@ public class BotCoreHandlers {
 		try {
 			
 			if (command.length < 2)
-				ignoreUsage(user);
+				invalidIgnore(user);
 			else if (command[1].equalsIgnoreCase("add"))
 				ignoreAdd(chan, command[2]);
 			else if (command[1].equalsIgnoreCase("rem"))
 				ignoreRem(chan, command[2]);
 			else if (command[1].equalsIgnoreCase("list"))
 				ignoreList(user);
-			else
+			else if (command[1].equalsIgnoreCase("help"))
 				ignoreUsage(user);
+			else
+				invalidIgnore(user);
 			
 		} catch (final IOException e) {
 			
 			LOG.error("Error while handling ignore command '" + msg + "'", e);
 			
 		}
+		
+	}
+	
+	private void invalidIgnore(final User user) {
+		
+		user.send().notice("Wrong usage! Try '.ignore help'!");
 		
 	}
 	
