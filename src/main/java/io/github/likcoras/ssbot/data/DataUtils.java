@@ -6,11 +6,11 @@ public class DataUtils {
 	
 	public static String tagList(final List<String> tags) {
 		
-		String out = "";
+		StringBuilder out = new StringBuilder();
 		for (final String tag : tags)
-			out += tag + ", ";
+			out.append(tag).append(", ");
 		
-		return out.substring(0, out.length() - 2);
+		return out.substring(0, out.lastIndexOf(","));
 		
 	}
 	

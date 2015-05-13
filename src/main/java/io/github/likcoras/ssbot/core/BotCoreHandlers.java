@@ -163,11 +163,11 @@ public class BotCoreHandlers {
 			
 		}
 		
-		String ignores = "";
+		StringBuilder ignoreBuild = new StringBuilder();
 		for (final String ignore : ignoreList)
-			ignores += ignore + ", ";
+			ignoreBuild.append(ignore).append(", ");
 		
-		ignores = ignores.substring(0, ignores.length() - 2);
+		String ignores = ignoreBuild.substring(0, ignoreBuild.lastIndexOf(","));
 		user.send().notice("Ignored Users: " + ignores);
 		
 	}
