@@ -1,13 +1,14 @@
 package io.github.likcoras.ssbot.data;
 
 import io.github.likcoras.ssbot.util.BotUtils;
+import io.github.likcoras.ssbot.util.TimeDiff;
 
 import java.util.Date;
 
 public class SilentLatestData implements SeriesData {
 	
 	private static final String FORMAT = BotUtils
-		.addBold("%bLatest: %b%s (%s hours ago) %b%s%b");
+		.addBold("%bLatest: %b%s (%s ago) %b%s%b");
 	
 	private String title;
 	private Date date;
@@ -46,11 +47,7 @@ public class SilentLatestData implements SeriesData {
 			throw new IllegalStateException(
 				"Every field must be set in SilentLatestData");
 		
-		String time;
-		if (DataUtils.getHours(date) > 100)
-			time = DataUtils.representDateAs(date, DataUtils.DAYS);
-		else
-			time = DataUtils.representDateAs(date, DataUtils.HOURS);
+		String time = TimeDiff.getTime(System.currentTimeMillis() - date.getTime()).getSimpleMessage();
 		
 		return String.format(FORMAT, title, time, link);
 		

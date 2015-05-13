@@ -1,12 +1,12 @@
 package io.github.likcoras.ssbot.data.values;
 
-import io.github.likcoras.ssbot.data.DataUtils;
+import io.github.likcoras.ssbot.util.TimeDiff;
 
 import java.util.Date;
 
 public class Release {
 	
-	private static final String RELEASE_FORMAT = "%s by %s (%s days ago)";
+	private static final String RELEASE_FORMAT = "%s by %s (%s ago)";
 	
 	private final String group;
 	private final String chapter;
@@ -14,11 +14,10 @@ public class Release {
 	
 	public static String releaseText(final Release release) {
 		
-		final String days =
-			DataUtils.representDateAs(release.getDate(), DataUtils.DAYS);
+		final String time = TimeDiff.getTime(System.currentTimeMillis() - release.getDate().getTime()).getSimpleMessage();
 		
 		return String.format(RELEASE_FORMAT, release.getChapter(),
-			release.getGroup(), days);
+			release.getGroup(), time);
 		
 	}
 	

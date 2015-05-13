@@ -7,6 +7,7 @@ import io.github.likcoras.ssbot.ConfigParser;
 import io.github.likcoras.ssbot.auth.AuthHandler;
 import io.github.likcoras.ssbot.ignore.IgnoreHandler;
 import io.github.likcoras.ssbot.util.BotUtils;
+import io.github.likcoras.ssbot.util.TimeDiff;
 
 import org.apache.log4j.Logger;
 import org.pircbotx.Channel;
@@ -193,7 +194,8 @@ public class BotCoreHandlers {
 	
 	private void uptime(Channel chan) {
 		
-		chan.send().message("Uptime: " + (System.currentTimeMillis() - startTime) / 60000 + " minute(s)");
+		String uptime = TimeDiff.getTime(System.currentTimeMillis() - startTime).getComplexMessage();
+		chan.send().message("Uptime: " + uptime);
 		
 	}
 	
