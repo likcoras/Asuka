@@ -1,6 +1,6 @@
 package io.github.likcoras.ssbot.data;
 
-import io.github.likcoras.ssbot.BotUtils;
+import io.github.likcoras.ssbot.util.BotUtils;
 
 public class XmlData implements SeriesData {
 	

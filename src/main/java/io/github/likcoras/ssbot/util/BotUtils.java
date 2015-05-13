@@ -1,4 +1,4 @@
-package io.github.likcoras.ssbot;
+package io.github.likcoras.ssbot.util;
 
 import org.pircbotx.Colors;
 import org.pircbotx.User;

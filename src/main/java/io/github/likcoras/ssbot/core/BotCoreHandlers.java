@@ -3,10 +3,10 @@ package io.github.likcoras.ssbot.core;
 import java.io.IOException;
 import java.util.Set;
 
-import io.github.likcoras.ssbot.BotUtils;
 import io.github.likcoras.ssbot.ConfigParser;
 import io.github.likcoras.ssbot.auth.AuthHandler;
 import io.github.likcoras.ssbot.ignore.IgnoreHandler;
+import io.github.likcoras.ssbot.util.BotUtils;
 
 import org.apache.log4j.Logger;
 import org.pircbotx.Channel;

@@ -1,7 +1,7 @@
 package io.github.likcoras.ssbot.data;
 
-import io.github.likcoras.ssbot.BotUtils;
 import io.github.likcoras.ssbot.data.values.Status;
+import io.github.likcoras.ssbot.util.BotUtils;
 
 import java.util.ArrayList;
 import java.util.List;
