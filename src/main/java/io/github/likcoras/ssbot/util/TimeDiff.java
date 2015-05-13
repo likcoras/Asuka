@@ -14,7 +14,13 @@ public class TimeDiff {
 	long days;
 	long weeks;
 	
-	public TimeDiff(final long millis) {
+	public static TimeDiff getTime(final long millis) {
+		
+		return new TimeDiff(millis);
+		
+	}
+	
+	private TimeDiff(final long millis) {
 		
 		seconds = millis / SECOND;
 		minutes = seconds / MINUTE;
