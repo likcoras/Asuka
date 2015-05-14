@@ -16,7 +16,7 @@ import org.pircbotx.UserLevel;
 
 public class BotCoreHandlers {
 	
-	private static final Logger LOG = Logger.getLogger(BotCoreHandlers.class);
+	private static final Logger LOG = Logger.getLogger("Handler");
 	
 	private static final String[] IGNORE_HELP =
 		{
