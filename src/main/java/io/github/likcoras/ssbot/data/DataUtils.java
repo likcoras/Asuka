@@ -6,7 +6,7 @@ public class DataUtils {
 	
 	public static String tagList(final List<String> tags) {
 		
-		StringBuilder out = new StringBuilder();
+		final StringBuilder out = new StringBuilder();
 		for (final String tag : tags)
 			out.append(tag).append(", ");
 		

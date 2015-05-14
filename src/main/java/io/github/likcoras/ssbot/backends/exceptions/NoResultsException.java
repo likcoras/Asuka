@@ -32,7 +32,7 @@ public class NoResultsException extends Exception {
 	
 	private static String getMessage(final String[] keywords) {
 		
-		StringBuilder message = new StringBuilder(MESSAGE);
+		final StringBuilder message = new StringBuilder(MESSAGE);
 		
 		for (final String keyword : keywords)
 			message.append("'" + keyword + "' ");

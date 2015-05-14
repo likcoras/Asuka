@@ -72,13 +72,13 @@ public class DbHandlerHelper {
 	
 	private String getQuery(final String[] keywords) {
 		
-		StringBuilder queryBuild = new StringBuilder();;
+		final StringBuilder queryBuild = new StringBuilder();;
 		
 		for (final String keyword : keywords)
 			if (keyword != null && !keyword.isEmpty())
 				queryBuild.append(keywordFormat.replace("{}", keyword));
 		
-		String query = queryBuild.toString();
+		final String query = queryBuild.toString();
 		
 		if (query.isEmpty())
 			throw new IllegalArgumentException(
