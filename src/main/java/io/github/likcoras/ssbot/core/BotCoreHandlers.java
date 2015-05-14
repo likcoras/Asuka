@@ -27,7 +27,6 @@ public class BotCoreHandlers {
 					.addBold("%b.ignore rem [nick]:%b removes the ignore from the user"),
 				BotUtils.addBold("%b.ignore list:%b lists the ignored users") };
 	
-	private final String botNick;
 	private final String quitMsg;
 	
 	private final Long startTime;
@@ -37,7 +36,6 @@ public class BotCoreHandlers {
 	
 	public BotCoreHandlers(final ConfigParser cfg) {
 		
-		botNick = cfg.getProperty("ircnick");
 		quitMsg = cfg.getProperty("quitmsg");
 		
 		startTime = System.currentTimeMillis();
@@ -72,8 +70,8 @@ public class BotCoreHandlers {
 			
 			return BotCoreResult.IGNORE;
 			
-		} else if (msg.equalsIgnoreCase(".quit " + botNick)
-			|| msg.equalsIgnoreCase("!quit " + botNick)) {
+		} else if (msg.equalsIgnoreCase(".quit " + user.getBot().getNick())
+			|| msg.equalsIgnoreCase("!quit " + user.getBot().getNick())) {
 			
 			if (auth.checkAuth(UserLevel.OP, user, chan))
 				return quit(user, chan);
