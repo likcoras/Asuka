@@ -13,7 +13,6 @@
   <appender name="IrcLog" class="org.apache.log4j.rolling.RollingFileAppender">
     <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
       <param name="FileNamePattern" value="logs/irc/irc-%d.log.gz"/>
-      <param name="ActiveFileName" value="logs/irc.log"/>
     </rollingPolicy>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{HH:mm:ss}] [%p] %m%n"/>
@@ -23,7 +22,6 @@
   <appender name="SilentLog" class="org.apache.log4j.rolling.RollingFileAppender">
     <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
       <param name="FileNamePattern" value="logs/silent/silent-%d.log.gz"/>
-      <param name="ActiveFileName" value="logs/silent.log"/>
     </rollingPolicy>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{HH:mm:ss}] [%p] %m%n"/>
@@ -33,7 +31,6 @@
   <appender name="HandlerLog" class="org.apache.log4j.rolling.RollingFileAppender">
     <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
       <param name="FileNamePattern" value="logs/handler/handler-%d.log.gz"/>
-      <param name="ActiveFileName" value="logs/handler.log"/>
     </rollingPolicy>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{HH:mm:ss}] [%p] %m%n"/>
@@ -43,7 +40,6 @@
   <appender name="ErrorLog" class="org.apache.log4j.rolling.RollingFileAppender">
     <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
       <param name="FileNamePattern" value="logs/error/error-%d.log.gz"/>
-      <param name="ActiveFileName" value="logs/error.log"/>
     </rollingPolicy>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{HH:mm:ss}] [%p] %m%n"/>
