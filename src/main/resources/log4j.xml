@@ -63,7 +63,7 @@
     <appender-ref ref="ErrorLog"/>
   </logger>
   
-  <logger name="Handler">
+  <logger name="Handler" additivity="false">
     <level value="info"/>
     <appender-ref ref="HandlerLog"/>
     <appender-ref ref="ErrorLog"/>
