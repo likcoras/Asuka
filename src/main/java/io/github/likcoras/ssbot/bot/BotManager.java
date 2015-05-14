@@ -86,6 +86,7 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 			.addListener(new BotLogger())
 			.addListener(new AuthListener(coreHandlers.getAuth()))
 			.addListener(this)
+			.setAutoNickChange(true)
 			.setAutoReconnect(true)
 			.setName(cfg.getProperty("ircnick"))
 			.setLogin(cfg.getProperty("irclogin"))

@@ -31,7 +31,7 @@ public class BotLogger extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onNickAlreadyInUse(final NickAlreadyInUseEvent<PircBotX> eve) {
 		
-		LOG.warn("The nick " + eve.getUsedNick() + " is already in use!");
+		LOG.warn("The nick " + eve.getUsedNick() + " is already in use! Trying with " + eve.getAutoNewNick());
 		
 	}
 	
