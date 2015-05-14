@@ -8,6 +8,8 @@ import io.github.likcoras.ssbot.data.SilentLatestData;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
+
 import com.rometools.fetcher.FeedFetcher;
 import com.rometools.fetcher.FetcherException;
 import com.rometools.fetcher.impl.HashMapFeedInfoCache;
@@ -17,6 +19,8 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 
 public class SilentLatestHandler implements DataHandler {
+	
+	private static final Logger HANDLE = Logger.getLogger("Handler");
 	
 	private final String link;
 	
@@ -59,6 +63,7 @@ public class SilentLatestHandler implements DataHandler {
 			silent.setDate(latest.getPublishedDate());
 			silent.setLink(latest.getLink());
 			
+			HANDLE.info("Query '" + query + "' returned data: " + silent.toString());
 			return silent;
 			
 		} catch (FetcherException | IOException | FeedException e) {

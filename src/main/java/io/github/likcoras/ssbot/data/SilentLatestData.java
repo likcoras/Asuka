@@ -55,4 +55,11 @@ public class SilentLatestData implements SeriesData {
 		
 	}
 	
+	@Override
+	public String toString() {
+		
+		return link;
+		
+	}
+	
 }
