@@ -20,8 +20,6 @@ public class SSBot {
 	
 	public static void main(final String[] args) {
 		
-		LOG.info("Starting SSBot...");
-		
 		try {
 			
 			final ConfigParser cfg = new ConfigParser();

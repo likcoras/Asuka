@@ -40,8 +40,6 @@ public class ConfigParser {
 		load();
 		check();
 		
-		LOG.info("Configuration loaded successfully!");
-		
 	}
 	
 	public String getProperty(final String k) {
@@ -54,8 +52,6 @@ public class ConfigParser {
 		
 		if (!conf.createNewFile())
 			return;
-		
-		LOG.info("No configuration file found, writing default configuration...");
 		
 		final BufferedReader def =
 			new BufferedReader(new InputStreamReader(this.getClass()
