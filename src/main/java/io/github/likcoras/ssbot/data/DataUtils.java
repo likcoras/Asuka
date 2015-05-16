@@ -8,7 +8,7 @@ public class DataUtils {
 		
 		final StringBuilder out = new StringBuilder();
 		for (final String tag : tags)
-			out.append(tag).append(", ");
+			out.append(tag + ", ");
 		
 		return out.substring(0, out.lastIndexOf(","));
 		

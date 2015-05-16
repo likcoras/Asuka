@@ -37,7 +37,7 @@ public class TimeDiff {
 	
 	public String getSimpleMessage() {
 		
-		String out = null;
+		String out;
 		if (!(out = getSub(weeks, days, "weeks", "days")).isEmpty()
 			|| !(out = getSub(days, hours, "days", "hours")).isEmpty()
 			|| !(out = getSub(hours, minutes, "hours", "minutes")).isEmpty()
