@@ -15,13 +15,13 @@ public class IgnoreCoreHandler {
 	private static final Logger LOG = Logger.getLogger(IgnoreCoreHandler.class);
 	
 	private static final String[] IGNORE_HELP =
-	{
-			BotUtils.addBold("%b.ignore usage%b"),
-			BotUtils
-				.addBold("%b.ignore add [nick]:%b makes the bot ignore the user"),
-			BotUtils
-				.addBold("%b.ignore rem [nick]:%b removes the ignore from the user"),
-			BotUtils.addBold("%b.ignore list:%b lists the ignored users") };
+		{
+				BotUtils.addBold("%b.ignore usage%b"),
+				BotUtils
+					.addBold("%b.ignore add [nick]:%b makes the bot ignore the user"),
+				BotUtils
+					.addBold("%b.ignore rem [nick]:%b removes the ignore from the user"),
+				BotUtils.addBold("%b.ignore list:%b lists the ignored users") };
 	
 	private final IgnoreHandler ignore;
 	
@@ -32,7 +32,7 @@ public class IgnoreCoreHandler {
 		
 	}
 	
-	public boolean checkIgnore(User user) {
+	public boolean checkIgnore(final User user) {
 		
 		return ignore.isIgnored(user.getNick());
 		

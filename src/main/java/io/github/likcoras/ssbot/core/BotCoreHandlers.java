@@ -67,13 +67,14 @@ public class BotCoreHandlers {
 		
 	}
 	
-	private boolean isTrigger(String trigger, String msg) {
+	private boolean isTrigger(final String trigger, final String msg) {
 		
-		return (msg.startsWith(".") || msg.startsWith("!")) && msg.substring(1).equalsIgnoreCase(trigger);
+		return (msg.startsWith(".") || msg.startsWith("!"))
+			&& msg.substring(1).equalsIgnoreCase(trigger);
 		
 	}
 	
-	private void noPerms(User user, Channel chan, String msg) {
+	private void noPerms(final User user, final Channel chan, final String msg) {
 		
 		LOG.info("Failed command " + BotUtils.userIdentifier(user));
 		chan.send().message(user, "Sorry, you're not allowed to do that!");

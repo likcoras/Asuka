@@ -13,7 +13,7 @@ public class QuitCoreHandler {
 	
 	private final String quitMsg;
 	
-	public QuitCoreHandler(ConfigParser cfg) {
+	public QuitCoreHandler(final ConfigParser cfg) {
 		
 		quitMsg = cfg.getProperty("quitmsg");
 		

@@ -63,7 +63,8 @@ public class SilentLatestHandler implements DataHandler {
 			silent.setDate(latest.getPublishedDate());
 			silent.setLink(latest.getLink());
 			
-			HANDLE.info("Query '" + query + "' returned data: " + silent.toString());
+			HANDLE.info("Query '" + query + "' returned data: "
+				+ silent.toString());
 			return silent;
 			
 		} catch (FetcherException | IOException | FeedException e) {
