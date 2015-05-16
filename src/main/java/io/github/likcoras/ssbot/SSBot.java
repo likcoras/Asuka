@@ -26,7 +26,6 @@ public class SSBot {
 			cfg.parse();
 			
 			final BotCoreHandlers coreHandlers = new BotCoreHandlers(cfg);
-			coreHandlers.initialize();
 			
 			final BotManager bot = new BotManager(cfg, coreHandlers);
 			registerHandlers(bot, cfg);
