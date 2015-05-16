@@ -64,7 +64,7 @@ public class IgnoreHandler {
 		
 	}
 	
-	private synchronized void flush() throws IOException {
+	private void flush() throws IOException {
 		
 		final BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		
