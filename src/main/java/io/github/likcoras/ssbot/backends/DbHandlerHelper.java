@@ -23,34 +23,30 @@ public class DbHandlerHelper {
 	
 	private final String user;
 	private final String pass;
-	
 	private final String database;
-	private final String table;
-	private final String titles;
-	private final String id;
 	
 	private Connection connection;
 	
 	public DbHandlerHelper(final ConfigParser cfg)
 		throws ClassNotFoundException {
 		
+		Class.forName("com.mysql.jdbc.Driver");
+		
 		host = cfg.getProperty("dbhost");
 		port = Integer.parseInt(cfg.getProperty("dbport"));
 		
 		user = cfg.getProperty("dbuser");
 		pass = cfg.getProperty("dbpass");
-		
 		database = cfg.getProperty("dbdatabase");
-		table = cfg.getProperty("dbtable");
-		titles = cfg.getProperty("dbcolumntitle");
-		id = cfg.getProperty("dbcolumnid");
 		
-		Class.forName("com.mysql.jdbc.Driver");
+		String table = cfg.getProperty("dbtable");
+		String id = cfg.getProperty("dbcolumnid");
+		String title = cfg.getProperty("dbcolumntitle");
 		
 		queryFormat =
-			String.format("SELECT * FROM %s.%s WHERE {} LIMIT 0,1", database,
+			String.format("SELECT %s FROM %s WHERE {} LIMIT 0,1", id,
 				table);
-		keywordFormat = String.format("%s LIKE '%%{}%%' AND ", titles);
+		keywordFormat = String.format("%s LIKE '%%{}%%' AND ", title);
 		
 	}
 	
@@ -63,10 +59,12 @@ public class DbHandlerHelper {
 		if (!result.next())
 			throw new NoResultsException(keywords);
 		
-		HANDLE.info("Database query '" + query + "' returned data: "
-			+ result.getInt(id));
+		int id = result.getInt(1);
 		
-		return result.getInt(id);
+		HANDLE.info("Database query '" + query + "' returned data: "
+			+ id);
+		
+		return id;
 		
 	}
 	
