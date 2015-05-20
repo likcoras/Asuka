@@ -26,13 +26,13 @@ public class CustomUserPrefixHandler {
 		
 	}
 	
-	void loadPrefix(final List<String> msg) {
+	void loadPrefix(final List<String> messages) {
 		
 		String prefixMsg = null;
-		for (final String item : msg)
-			if (item.startsWith("PREFIX")) {
+		for (final String message : messages)
+			if (message.startsWith("PREFIX")) {
 				
-				prefixMsg = item;
+				prefixMsg = message;
 				break;
 				
 			}
@@ -52,8 +52,8 @@ public class CustomUserPrefixHandler {
 		final String prefixes = prefixMsg.substring(prefixMsg.indexOf(")") + 1);
 		
 		if (modes.length() != prefixes.length())
-			throw new java.lang.AssertionError(
-				"Length of prefix and mode must be equal", null);
+			throw new IllegalStateException(
+				"Length of prefix and mode must be equal");
 		
 		prefix.clear();
 		for (int i = 0; i < modes.length(); i++) {

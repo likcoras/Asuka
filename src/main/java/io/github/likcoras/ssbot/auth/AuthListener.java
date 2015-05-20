@@ -16,6 +16,9 @@ import org.pircbotx.hooks.events.VoiceEvent;
 
 public class AuthListener extends ListenerAdapter<PircBotX> {
 	
+	private static final int ISUPPORT = 005;
+	private static final int NAMES = 353;
+	
 	private final CustomUserPrefixHandler customPrefix;
 	
 	public AuthListener(final AuthHandler auth) {
@@ -27,9 +30,9 @@ public class AuthListener extends ListenerAdapter<PircBotX> {
 	@Override
 	public void onServerResponse(final ServerResponseEvent<PircBotX> eve) {
 		
-		if (eve.getCode() == 005)
+		if (eve.getCode() == ISUPPORT)
 			customPrefix.loadPrefix(eve.getParsedResponse());
-		else if (eve.getCode() == 353)
+		else if (eve.getCode() == NAMES)
 			customPrefix.loadNames(eve.getParsedResponse());
 		
 	}

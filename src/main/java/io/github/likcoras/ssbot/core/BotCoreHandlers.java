@@ -15,23 +15,23 @@ public class BotCoreHandlers {
 	
 	private static final Logger LOG = Logger.getLogger("Handler");
 	
-	private final AuthHandler auth;
-	private final QuitCoreHandler quit;
-	private final IgnoreCoreHandler ignore;
-	private final UptimeCoreHandler uptime;
+	private final AuthHandler authHandler;
+	private final QuitCoreHandler quitHandler;
+	private final IgnoreCoreHandler ignoreHandler;
+	private final UptimeCoreHandler uptimeHandler;
 	
 	public BotCoreHandlers(final ConfigParser cfg) throws IOException {
 		
-		auth = new AuthHandler();
-		quit = new QuitCoreHandler(cfg);
-		ignore = new IgnoreCoreHandler();
-		uptime = new UptimeCoreHandler();
+		authHandler = new AuthHandler();
+		quitHandler = new QuitCoreHandler(cfg);
+		ignoreHandler = new IgnoreCoreHandler();
+		uptimeHandler = new UptimeCoreHandler();
 		
 	}
 	
 	public AuthHandler getAuth() {
 		
-		return auth;
+		return authHandler;
 		
 	}
 	
@@ -40,8 +40,8 @@ public class BotCoreHandlers {
 		
 		if (isTrigger("ignore", msg)) {
 			
-			if (auth.checkAuth(UserLevel.OP, user, chan))
-				ignore.ignore(user, chan, msg);
+			if (authHandler.checkAuth(UserLevel.OP, user, chan))
+				ignoreHandler.ignore(user, chan, msg);
 			else
 				noPerms(user, chan, msg);
 			
@@ -49,18 +49,18 @@ public class BotCoreHandlers {
 			
 		} else if (isTrigger("quit " + user.getBot().getNick(), msg)) {
 			
-			if (auth.checkAuth(UserLevel.OP, user, chan))
-				return quit.quit(user, chan);
+			if (authHandler.checkAuth(UserLevel.OP, user, chan))
+				return quitHandler.quit(user, chan);
 			
 			noPerms(user, chan, msg);
 			return BotCoreResult.IGNORE;
 			
 		} else if (isTrigger("uptime", msg)) {
 			
-			uptime.uptime(chan);
+			uptimeHandler.uptime(chan);
 			return BotCoreResult.IGNORE;
 			
-		} else if (ignore.checkIgnore(user))
+		} else if (ignoreHandler.checkIgnore(user))
 			return BotCoreResult.IGNORE;
 		
 		return BotCoreResult.HANDLE;

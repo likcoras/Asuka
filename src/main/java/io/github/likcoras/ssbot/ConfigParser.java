@@ -17,46 +17,50 @@ public class ConfigParser {
 	private static final Logger LOG = Logger.getLogger(ConfigParser.class);
 	
 	private final String[] keys = { "dbhost", "dbport", "dbuser", "#dbpass",
-			"dbdatabase", "dbtable", "dbcolumntitle", "dbcolumnid",
-			"xmlupdatefile", "xmlfile", "latestfile", "muurl", "bturl",
-			"ircnick", "irclogin", "ircrealname", "irchost", "ircport",
-			"ircssl", "#ircnickserv", "#ircpass", "ircchannels", "quitmsg" };
+		"dbdatabase", "dbtable", "dbcolumntitle", "dbcolumnid",
+		"xmlupdatefile", "xmlfile", "latestfile", "muurl", "bturl",
+		"ircnick", "irclogin", "ircrealname", "irchost", "ircport",
+		"ircssl", "#ircnickserv", "#ircpass", "ircchannels", "quitmsg" };
 	
-	private final Map<String, String> prop;
-	private final File conf;
+	private Map<String, String> properties;
 	
 	public ConfigParser() {
 		
-		prop = new HashMap<String, String>();
-		conf = new File("config.txt");
+		properties = new HashMap<String, String>();
 		
 	}
 	
-	public void parse() throws IOException {
+	public boolean parse() throws IOException {
+		
+		return parse(new File("config.txt"));
+		
+	}
+	
+	public boolean parse(File file) throws IOException {
 		
 		LOG.info("Loading configuration...");
 		
-		createDefault();
-		load();
-		check();
+		createDefault(file);
+		properties = load(file);
+		return check(properties);
 		
 	}
 	
-	public String getProperty(final String k) {
+	public String getProperty(final String key) {
 		
-		return prop.get(k);
+		return properties.get(key);
 		
 	}
 	
-	private void createDefault() throws IOException {
+	private void createDefault(File file) throws IOException {
 		
-		if (!conf.createNewFile())
+		if (!file.createNewFile())
 			return;
 		
 		final BufferedReader def =
 			new BufferedReader(new InputStreamReader(this.getClass()
 				.getClassLoader().getResourceAsStream("config.txt")));
-		final BufferedWriter out = new BufferedWriter(new FileWriter(conf));
+		final BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		
 		String line;
 		while ((line = def.readLine()) != null)
@@ -72,9 +76,11 @@ public class ConfigParser {
 		
 	}
 	
-	private void load() throws IOException {
+	private Map<String, String> load(File file) throws IOException {
 		
-		final BufferedReader in = new BufferedReader(new FileReader(conf));
+		Map<String,String> properties = new HashMap<String, String>();
+		
+		final BufferedReader in = new BufferedReader(new FileReader(file));
 		
 		String line;
 		while ((line = in.readLine()) != null) {
@@ -86,41 +92,41 @@ public class ConfigParser {
 			final String key = line.substring(0, i);
 			final String val = line.substring(i + 1);
 			
-			prop.put(key, val);
+			properties.put(key, val);
 			
 		}
 		
 		in.close();
 		
+		return properties;
+		
 	}
 	
-	private void check() {
+	private boolean check(Map<String, String> properties) {
 		
-		boolean fail = false;
+		boolean passed = true;
 		for (String key : keys) {
 			
-			boolean notRequired = false;
+			boolean required = true;
 			if (key.startsWith("#")) {
 				
 				key = key.substring(1);
-				notRequired = true;
+				required = false;
 				
 			}
 			
-			if (!prop.containsKey(key) || !notRequired
-				&& prop.get(key).isEmpty()) {
+			if (required && (!properties.containsKey(key) || properties.get(key).isEmpty())) {
 				
 				LOG.error("Required configuration value '" + key
 					+ "' was not found!");
 				
-				fail = true;
+				passed = false;
 				
 			}
 			
 		}
 		
-		if (fail)
-			System.exit(1);
+		return passed;
 		
 	}
 	
