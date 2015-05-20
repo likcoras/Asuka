@@ -70,7 +70,7 @@ public class BotCoreHandlers {
 	private boolean isTrigger(final String trigger, final String msg) {
 		
 		return (msg.startsWith(".") || msg.startsWith("!"))
-			&& msg.substring(1).equalsIgnoreCase(trigger);
+			&& msg.substring(1).startsWith(trigger);
 		
 	}
 	
