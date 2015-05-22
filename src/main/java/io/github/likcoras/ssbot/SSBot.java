@@ -39,7 +39,6 @@ public class SSBot {
 		}
 		
 		LOG.info("Bot stopped, exiting.");
-		System.exit(0);
 		
 	}
 	
