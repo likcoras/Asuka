@@ -12,6 +12,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.pircbotx.exception.IrcException;
 import org.xml.sax.SAXException;
 
 public class SSBot {
@@ -22,17 +23,17 @@ public class SSBot {
 		
 		try {
 			
-			final ConfigParser cfg = new ConfigParser();
-			cfg.parse();
+			final ConfigParser config = new ConfigParser();
+			config.parse();
 			
-			final BotCoreHandlers coreHandlers = new BotCoreHandlers(cfg);
+			final BotCoreHandlers coreHandlers = new BotCoreHandlers(config);
 			
-			final BotManager bot = new BotManager(cfg, coreHandlers);
-			registerHandlers(bot, cfg);
+			final BotManager bot = new BotManager(config, coreHandlers);
+			registerHandlers(bot, config);
 			
 			bot.start();
 			
-		} catch (final Exception e) {
+		} catch (ClassNotFoundException | IOException | SAXException | ParserConfigurationException | IrcException e) {
 			
 			LOG.error("Error while executing bot", e);
 			
@@ -43,14 +44,14 @@ public class SSBot {
 	}
 	
 	private static void registerHandlers(final BotManager bot,
-		final ConfigParser cfg) throws ClassNotFoundException, IOException,
+		final ConfigParser config) throws ClassNotFoundException, IOException,
 		SAXException, ParserConfigurationException {
 		
-		bot.registerHandler(new BttHandler(cfg));
-		bot.registerHandler(new SilentLatestHandler(cfg));
-		bot.registerHandler(new MuHandler(cfg));
+		bot.registerHandler(new BttHandler(config));
+		bot.registerHandler(new SilentLatestHandler(config));
+		bot.registerHandler(new MuHandler(config));
 		
-		final XmlHandler xml = new XmlHandler(cfg);
+		final XmlHandler xml = new XmlHandler(config);
 		xml.update();
 		
 		bot.registerHandler(xml);
