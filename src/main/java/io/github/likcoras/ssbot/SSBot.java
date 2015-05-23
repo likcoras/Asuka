@@ -7,6 +7,7 @@ import io.github.likcoras.ssbot.backends.XmlHandler;
 import io.github.likcoras.ssbot.bot.BotManager;
 import io.github.likcoras.ssbot.core.BotCoreHandlers;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -24,7 +25,11 @@ public class SSBot {
 		try {
 			
 			final ConfigParser config = new ConfigParser();
-			config.parse();
+			
+			if (args.length > 0)
+				config.parse();
+			else
+				config.parse(new File(args[0]));
 			
 			final BotCoreHandlers coreHandlers = new BotCoreHandlers(config);
 			
