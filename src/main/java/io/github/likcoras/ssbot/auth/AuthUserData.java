@@ -20,12 +20,15 @@ public class AuthUserData {
 		
 	}
 	
-	void setUserLevel(final UserLevel level, final boolean set) {
+	void setUserLevel(final UserLevel level) {
 		
-		if (set)
-			levels.add(level);
-		else
-			levels.remove(level);
+		levels.add(level);
+		
+	}
+	
+	void removeUserLevel(final UserLevel level) {
+		
+		levels.remove(level);
 		
 	}
 	

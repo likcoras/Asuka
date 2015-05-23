@@ -4,7 +4,7 @@ public class TimeDiff {
 	
 	private static final long SECOND = 1000L;
 	private static final long MINUTE = 60L;
-	private static final long HOUR = MINUTE;
+	private static final long HOUR = 60L;
 	private static final long DAY = 24L;
 	private static final long WEEK = 7L;
 	
@@ -13,12 +13,6 @@ public class TimeDiff {
 	long hours;
 	long days;
 	long weeks;
-	
-	public static TimeDiff getTime(final long millis) {
-		
-		return new TimeDiff(millis);
-		
-	}
 	
 	private TimeDiff(final long millis) {
 		
@@ -32,6 +26,12 @@ public class TimeDiff {
 		hours = hours % DAY;
 		minutes = minutes % HOUR;
 		seconds = seconds % MINUTE;
+		
+	}
+	
+	public static TimeDiff getTime(final long millis) {
+		
+		return new TimeDiff(millis);
 		
 	}
 	

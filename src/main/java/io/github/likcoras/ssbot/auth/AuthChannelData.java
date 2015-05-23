@@ -43,7 +43,10 @@ public class AuthChannelData {
 			
 		}
 		
-		userData.setUserLevel(level, set);
+		if (set)
+			userData.setUserLevel(level);
+		else
+			userData.removeUserLevel(level);
 		
 		purgeUser(user);
 		

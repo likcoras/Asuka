@@ -15,46 +15,46 @@ public class BotLogger extends ListenerAdapter<PircBotX> {
 	private static final Logger LOG = Logger.getLogger(BotLogger.class);
 	
 	@Override
-	public void onSocketConnect(final SocketConnectEvent<PircBotX> eve) {
+	public void onSocketConnect(final SocketConnectEvent<PircBotX> event) {
 		
 		LOG.info("Connecting...");
 		
 	}
 	
 	@Override
-	public void onConnect(final ConnectEvent<PircBotX> eve) {
+	public void onConnect(final ConnectEvent<PircBotX> event) {
 		
 		LOG.info("Successfully connected to IRC.");
 		
 	}
 	
 	@Override
-	public void onNickAlreadyInUse(final NickAlreadyInUseEvent<PircBotX> eve) {
+	public void onNickAlreadyInUse(final NickAlreadyInUseEvent<PircBotX> event) {
 		
-		LOG.warn("The nick " + eve.getUsedNick()
-			+ " is already in use! Trying with " + eve.getAutoNewNick());
-		
-	}
-	
-	@Override
-	public void onJoin(final JoinEvent<PircBotX> eve) {
-		
-		if (eve.getUser().equals(eve.getBot().getUserBot()))
-			LOG.info("Joined channel " + eve.getChannel().getName());
+		LOG.warn("The nick " + event.getUsedNick()
+			+ " is already in use! Trying with " + event.getAutoNewNick());
 		
 	}
 	
 	@Override
-	public void onKick(final KickEvent<PircBotX> eve) {
+	public void onJoin(final JoinEvent<PircBotX> event) {
 		
-		if (eve.getRecipient().equals(eve.getBot().getUserBot()))
-			LOG.info("Kicked from " + eve.getChannel().getName() + " for '"
-				+ eve.getReason() + "'");
+		if (event.getUser().equals(event.getBot().getUserBot()))
+			LOG.info("Joined channel " + event.getChannel().getName());
 		
 	}
 	
 	@Override
-	public void onDisconnect(final DisconnectEvent<PircBotX> eve) {
+	public void onKick(final KickEvent<PircBotX> event) {
+		
+		if (event.getRecipient().equals(event.getBot().getUserBot()))
+			LOG.info("Kicked from " + event.getChannel().getName() + " for '"
+				+ event.getReason() + "'");
+		
+	}
+	
+	@Override
+	public void onDisconnect(final DisconnectEvent<PircBotX> event) {
 		
 		LOG.info("Disconnected from server.");
 		

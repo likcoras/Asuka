@@ -49,25 +49,21 @@ public class BotManager extends ListenerAdapter<PircBotX> {
 		final User user = eve.getUser();
 		final Channel chan = eve.getChannel();
 		
-		final BotCoreResult core = coreHandlers.handle(user, chan, msg);
+		final BotCoreResult coreResult = coreHandlers.handle(user, chan, msg);
 		
-		if (core.equals(BotCoreResult.QUIT)) {
+		if (coreResult.equals(BotCoreResult.QUIT)) {
 			
 			bot.stopBotReconnect();
 			bot.sendIRC().quitServer();
 			
-		} else if (core.equals(BotCoreResult.HANDLE))
+		} else if (coreResult.equals(BotCoreResult.HANDLE))
 			doHandlers(user, chan, msg);
 		
 	}
 	
 	public void registerHandler(final DataHandler handler) {
 		
-		synchronized (handlers) {
-			
-			handlers.add(handler);
-			
-		}
+		handlers.add(handler);
 		
 	}
 	
