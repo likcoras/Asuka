@@ -23,7 +23,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>io.github.likcoras.ssbot.SSBot</mainClass>
+              <mainClass>io.github.likcoras.asuka.AsukaBot</mainClass>
             </manifest>
           </archive>
         </configuration>
