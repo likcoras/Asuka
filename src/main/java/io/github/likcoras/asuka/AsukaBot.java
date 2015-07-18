@@ -2,9 +2,13 @@ package io.github.likcoras.asuka;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+import javax.net.SocketFactory;
 
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
+import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.exception.IrcException;
 
 import io.github.likcoras.asuka.exception.ConfigException;
@@ -69,8 +73,12 @@ public class AsukaBot {
 				.setLogin(config.getString("ircUsername"))
 				.setRealName(config.getString("ircRealname"))
 				.setNickservPassword("ircPassword")
-				.setServer(config.getString("ircServer"), config.getInt("ircPort"));
-		config.getStringList("ircChannels").forEach(s -> botConfig.addAutoJoinChannel(s));
+				.setServer(config.getString("ircServer"), config.getInt("ircPort"))
+				.setSocketFactory(config.getBoolean("ircSSL") ? 
+						new UtilSSLSocketFactory().trustAllCertificates() : SocketFactory.getDefault());
+		Stream<String[]> channels = config.getStringList("ircChannels").stream().map(s -> s.split(":"));
+		channels.filter(c -> c.length > 1).forEach(c -> botConfig.addAutoJoinChannel(c[0], c[1]));
+		channels.filter(c -> c.length == 1).forEach(c -> botConfig.addAutoJoinChannel(c[0]));
 		ircBot = new PircBotX(botConfig.buildConfiguration());
 	}
 	
