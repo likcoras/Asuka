@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.pircbotx.User;
+
+import com.google.common.collect.ImmutableSet;
+
 import lombok.Cleanup;
 
 public class IgnoreManager {
@@ -20,7 +23,7 @@ public class IgnoreManager {
 	}
 	
 	public void addIgnored(User user) {
-		addIgnored(BotUtil.getId(user));
+		addIgnored(user.getNick());
 	}
 	
 	public void addIgnored(String user) {
@@ -28,7 +31,7 @@ public class IgnoreManager {
 	}
 	
 	public void removeIgnored(User user) {
-		removeIgnored(BotUtil.getId(user));
+		removeIgnored(user.getNick());
 	}
 	
 	public void removeIgnored(String user) {
@@ -36,7 +39,11 @@ public class IgnoreManager {
 	}
 	
 	public boolean isIgnored(User user) {
-		return ignored.contains(BotUtil.getId(user));
+		return ignored.contains(user.getNick());
+	}
+	
+	public Set<String> getIgnored() {
+		return ImmutableSet.copyOf(ignored);
 	}
 	
 	public void readFile(Path ignoreFile) throws IOException {
