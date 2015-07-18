@@ -1,12 +1,10 @@
-package io.github.likcoras.asuka.auth;
+package io.github.likcoras.asuka;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.pircbotx.User;
 import org.pircbotx.UserLevel;
 import com.google.common.base.Optional;
-import io.github.likcoras.asuka.BotConfig;
-import io.github.likcoras.asuka.BotUtil;
 import io.github.likcoras.asuka.exception.ConfigException;
 
 public class AuthManager {
