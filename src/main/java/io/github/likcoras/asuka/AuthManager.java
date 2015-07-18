@@ -19,15 +19,21 @@ public class AuthManager {
 	}
 	
 	public void setLevel(User user, UserLevel level) {
-		String id = BotUtil.getId(user);
-		if (!id.equals(ownerId))
-			levels.put(id, level);
+		setLevel(BotUtil.getId(user), level);
+	}
+	
+	public void setLevel(String user, UserLevel level) {
+		if (!user.equals(ownerId))
+			levels.put(user, level);
 	}
 	
 	public void removeLevel(User user) {
-		String id = BotUtil.getId(user);
-		if (!id.equals(ownerId))
-			levels.remove(id);
+		removeLevel(BotUtil.getId(user));
+	}
+	
+	public void removeLevel(String user) {
+		if (!user.equals(ownerId))
+			levels.remove(user);
 	}
 	
 	public Optional<UserLevel> getLevel(User user) {
