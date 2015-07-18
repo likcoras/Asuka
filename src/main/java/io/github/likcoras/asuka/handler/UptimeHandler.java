@@ -33,6 +33,6 @@ public class UptimeHandler implements Handler {
 	}
 	
 	@Override
-	public void cleanUp() throws HandlerException {}
+	public void cleanUp() {}
 	
 }

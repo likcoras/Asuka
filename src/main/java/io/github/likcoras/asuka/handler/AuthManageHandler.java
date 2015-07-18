@@ -50,7 +50,7 @@ public class AuthManageHandler implements Handler {
 	}
 	
 	@Override
-	public void cleanUp() throws HandlerException {}
+	public void cleanUp() {}
 	
 	private void parseIsupport(List<String> params) {
 		String prefixParam = "";
