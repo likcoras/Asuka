@@ -72,12 +72,14 @@ public class BotConfig {
 	}
 	
 	public List<Integer> getIntList(String key) throws ConfigException {
+		List<String> stringList = getStringList(key);
 		ImmutableList.Builder<Integer> out = ImmutableList.builder();
-		try {
-			getStringList(key).stream().forEach(s -> out.add(Integer.parseInt(s)));
-		} catch (NumberFormatException e) {
-			throw new ConfigException(key, List.class);
-		}
+		for (String string : stringList)
+			try {
+				out.add(Integer.parseInt(string));
+			} catch (NumberFormatException e) {
+				throw new ConfigException(key, List.class);
+			}
 		return out.build();
 	}
 	
