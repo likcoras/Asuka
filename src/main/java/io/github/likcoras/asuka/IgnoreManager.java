@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class IgnoreManager {
 	
 	public void writeFile() throws IOException {
 		@Cleanup
-		BufferedWriter write = Files.newBufferedWriter(ignoreFile, StandardOpenOption.CREATE);
+		BufferedWriter write = Files.newBufferedWriter(ignoreFile);
 		synchronized(ignored) {
 			for (String user : ignored)
 				write.write(user + "\n");
