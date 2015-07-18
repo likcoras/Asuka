@@ -15,6 +15,8 @@ import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotConfig;
 import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.exception.HandlerException;
+import io.github.likcoras.asuka.handler.response.AuthModeResponse;
+import io.github.likcoras.asuka.handler.response.AuthWhoResponse;
 import io.github.likcoras.asuka.handler.response.BotResponse;
 import io.github.likcoras.asuka.handler.response.EmptyResponse;
 
@@ -39,12 +41,12 @@ public class AuthManageHandler implements Handler {
 			if (numericEvent.getCode() == RPL_ISUPPORT)
 				parseIsupport(numericEvent.getParsedResponse());
 			else if (numericEvent.getCode() == RPL_WHOREPLY)
-				parseWhoreply(bot, numericEvent.getParsedResponse());
+				return parseWhoreply(numericEvent.getParsedResponse());
 		} else if (event instanceof GenericUserModeEvent) {
 			@SuppressWarnings("unchecked")
 			GenericUserModeEvent<PircBotX> modeEvent = (GenericUserModeEvent<PircBotX>) event;
 			if (authChannels.contains(modeEvent.getChannel().getName()))
-				parseModeSet(bot, modeEvent);
+				return parseModeSet(modeEvent);
 		}
 		return new EmptyResponse();
 	}
@@ -79,24 +81,25 @@ public class AuthManageHandler implements Handler {
 		return UserLevel.VOICE;
 	}
 	
-	private void parseWhoreply(AsukaBot bot, List<String> params) {
+	private BotResponse parseWhoreply(List<String> params) {
 		if (params.size() < 3)
-			return;
+			return new EmptyResponse();
 		String channel = params.get(2);
 		if (!authChannels.contains(channel))
-			return;
+			return new EmptyResponse();
 		String user = params.get(3) + "@" + params.get(4);
 		UserLevel level = prefix.get(params.get(7).charAt(params.get(7).length() - 1));
 		if (level != null)
-			bot.getAuthManager().setLevel(user, level);
+			return new AuthWhoResponse(user, level);
+		return new EmptyResponse();
 	}
 	
-	private void parseModeSet(AsukaBot bot, GenericUserModeEvent<PircBotX> modeEvent) {
+	private BotResponse parseModeSet(GenericUserModeEvent<PircBotX> modeEvent) {
 		Channel channel = modeEvent.getChannel();
 		if (!authChannels.contains(channel.getName()))
-			return;
+			return new EmptyResponse();
 		User user = modeEvent.getRecipient();
-		bot.getAuthManager().setLevel(user, channel.getUserLevels(user).last());
+		return new AuthModeResponse(user, channel.getUserLevels(user).last());
 	}
 	
 }
