@@ -42,7 +42,4 @@ public class QuitHandler implements Handler {
 		return new EmptyResponse();
 	}
 	
-	@Override
-	public void cleanUp() {}
-	
 }

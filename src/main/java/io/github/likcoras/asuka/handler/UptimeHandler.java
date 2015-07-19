@@ -32,7 +32,4 @@ public class UptimeHandler implements Handler {
 		return new EmptyResponse();
 	}
 	
-	@Override
-	public void cleanUp() {}
-	
 }

@@ -55,7 +55,4 @@ public class IgnoreManageHandler implements Handler {
 			return new IgnoreHelpResponse(event);
 	}
 	
-	@Override
-	public void cleanUp() {}
-	
 }

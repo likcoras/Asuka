@@ -51,9 +51,6 @@ public class AuthManageHandler implements Handler {
 		return new EmptyResponse();
 	}
 	
-	@Override
-	public void cleanUp() {}
-	
 	private void parseIsupport(List<String> params) {
 		String prefixParam = "";
 		for (String param : params)
