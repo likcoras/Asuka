@@ -7,9 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
+
 import lombok.Cleanup;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 
 public class BotConfig {
@@ -68,19 +69,18 @@ public class BotConfig {
 	}
 	
 	public List<String> getStringList(String key) throws ConfigException {
-		return ImmutableList.copyOf(Splitter.on(',').omitEmptyStrings().trimResults().splitToList(getString(key)));
+		return Splitter.on(',').omitEmptyStrings().trimResults().splitToList(getString(key));
 	}
 	
 	public List<Integer> getIntList(String key) throws ConfigException {
-		List<String> stringList = getStringList(key);
-		ImmutableList.Builder<Integer> out = ImmutableList.builder();
-		for (String string : stringList)
-			try {
-				out.add(Integer.parseInt(string));
-			} catch (NumberFormatException e) {
-				throw new ConfigException(key, List.class);
-			}
-		return out.build();
+		try {
+			return getStringList(key).stream()
+					.mapToInt(s -> Integer.parseInt(s))
+					.boxed()
+					.collect(Collectors.toList());
+		} catch (NumberFormatException e) {
+			throw new ConfigException(key, List.class);
+		}
 	}
 	
 }

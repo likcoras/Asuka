@@ -1,7 +1,6 @@
 package io.github.likcoras.asuka;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,20 +49,14 @@ public class IgnoreManager {
 		@Cleanup
 		BufferedReader read = Files.newBufferedReader(ignoreFile);
 		synchronized (ignored) {
-			String line;
-			while ((line = read.readLine()) != null)
-				ignored.add(line);
+			Files.lines(ignoreFile).forEach(ignored::add);
 		}
 	}
 	
 	public void writeFile(Path ignoreFile) throws IOException {
-		@Cleanup
-		BufferedWriter write = Files.newBufferedWriter(ignoreFile);
 		synchronized (ignored) {
-			for (String user : ignored)
-				write.write(user + "\n");
+			Files.write(ignoreFile, ignored);
 		}
-		write.flush();
 	}
 	
 }
