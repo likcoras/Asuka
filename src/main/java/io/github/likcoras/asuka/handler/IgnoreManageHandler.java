@@ -30,7 +30,7 @@ public class IgnoreManageHandler implements Handler {
 	@Override
 	public BotResponse handle(AsukaBot bot, Event<PircBotX> event) throws HandlerException {
 		if (!(event instanceof GenericMessageEvent))
-			return new EmptyResponse();
+			return EmptyResponse.get();
 		@SuppressWarnings("unchecked")
 		GenericMessageEvent<PircBotX> messageEvent = (GenericMessageEvent<PircBotX>) event;
 		if (BotUtil.isTrigger(messageEvent.getMessage(), "ignore"))
@@ -38,7 +38,7 @@ public class IgnoreManageHandler implements Handler {
 				return handleIgnore(messageEvent);
 			else
 				throw new PermissionException(this, messageEvent.getUser(), messageEvent.getMessage());
-		return new EmptyResponse();
+		return EmptyResponse.get();
 	}
 	
 	public BotResponse handleIgnore(GenericMessageEvent<PircBotX> event) {

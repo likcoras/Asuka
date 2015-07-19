@@ -29,7 +29,7 @@ public class QuitHandler implements Handler {
 	@Override
 	public BotResponse handle(AsukaBot bot, Event<PircBotX> event) throws HandlerException {
 		if (!(event instanceof GenericMessageEvent))
-			return new EmptyResponse();
+			return EmptyResponse.get();
 		@SuppressWarnings("unchecked")
 		GenericMessageEvent<PircBotX> messageEvent = (GenericMessageEvent<PircBotX>) event;
 		String message = messageEvent.getMessage();
@@ -39,7 +39,7 @@ public class QuitHandler implements Handler {
 				return new QuitResponse(messageEvent, quitReply, quitMessage);
 			else
 				throw new PermissionException(this, user, message);
-		return new EmptyResponse();
+		return EmptyResponse.get();
 	}
 	
 }

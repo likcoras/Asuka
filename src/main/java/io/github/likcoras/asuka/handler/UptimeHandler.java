@@ -29,7 +29,7 @@ public class UptimeHandler implements Handler {
 			if (BotUtil.isTrigger(messageEvent.getMessage(), "uptime"))
 				return new UptimeResponse(messageEvent, upSince);
 		}
-		return new EmptyResponse();
+		return EmptyResponse.get();
 	}
 	
 }

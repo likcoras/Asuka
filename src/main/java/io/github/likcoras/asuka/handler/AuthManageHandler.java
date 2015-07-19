@@ -48,7 +48,7 @@ public class AuthManageHandler implements Handler {
 			if (authChannels.contains(modeEvent.getChannel().getName()))
 				return parseModeSet(modeEvent);
 		}
-		return new EmptyResponse();
+		return EmptyResponse.get();
 	}
 	
 	private void parseIsupport(List<String> params) {
@@ -80,21 +80,21 @@ public class AuthManageHandler implements Handler {
 	
 	private BotResponse parseWhoreply(List<String> params) {
 		if (params.size() < 3)
-			return new EmptyResponse();
+			return EmptyResponse.get();
 		String channel = params.get(2);
 		if (!authChannels.contains(channel))
-			return new EmptyResponse();
+			return EmptyResponse.get();
 		String user = params.get(3) + "@" + params.get(4);
 		UserLevel level = prefix.get(params.get(7).charAt(params.get(7).length() - 1));
 		if (level != null)
 			return new AuthWhoResponse(user, level);
-		return new EmptyResponse();
+		return EmptyResponse.get();
 	}
 	
 	private BotResponse parseModeSet(GenericUserModeEvent<PircBotX> modeEvent) {
 		Channel channel = modeEvent.getChannel();
 		if (!authChannels.contains(channel.getName()))
-			return new EmptyResponse();
+			return EmptyResponse.get();
 		User user = modeEvent.getRecipient();
 		return new AuthModeResponse(user, channel.getUserLevels(user).last());
 	}
