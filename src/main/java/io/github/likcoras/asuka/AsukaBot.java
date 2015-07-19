@@ -54,6 +54,7 @@ public class AsukaBot {
 			ignoreManager = new IgnoreManager();
 			authManager = new AuthManager(config);
 			handlerManager = new HandlerManager(this);
+			handlerManager.configHandlers(config);
 		} catch (ConfigException e) {
 			return false; // TODO inform user
 		} catch (IOException e) {
