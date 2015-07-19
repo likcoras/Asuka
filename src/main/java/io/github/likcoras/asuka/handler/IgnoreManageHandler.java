@@ -22,7 +22,7 @@ import io.github.likcoras.asuka.handler.response.IgnoreDelResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreHelpResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreListResponse;
 
-public class IgnoreManagehandler implements Handler {
+public class IgnoreManageHandler implements Handler {
 	
 	@Override
 	public void configure(BotConfig config) {}
