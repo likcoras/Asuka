@@ -67,223 +67,329 @@ import io.github.likcoras.asuka.handler.response.EmptyResponse;
 public abstract class TranslatingHandler implements Handler {
 
 	@Override
-	public abstract void configure(BotConfig config) throws ConfigException;
+	public void configure(BotConfig config) throws ConfigException {}
 
 	@Override
-	public BotResponse handle(AsukaBot bot, Event<PircBotX> event)  throws PermissionException, HandlerException {
+	public BotResponse handle(AsukaBot bot, Event<PircBotX> event) throws PermissionException, HandlerException {
 		if (event instanceof ActionEvent)
-			return onAction((ActionEvent<PircBotX>) event);
+			return onAction(bot, (ActionEvent<PircBotX>) event);
 		else if (event instanceof ChannelInfoEvent)
-			return onChannelInfo((ChannelInfoEvent<PircBotX>) event);
+			return onChannelInfo(bot, (ChannelInfoEvent<PircBotX>) event);
 		else if (event instanceof ConnectEvent)
-			return onConnect((ConnectEvent<PircBotX>) event);
+			return onConnect(bot, (ConnectEvent<PircBotX>) event);
 		else if (event instanceof DisconnectEvent)
-			return onDisconnect((DisconnectEvent<PircBotX>) event);
+			return onDisconnect(bot, (DisconnectEvent<PircBotX>) event);
 		else if (event instanceof FingerEvent)
-			return onFinger((FingerEvent<PircBotX>) event);
+			return onFinger(bot, (FingerEvent<PircBotX>) event);
 		else if (event instanceof HalfOpEvent)
-			return onHalfOp((HalfOpEvent<PircBotX>) event);
+			return onHalfOp(bot, (HalfOpEvent<PircBotX>) event);
 		else if (event instanceof IncomingChatRequestEvent)
-			return onIncomingChatRequest((IncomingChatRequestEvent<PircBotX>) event);
+			return onIncomingChatRequest(bot, (IncomingChatRequestEvent<PircBotX>) event);
 		else if (event instanceof IncomingFileTransferEvent)
-			return onIncomingFileTransfer((IncomingFileTransferEvent<PircBotX>) event);
+			return onIncomingFileTransfer(bot, (IncomingFileTransferEvent<PircBotX>) event);
 		else if (event instanceof InviteEvent)
-			return onInvite((InviteEvent<PircBotX>) event);
+			return onInvite(bot, (InviteEvent<PircBotX>) event);
 		else if (event instanceof JoinEvent)
-			return onJoin((JoinEvent<PircBotX>) event);
+			return onJoin(bot, (JoinEvent<PircBotX>) event);
 		else if (event instanceof KickEvent)
-			return onKick((KickEvent<PircBotX>) event);
+			return onKick(bot, (KickEvent<PircBotX>) event);
 		else if (event instanceof MessageEvent)
-			return onMessage((MessageEvent<PircBotX>) event);
+			return onMessage(bot, (MessageEvent<PircBotX>) event);
 		else if (event instanceof ModeEvent)
-			return onMode((ModeEvent<PircBotX>) event);
+			return onMode(bot, (ModeEvent<PircBotX>) event);
 		else if (event instanceof MotdEvent)
-			return onMotd((MotdEvent<PircBotX>) event);
+			return onMotd(bot, (MotdEvent<PircBotX>) event);
 		else if (event instanceof NickAlreadyInUseEvent)
-			return onNickAlreadyInUse((NickAlreadyInUseEvent<PircBotX>) event);
+			return onNickAlreadyInUse(bot, (NickAlreadyInUseEvent<PircBotX>) event);
 		else if (event instanceof NickChangeEvent)
-			return onNickChange((NickChangeEvent<PircBotX>) event);
+			return onNickChange(bot, (NickChangeEvent<PircBotX>) event);
 		else if (event instanceof NoticeEvent)
-			return onNotice((NoticeEvent<PircBotX>) event);
+			return onNotice(bot, (NoticeEvent<PircBotX>) event);
 		else if (event instanceof OpEvent)
-			return onOp((OpEvent<PircBotX>) event);
+			return onOp(bot, (OpEvent<PircBotX>) event);
 		else if (event instanceof OwnerEvent)
-			return onOwner((OwnerEvent<PircBotX>) event);
+			return onOwner(bot, (OwnerEvent<PircBotX>) event);
 		else if (event instanceof PartEvent)
-			return onPart((PartEvent<PircBotX>) event);
+			return onPart(bot, (PartEvent<PircBotX>) event);
 		else if (event instanceof PingEvent)
-			return onPing((PingEvent<PircBotX>) event);
+			return onPing(bot, (PingEvent<PircBotX>) event);
 		else if (event instanceof PrivateMessageEvent)
-			return onPrivateMessage((PrivateMessageEvent<PircBotX>) event);
+			return onPrivateMessage(bot, (PrivateMessageEvent<PircBotX>) event);
 		else if (event instanceof QuitEvent)
-			return onQuit((QuitEvent<PircBotX>) event);
+			return onQuit(bot, (QuitEvent<PircBotX>) event);
 		else if (event instanceof RemoveChannelBanEvent)
-			return onRemoveChannelBan((RemoveChannelBanEvent<PircBotX>) event);
+			return onRemoveChannelBan(bot, (RemoveChannelBanEvent<PircBotX>) event);
 		else if (event instanceof RemoveChannelKeyEvent)
-			return onRemoveChannelKey((RemoveChannelKeyEvent<PircBotX>) event);
+			return onRemoveChannelKey(bot, (RemoveChannelKeyEvent<PircBotX>) event);
 		else if (event instanceof RemoveChannelLimitEvent)
-			return onRemoveChannelLimit((RemoveChannelLimitEvent<PircBotX>) event);
+			return onRemoveChannelLimit(bot, (RemoveChannelLimitEvent<PircBotX>) event);
 		else if (event instanceof RemoveInviteOnlyEvent)
-			return onRemoveInviteOnly((RemoveInviteOnlyEvent<PircBotX>) event);
+			return onRemoveInviteOnly(bot, (RemoveInviteOnlyEvent<PircBotX>) event);
 		else if (event instanceof RemoveModeratedEvent)
-			return onRemoveModerated((RemoveModeratedEvent<PircBotX>) event);
+			return onRemoveModerated(bot, (RemoveModeratedEvent<PircBotX>) event);
 		else if (event instanceof RemoveNoExternalMessagesEvent)
-			return onRemoveNoExternalMessages((RemoveNoExternalMessagesEvent<PircBotX>) event);
+			return onRemoveNoExternalMessages(bot, (RemoveNoExternalMessagesEvent<PircBotX>) event);
 		else if (event instanceof RemovePrivateEvent)
-			return onRemovePrivate((RemovePrivateEvent<PircBotX>) event);
+			return onRemovePrivate(bot, (RemovePrivateEvent<PircBotX>) event);
 		else if (event instanceof RemoveSecretEvent)
-			return onRemoveSecret((RemoveSecretEvent<PircBotX>) event);
+			return onRemoveSecret(bot, (RemoveSecretEvent<PircBotX>) event);
 		else if (event instanceof RemoveTopicProtectionEvent)
-			return onRemoveTopicProtection((RemoveTopicProtectionEvent<PircBotX>) event);
+			return onRemoveTopicProtection(bot, (RemoveTopicProtectionEvent<PircBotX>) event);
 		else if (event instanceof ServerPingEvent)
-			return onServerPing((ServerPingEvent<PircBotX>) event);
+			return onServerPing(bot, (ServerPingEvent<PircBotX>) event);
 		else if (event instanceof ServerResponseEvent)
-			return onServerResponse((ServerResponseEvent<PircBotX>) event);
+			return onServerResponse(bot, (ServerResponseEvent<PircBotX>) event);
 		else if (event instanceof SetChannelBanEvent)
-			return onSetChannelBan((SetChannelBanEvent<PircBotX>) event);
+			return onSetChannelBan(bot, (SetChannelBanEvent<PircBotX>) event);
 		else if (event instanceof SetChannelKeyEvent)
-			return onSetChannelKey((SetChannelKeyEvent<PircBotX>) event);
+			return onSetChannelKey(bot, (SetChannelKeyEvent<PircBotX>) event);
 		else if (event instanceof SetChannelLimitEvent)
-			return onSetChannelLimit((SetChannelLimitEvent<PircBotX>) event);
+			return onSetChannelLimit(bot, (SetChannelLimitEvent<PircBotX>) event);
 		else if (event instanceof SetInviteOnlyEvent)
-			return onSetInviteOnly((SetInviteOnlyEvent<PircBotX>) event);
+			return onSetInviteOnly(bot, (SetInviteOnlyEvent<PircBotX>) event);
 		else if (event instanceof SetModeratedEvent)
-			return onSetModerated((SetModeratedEvent<PircBotX>) event);
+			return onSetModerated(bot, (SetModeratedEvent<PircBotX>) event);
 		else if (event instanceof SetNoExternalMessagesEvent)
-			return onSetNoExternalMessages((SetNoExternalMessagesEvent<PircBotX>) event);
+			return onSetNoExternalMessages(bot, (SetNoExternalMessagesEvent<PircBotX>) event);
 		else if (event instanceof SetPrivateEvent)
-			return onSetPrivate((SetPrivateEvent<PircBotX>) event);
+			return onSetPrivate(bot, (SetPrivateEvent<PircBotX>) event);
 		else if (event instanceof SetSecretEvent)
-			return onSetSecret((SetSecretEvent<PircBotX>) event);
+			return onSetSecret(bot, (SetSecretEvent<PircBotX>) event);
 		else if (event instanceof SetTopicProtectionEvent)
-			return onSetTopicProtection((SetTopicProtectionEvent<PircBotX>) event);
+			return onSetTopicProtection(bot, (SetTopicProtectionEvent<PircBotX>) event);
 		else if (event instanceof SocketConnectEvent)
-			return onSocketConnect((SocketConnectEvent<PircBotX>) event);
+			return onSocketConnect(bot, (SocketConnectEvent<PircBotX>) event);
 		else if (event instanceof SuperOpEvent)
-			return onSuperOp((SuperOpEvent<PircBotX>) event);
+			return onSuperOp(bot, (SuperOpEvent<PircBotX>) event);
 		else if (event instanceof TimeEvent)
-			return onTime((TimeEvent<PircBotX>) event);
+			return onTime(bot, (TimeEvent<PircBotX>) event);
 		else if (event instanceof TopicEvent)
-			return onTopic((TopicEvent<PircBotX>) event);
+			return onTopic(bot, (TopicEvent<PircBotX>) event);
 		else if (event instanceof UnknownEvent)
-			return onUnknown((UnknownEvent<PircBotX>) event);
+			return onUnknown(bot, (UnknownEvent<PircBotX>) event);
 		else if (event instanceof UserListEvent)
-			return onUserList((UserListEvent<PircBotX>) event);
+			return onUserList(bot, (UserListEvent<PircBotX>) event);
 		else if (event instanceof UserModeEvent)
-			return onUserMode((UserModeEvent<PircBotX>) event);
+			return onUserMode(bot, (UserModeEvent<PircBotX>) event);
 		else if (event instanceof VersionEvent)
-			return onVersion((VersionEvent<PircBotX>) event);
+			return onVersion(bot, (VersionEvent<PircBotX>) event);
 		else if (event instanceof VoiceEvent)
-			return onVoice((VoiceEvent<PircBotX>) event);
+			return onVoice(bot, (VoiceEvent<PircBotX>) event);
 		else if (event instanceof WhoisEvent)
-			return onWhois((WhoisEvent<PircBotX>) event);
+			return onWhois(bot, (WhoisEvent<PircBotX>) event);
 		return EmptyResponse.get();
 	}
 
-	protected BotResponse onAction(ActionEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onAction  (AsukaBot bot, ActionEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onChannelInfo(ChannelInfoEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onChannelInfo (AsukaBot bot, ChannelInfoEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onConnect(ConnectEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onConnect (AsukaBot bot, ConnectEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onDisconnect(DisconnectEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onDisconnect (AsukaBot bot, DisconnectEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onFinger(FingerEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onFinger (AsukaBot bot, FingerEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onHalfOp(HalfOpEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onHalfOp (AsukaBot bot, HalfOpEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onIncomingChatRequest(IncomingChatRequestEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onIncomingChatRequest (AsukaBot bot, IncomingChatRequestEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onIncomingFileTransfer(IncomingFileTransferEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onIncomingFileTransfer (AsukaBot bot, IncomingFileTransferEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onInvite(InviteEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onInvite (AsukaBot bot, InviteEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onJoin(JoinEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onJoin (AsukaBot bot, JoinEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onKick(KickEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onKick (AsukaBot bot, KickEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onMessage(MessageEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onMessage (AsukaBot bot, MessageEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onMode(ModeEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onMode (AsukaBot bot, ModeEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onMotd(MotdEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onMotd (AsukaBot bot, MotdEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onNickAlreadyInUse(NickAlreadyInUseEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onNickAlreadyInUse (AsukaBot bot, NickAlreadyInUseEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onNickChange(NickChangeEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onNickChange (AsukaBot bot, NickChangeEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onNotice(NoticeEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onNotice (AsukaBot bot, NoticeEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onOp(OpEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onOp (AsukaBot bot, OpEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onOwner(OwnerEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onOwner (AsukaBot bot, OwnerEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onPart(PartEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onPart (AsukaBot bot, PartEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onPing(PingEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onPing (AsukaBot bot, PingEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onPrivateMessage(PrivateMessageEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onPrivateMessage (AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onQuit(QuitEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onQuit (AsukaBot bot, QuitEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemoveChannelBan(RemoveChannelBanEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemoveChannelBan (AsukaBot bot, RemoveChannelBanEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemoveChannelKey(RemoveChannelKeyEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemoveChannelKey (AsukaBot bot, RemoveChannelKeyEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemoveChannelLimit(RemoveChannelLimitEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemoveChannelLimit (AsukaBot bot, RemoveChannelLimitEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemoveInviteOnly(RemoveInviteOnlyEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemoveInviteOnly (AsukaBot bot, RemoveInviteOnlyEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemoveModerated(RemoveModeratedEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemoveModerated (AsukaBot bot, RemoveModeratedEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemoveNoExternalMessages(RemoveNoExternalMessagesEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemoveNoExternalMessages (AsukaBot bot, RemoveNoExternalMessagesEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemovePrivate(RemovePrivateEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemovePrivate (AsukaBot bot, RemovePrivateEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemoveSecret(RemoveSecretEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemoveSecret (AsukaBot bot, RemoveSecretEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onRemoveTopicProtection(RemoveTopicProtectionEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onRemoveTopicProtection (AsukaBot bot, RemoveTopicProtectionEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onServerPing(ServerPingEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onServerPing (AsukaBot bot, ServerPingEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onServerResponse(ServerResponseEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onServerResponse (AsukaBot bot, ServerResponseEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetChannelBan(SetChannelBanEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetChannelBan (AsukaBot bot, SetChannelBanEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetChannelKey(SetChannelKeyEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetChannelKey (AsukaBot bot, SetChannelKeyEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetChannelLimit(SetChannelLimitEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetChannelLimit (AsukaBot bot, SetChannelLimitEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetInviteOnly(SetInviteOnlyEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetInviteOnly (AsukaBot bot, SetInviteOnlyEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetModerated(SetModeratedEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetModerated (AsukaBot bot, SetModeratedEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetNoExternalMessages(SetNoExternalMessagesEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetNoExternalMessages (AsukaBot bot, SetNoExternalMessagesEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetPrivate(SetPrivateEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetPrivate (AsukaBot bot, SetPrivateEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetSecret(SetSecretEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetSecret (AsukaBot bot, SetSecretEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSetTopicProtection(SetTopicProtectionEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSetTopicProtection (AsukaBot bot, SetTopicProtectionEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSocketConnect(SocketConnectEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSocketConnect (AsukaBot bot, SocketConnectEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onSuperOp(SuperOpEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onSuperOp (AsukaBot bot, SuperOpEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onTime(TimeEvent<PircBotX> event)  { return EmptyResponse.get(); }
+	protected BotResponse onTime (AsukaBot bot, TimeEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onTopic(TopicEvent<PircBotX> event) { return EmptyResponse.get(); }
+	protected BotResponse onTopic (AsukaBot bot, TopicEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onUnknown(UnknownEvent<PircBotX> event) { return EmptyResponse.get(); }
+	protected BotResponse onUnknown (AsukaBot bot, UnknownEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onUserList(UserListEvent<PircBotX> event) { return EmptyResponse.get(); }
+	protected BotResponse onUserList (AsukaBot bot, UserListEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onUserMode(UserModeEvent<PircBotX> event) { return EmptyResponse.get(); }
+	protected BotResponse onUserMode (AsukaBot bot, UserModeEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onVersion(VersionEvent<PircBotX> event) { return EmptyResponse.get(); }
+	protected BotResponse onVersion (AsukaBot bot, VersionEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onVoice(VoiceEvent<PircBotX> event) { return EmptyResponse.get(); }
+	protected BotResponse onVoice (AsukaBot bot, VoiceEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
-	protected BotResponse onWhois(WhoisEvent<PircBotX> event) { return EmptyResponse.get(); }
+	protected BotResponse onWhois (AsukaBot bot, WhoisEvent<PircBotX> event) throws PermissionException, HandlerException {
+		return EmptyResponse.get();
+	}
 
 }
