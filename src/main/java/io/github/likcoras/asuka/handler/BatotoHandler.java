@@ -57,7 +57,7 @@ public class BatotoHandler extends TranslatingHandler {
 	private BotResponse getBatoto(GenericMessageEvent<PircBotX> event) throws IOException {
 		if (event.getMessage().length() < 8)
 			return EmptyResponse.get();
-		Document document = Jsoup.connect(SEARCH_URL + event.getMessage().substring(7)).get();
+		Document document = Jsoup.parse(new URL(SEARCH_URL + event.getMessage().substring(7)), 10000);
 		Elements results = document.select("strong > a[href]");
 		if (results.isEmpty())
 			return new NoResultResponse(event);
