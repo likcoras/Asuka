@@ -9,6 +9,7 @@ import io.github.likcoras.asuka.handler.response.EmptyResponse;
 import io.github.likcoras.asuka.handler.response.NoResultResponse;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +46,7 @@ public class BatotoHandler extends TranslatingHandler {
 	}
 	
 	private BotResponse handle(GenericMessageEvent<PircBotX> event) throws IOException {
-		if (!BotUtil.isTrigger(event.getMessage(), "batoto"))
+		if (BotUtil.isTrigger(event.getMessage(), "batoto"))
 			return getBatoto(event);
 		Matcher matcher = LINK_PATTERN.matcher(event.getMessage());
 		if (matcher.find())
@@ -64,7 +65,7 @@ public class BatotoHandler extends TranslatingHandler {
 	}
 	
 	private BotResponse getBatotoLink(GenericMessageEvent<PircBotX> event, String link) throws IOException {
-		Document document = Jsoup.connect(link).get();
+		Document document = Jsoup.parse(new URL(link.startsWith("http") ? link : "http://" + link), 10000);
 		String title = document.select("h1.ipsType_pagetitle").text();
 		String author = document.select("td:contains(Author:) + td").text();
 		String genres = document.select("td:contains(Genres:) + td").text();
