@@ -7,7 +7,7 @@ import io.github.likcoras.asuka.AsukaBot;
 public class AuthModeRemoveResponse implements BotResponse {
 
 	private User user;
-	
+
 	public AuthModeRemoveResponse(User user) {
 		this.user = user;
 	}

@@ -9,7 +9,7 @@ public class QuitResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String reply;
 	private String message;
-	
+
 	public QuitResponse(GenericMessageEvent<PircBotX> event, String reply, String message) {
 		this.event = event;
 		this.reply = reply.replaceAll("%s", event.getUser().getNick());
@@ -22,5 +22,5 @@ public class QuitResponse implements BotResponse {
 		bot.getIrcBot().stopBotReconnect();
 		bot.getIrcBot().sendIRC().quitServer(message);
 	}
-	
+
 }

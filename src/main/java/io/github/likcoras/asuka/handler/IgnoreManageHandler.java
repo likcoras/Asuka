@@ -22,7 +22,7 @@ import io.github.likcoras.asuka.handler.response.IgnoreHelpResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreListResponse;
 
 public class IgnoreManageHandler extends TranslatingHandler {
-	
+
 	@Override
 	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws PermissionException {
 		if (!BotUtil.isTrigger(event.getMessage(), "ignore"))
@@ -32,7 +32,7 @@ public class IgnoreManageHandler extends TranslatingHandler {
 		else
 			throw new PermissionException(this, event.getUser(), event.getMessage());
 	}
-	
+
 	@Override
 	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws PermissionException {
 		if (!BotUtil.isTrigger(event.getMessage(), "ignore"))
@@ -42,9 +42,10 @@ public class IgnoreManageHandler extends TranslatingHandler {
 		else
 			throw new PermissionException(this, event.getUser(), event.getMessage());
 	}
-	
+
 	public BotResponse handleIgnore(GenericMessageEvent<PircBotX> event) {
-		List<String> args = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings().trimResults().splitToList(event.getMessage());
+		List<String> args = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings().trimResults()
+				.splitToList(event.getMessage());
 		if (args.size() > 1 && args.get(1).equalsIgnoreCase("list"))
 			return new IgnoreListResponse(event);
 		if (args.size() < 3)
@@ -56,5 +57,5 @@ public class IgnoreManageHandler extends TranslatingHandler {
 		else
 			return new IgnoreHelpResponse(event);
 	}
-	
+
 }

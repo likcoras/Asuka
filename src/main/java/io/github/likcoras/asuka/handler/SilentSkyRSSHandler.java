@@ -25,11 +25,11 @@ import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.io.FeedException;
 
 public class SilentSkyRSSHandler extends TranslatingHandler {
-	
+
 	private static final String RSS_LINK = "http://www.silentsky-scans.net/feed/";
-	
+
 	private FeedFetcher fetcher = new HttpClientFeedFetcher(LinkedHashMapFeedInfoCache.getInstance());
-	
+
 	@Override
 	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws HandlerException {
 		if (!BotUtil.isTrigger(event.getMessage(), "latest"))
@@ -40,7 +40,7 @@ public class SilentSkyRSSHandler extends TranslatingHandler {
 			throw new HandlerException(this, "Exception while fetching data", e);
 		}
 	}
-	
+
 	@Override
 	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws HandlerException {
 		if (!BotUtil.isTrigger(event.getMessage(), "latest"))
@@ -51,8 +51,9 @@ public class SilentSkyRSSHandler extends TranslatingHandler {
 			throw new HandlerException(this, "Exception while fetching data", e);
 		}
 	}
-	
-	private BotResponse onHandle(AsukaBot bot, GenericMessageEvent<PircBotX> event) throws FetcherException, FeedException, IOException {
+
+	private BotResponse onHandle(AsukaBot bot, GenericMessageEvent<PircBotX> event)
+			throws FetcherException, FeedException, IOException {
 		List<SyndEntry> entries = fetcher.retrieveFeed(new URL(RSS_LINK)).getEntries();
 		if (entries.isEmpty())
 			return EmptyResponse.get();
@@ -62,5 +63,5 @@ public class SilentSkyRSSHandler extends TranslatingHandler {
 		String link = latest.getLink();
 		return new SilentSkyRSSResponse(event, title, date, link);
 	}
-	
+
 }

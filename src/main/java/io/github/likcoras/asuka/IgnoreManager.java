@@ -14,37 +14,37 @@ import com.google.common.collect.ImmutableSet;
 import lombok.Cleanup;
 
 public class IgnoreManager {
-	
+
 	private Set<String> ignored;
-	
+
 	public IgnoreManager() {
 		ignored = Collections.synchronizedSet(new HashSet<String>());
 	}
-	
+
 	public void addIgnored(User user) {
 		addIgnored(user.getNick());
 	}
-	
+
 	public void addIgnored(String user) {
 		ignored.add(user);
 	}
-	
+
 	public void removeIgnored(User user) {
 		removeIgnored(user.getNick());
 	}
-	
+
 	public void removeIgnored(String user) {
 		ignored.remove(user);
 	}
-	
+
 	public boolean isIgnored(User user) {
 		return ignored.contains(user.getNick());
 	}
-	
+
 	public Set<String> getIgnored() {
 		return ImmutableSet.copyOf(ignored);
 	}
-	
+
 	public void readFile(Path ignoreFile) throws IOException {
 		@Cleanup
 		BufferedReader read = Files.newBufferedReader(ignoreFile);
@@ -52,11 +52,11 @@ public class IgnoreManager {
 			Files.lines(ignoreFile).forEach(ignored::add);
 		}
 	}
-	
+
 	public void writeFile(Path ignoreFile) throws IOException {
 		synchronized (ignored) {
 			Files.write(ignoreFile, ignored);
 		}
 	}
-	
+
 }

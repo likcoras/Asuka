@@ -3,13 +3,14 @@ package io.github.likcoras.asuka;
 import org.pircbotx.User;
 
 public final class BotUtil {
-	
-	private BotUtil() {}
+
+	private BotUtil() {
+	}
 
 	public static String getId(User user) {
 		return user.getLogin() + "@" + user.getHostmask();
 	}
-	
+
 	public static boolean isTrigger(String message, String trigger) {
 		if (message.isEmpty())
 			return false;
@@ -19,7 +20,7 @@ public final class BotUtil {
 		String first = split[0].trim();
 		return first.equalsIgnoreCase("." + trigger) || first.equalsIgnoreCase("!" + trigger);
 	}
-	
+
 	public static String addFormat(String message) {
 		return message
 				.replaceAll("&b", "\u0002").replaceAll("&\u0002", "&b")
@@ -29,5 +30,5 @@ public final class BotUtil {
 				.replaceAll("&i", "\u001d").replaceAll("&\u001d", "&i")
 				.replaceAll("&u", "\u001f").replaceAll("&\u001f", "&u");
 	}
-	
+
 }

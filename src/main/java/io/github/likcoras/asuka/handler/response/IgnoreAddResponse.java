@@ -6,10 +6,10 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import io.github.likcoras.asuka.AsukaBot;
 
 public class IgnoreAddResponse implements BotResponse {
-	
+
 	private GenericMessageEvent<PircBotX> event;
 	private String user;
-	
+
 	public IgnoreAddResponse(GenericMessageEvent<PircBotX> event, String user) {
 		this.event = event;
 		this.user = user;

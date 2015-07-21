@@ -17,7 +17,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class AsukaBot {
-	
+
 	@Getter
 	private BotConfig config;
 	@Getter
@@ -28,11 +28,11 @@ public class AsukaBot {
 	private IgnoreManager ignoreManager;
 	@Getter
 	private HandlerManager handlerManager;
-	
+
 	public static void main(String[] args) {
 		new AsukaBot();
 	}
-	
+
 	private AsukaBot() {
 		log.info("Loading configuration...");
 		if (!initComponents()) {
@@ -49,10 +49,10 @@ public class AsukaBot {
 		try {
 			ircBot.startBot();
 		} catch (IOException | IrcException e) {
-			log.error("Exception caught while running bot: ", e); 
+			log.error("Exception caught while running bot: ", e);
 		}
 	}
-	
+
 	private boolean initComponents() {
 		config = new BotConfig();
 		try {
@@ -73,7 +73,7 @@ public class AsukaBot {
 		}
 		return true;
 	}
-	
+
 	private void configureBot() throws ConfigException {
 		Configuration.Builder<PircBotX> botConfig = new Configuration.Builder<PircBotX>()
 				.addListener(handlerManager)
@@ -86,8 +86,8 @@ public class AsukaBot {
 				.setRealName(config.getString("ircRealname"))
 				.setNickservPassword(config.getString("ircPassword"))
 				.setServer(config.getString("ircServer"), config.getInt("ircPort"))
-				.setSocketFactory(config.getBoolean("ircSSL") ? 
-						new UtilSSLSocketFactory().trustAllCertificates() : SocketFactory.getDefault());
+				.setSocketFactory(config.getBoolean("ircSSL") ? new UtilSSLSocketFactory().trustAllCertificates()
+						: SocketFactory.getDefault());
 		Stream<String[]> channels = config.getStringList("ircChannels").stream().map(s -> s.split(":"));
 		channels.forEach(c -> {
 			if (c.length > 1)
@@ -97,5 +97,5 @@ public class AsukaBot {
 		});
 		ircBot = new PircBotX(botConfig.buildConfiguration());
 	}
-	
+
 }

@@ -10,10 +10,10 @@ import io.github.likcoras.asuka.BotUtil;
 public class SilentSkyRSSResponse implements BotResponse {
 
 	private static final String FORMAT = BotUtil.addFormat("&bLatest:&b %s (%s) &b%s&b");
-	
+
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
-	
+
 	public SilentSkyRSSResponse(GenericMessageEvent<PircBotX> event, String title, String date, String link) {
 		this.event = event;
 		message = String.format(FORMAT, title, date, link);

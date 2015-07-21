@@ -5,10 +5,10 @@ import org.pircbotx.UserLevel;
 import io.github.likcoras.asuka.AsukaBot;
 
 public class AuthModeResponse implements BotResponse {
-	
+
 	private User user;
 	private UserLevel level;
-	
+
 	public AuthModeResponse(User user, UserLevel level) {
 		this.user = user;
 		this.level = level;
@@ -18,5 +18,5 @@ public class AuthModeResponse implements BotResponse {
 	public void send(AsukaBot bot) {
 		bot.getAuthManager().setLevel(user, level);
 	}
-	
+
 }

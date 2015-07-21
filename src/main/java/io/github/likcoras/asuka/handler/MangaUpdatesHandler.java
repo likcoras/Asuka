@@ -29,9 +29,9 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 
 	private static final String SEARCH_URL = "https://rlstrackr.com/search/series/?q=";
 	private static final String DISPLAY_URL = "http://www.mangaupdates.com/series.html?id=";
-	private static final Pattern LINK_PATTERN = Pattern
-			.compile("((https?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)/?)");
-	
+	private static final Pattern LINK_PATTERN = Pattern.compile(
+			"((https?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)/?)");
+
 	@Override
 	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws HandlerException {
 		try {
@@ -40,7 +40,7 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 			throw new HandlerException(this, "Exception while fetching data", e);
 		}
 	}
-	
+
 	@Override
 	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws HandlerException {
 		try {
@@ -49,7 +49,7 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 			throw new HandlerException(this, "Exception while fetching data", e);
 		}
 	}
-	
+
 	private BotResponse handle(GenericMessageEvent<PircBotX> event) throws IOException {
 		if (BotUtil.isTrigger(event.getMessage(), "baka"))
 			return getMangaUpdates(event);
@@ -58,7 +58,7 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 			return getMangaUpdatesLink(event, matcher.group(1));
 		return EmptyResponse.get();
 	}
-	
+
 	private BotResponse getMangaUpdates(GenericMessageEvent<PircBotX> event) throws IOException {
 		if (event.getMessage().length() < 7)
 			return EmptyResponse.get();
@@ -68,12 +68,12 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 			return new NoResultResponse(event);
 		return getMangaUpdatesLink(event, results.get(0).attr("abs:href"));
 	}
-	
+
 	private BotResponse getMangaUpdatesLink(GenericMessageEvent<PircBotX> event, String link) throws IOException {
 		Document document = Jsoup.parse(new URL(link.startsWith("http") ? link : "http://" + link), 10000);
 		String title = document.select("div.content header h2").text();
-		String author = document.select("dd:contains(Author) + dt").isEmpty() ? 
-				"Unknown" :  document.select("dd:contains(Author) + dt").get(0).text();
+		String author = document.select("dd:contains(Author) + dt").isEmpty() ? "Unknown"
+				: document.select("dd:contains(Author) + dt").get(0).text();
 		String genres = document.select("dd:contains(Tags) + dt").text();
 		String status = statusMsg(document);
 		Matcher matcher = LINK_PATTERN.matcher(link);
@@ -81,17 +81,18 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 		link = DISPLAY_URL + matcher.group(7);
 		return new MangaUpdatesResponse(event, title, author, genres, status, link);
 	}
-	
+
 	private String statusMsg(Document document) {
 		Elements releases = document.select("table.table.no-border tr");
 		if (releases.isEmpty())
 			return "No releases";
 		Elements lastRelease = releases.get(0).getAllElements();
 		String chapter = lastRelease.get(1).text();
-		LocalDate releaseDate = LocalDate.parse(lastRelease.get(2).text(), DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.US));
+		LocalDate releaseDate = LocalDate.parse(lastRelease.get(2).text(),
+				DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.US));
 		Period since = Period.between(releaseDate, LocalDate.now());
 		String group = lastRelease.get(3).text();
 		return chapter + " by " + group + " (" + since.toTotalMonths() + " months, " + since.getDays() + " days ago)";
 	}
-	
+
 }

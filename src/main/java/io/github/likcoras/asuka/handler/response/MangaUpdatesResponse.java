@@ -9,21 +9,23 @@ import io.github.likcoras.asuka.BotUtil;
 
 public class MangaUpdatesResponse implements BotResponse {
 
-	private static final String FORMAT = BotUtil.addFormat("&bName:&b %s | &bAuthor:&b %s | &bTags:&b %s | &bLast Release:&b %s | &bLink:&b %s");
-	
+	private static final String FORMAT = BotUtil
+			.addFormat("&bName:&b %s | &bAuthor:&b %s | &bTags:&b %s | &bLast Release:&b %s | &bLink:&b %s");
+
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
-	
-	public MangaUpdatesResponse(GenericMessageEvent<PircBotX> event, String title, String author, String genres, String lastRelease, String link) {
+
+	public MangaUpdatesResponse(GenericMessageEvent<PircBotX> event, String title, String author, String genres,
+			String lastRelease, String link) {
 		this.event = event;
 		message = String.format(FORMAT, title, author, genres, lastRelease, link);
 	}
-	
+
 	@Override
 	public void send(AsukaBot bot) {
 		if (event instanceof MessageEvent)
 			((MessageEvent<PircBotX>) event).getChannel().send().message(message);
-		else 
+		else
 			event.respond(message);
 	}
 

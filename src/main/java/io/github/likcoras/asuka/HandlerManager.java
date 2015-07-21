@@ -29,19 +29,19 @@ public class HandlerManager implements Listener<PircBotX> {
 
 	private AsukaBot bot;
 	private List<Handler> handlers;
-	
+
 	public HandlerManager(AsukaBot bot) {
 		this.bot = bot;
 		addHandlers();
 	}
-	
+
 	public void configHandlers(BotConfig config) throws ConfigException {
 		for (Handler handler : handlers)
 			handler.configure(config);
 	}
-	
+
 	private void addHandlers() {
-		handlers = ImmutableList.<Handler>builder()
+		handlers = ImmutableList.<Handler> builder()
 				.add(new AuthManageHandler())
 				.add(new IgnoreManageHandler())
 				.add(new QuitHandler())
@@ -52,7 +52,7 @@ public class HandlerManager implements Listener<PircBotX> {
 				.add(new SilentSkyRSSHandler())
 				.build();
 	}
-	
+
 	@Override
 	public void onEvent(Event<PircBotX> event) {
 		for (Handler handler : handlers)

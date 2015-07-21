@@ -29,10 +29,10 @@ public class SilentSkyXMLHandler extends TranslatingHandler {
 
 	private static final String XML_LINK = "http://everath.net/sslist/csparse.xml";
 	private static final String UPDATE_LINK = "http://everath.net/sslist/index.php";
-	
+
 	private Map<String, SilentXMLData> xmlData = new HashMap<>();
 	private long updateTime = -1L;
-	
+
 	@Override
 	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws HandlerException {
 		try {
@@ -41,7 +41,7 @@ public class SilentSkyXMLHandler extends TranslatingHandler {
 			throw new HandlerException(this, "Exception while fetching data", e);
 		}
 	}
-	
+
 	@Override
 	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws HandlerException {
 		try {
@@ -50,12 +50,13 @@ public class SilentSkyXMLHandler extends TranslatingHandler {
 			throw new HandlerException(this, "Exception while fetching data", e);
 		}
 	}
-	
-	private BotResponse onHandle(AsukaBot bot, GenericMessageEvent<PircBotX> event) throws IOException, XMLStreamException, PermissionException {
+
+	private BotResponse onHandle(AsukaBot bot, GenericMessageEvent<PircBotX> event)
+			throws IOException, XMLStreamException, PermissionException {
 		if (event.getTimestamp() - updateTime > 3600000L)
 			update(event);
 		String message = event.getMessage();
-		if(BotUtil.isTrigger(message, "update"))
+		if (BotUtil.isTrigger(message, "update"))
 			if (bot.getAuthManager().checkAccess(event.getUser(), UserLevel.OP))
 				return update(event);
 			else
@@ -64,13 +65,13 @@ public class SilentSkyXMLHandler extends TranslatingHandler {
 			return getData(event, message.substring(1));
 		return EmptyResponse.get();
 	}
-	
+
 	private boolean isTrigger(String message) {
 		synchronized (xmlData) {
 			return xmlData.containsKey(message.substring(1));
 		}
 	}
-	
+
 	public BotResponse update(GenericMessageEvent<PircBotX> event) throws IOException, XMLStreamException {
 		new URL(UPDATE_LINK).openConnection().connect();
 		XMLStreamReader xmlReader = XMLInputFactory.newFactory().createXMLStreamReader(new URL(XML_LINK).openStream());
@@ -80,7 +81,7 @@ public class SilentSkyXMLHandler extends TranslatingHandler {
 		}
 		return new SilentSkyXMLUpdateResponse(event);
 	}
-	
+
 	private Map<String, SilentXMLData> parseData(XMLStreamReader xml) throws XMLStreamException {
 		Map<String, SilentXMLData> newData = new HashMap<>();
 		String trigger = "";
@@ -95,28 +96,36 @@ public class SilentSkyXMLHandler extends TranslatingHandler {
 				continue;
 			String name = xml.getLocalName();
 			switch (name) {
-			case "trigger": {
+			case "trigger":
 				if (!trigger.isEmpty())
 					newData.put(trigger, new SilentXMLData(project, chapter, mediafireLink, megaLink, readerLink));
 				trigger = xml.getElementText().substring(1);
 				break;
-			}
-			case "Project": project = xml.getElementText(); break;
-			case "Chapter_no": chapter = Integer.parseInt(xml.getElementText()); break;
-			case "Mediafire": mediafireLink = xml.getElementText(); break;
-			case "Mega": megaLink = xml.getElementText(); break;
-			case "Online": readerLink = xml.getElementText();
+			case "Project":
+				project = xml.getElementText();
+				break;
+			case "Chapter_no":
+				chapter = Integer.parseInt(xml.getElementText());
+				break;
+			case "Mediafire":
+				mediafireLink = xml.getElementText();
+				break;
+			case "Mega":
+				megaLink = xml.getElementText();
+				break;
+			case "Online":
+				readerLink = xml.getElementText();
 			}
 		}
 		return newData;
 	}
-	
+
 	public BotResponse getData(GenericMessageEvent<PircBotX> event, String trigger) {
 		synchronized (xmlData) {
 			return new SilentSkyXMLResponse(event, xmlData.get(trigger));
 		}
 	}
-	
+
 	@Value
 	public static class SilentXMLData {
 		private String project;
@@ -125,5 +134,5 @@ public class SilentSkyXMLHandler extends TranslatingHandler {
 		private String megaLink;
 		private String readerLink;
 	}
-	
+
 }

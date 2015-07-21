@@ -13,12 +13,13 @@ import io.github.likcoras.asuka.handler.response.EmptyResponse;
 import io.github.likcoras.asuka.handler.response.UptimeResponse;
 
 public class UptimeHandler implements Handler {
-	
+
 	private long upSince;
-	
+
 	@Override
-	public void configure(BotConfig config) {}
-	
+	public void configure(BotConfig config) {
+	}
+
 	@Override
 	public BotResponse handle(AsukaBot bot, Event<PircBotX> event) throws HandlerException {
 		if (event instanceof ConnectEvent)
@@ -31,5 +32,5 @@ public class UptimeHandler implements Handler {
 		}
 		return EmptyResponse.get();
 	}
-	
+
 }

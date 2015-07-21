@@ -10,9 +10,9 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.Event;
 
 public interface Handler {
-	
+
 	public void configure(BotConfig config) throws ConfigException;
-	
+
 	public BotResponse handle(AsukaBot bot, Event<PircBotX> event) throws PermissionException, HandlerException;
-	
+
 }

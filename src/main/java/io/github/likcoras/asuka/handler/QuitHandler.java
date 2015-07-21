@@ -14,16 +14,16 @@ import io.github.likcoras.asuka.handler.response.EmptyResponse;
 import io.github.likcoras.asuka.handler.response.QuitResponse;
 
 public class QuitHandler extends TranslatingHandler {
-	
+
 	private String quitReply;
 	private String quitMessage;
-	
+
 	@Override
 	public void configure(BotConfig config) throws ConfigException {
 		quitReply = config.getString("quitReply");
 		quitMessage = config.getString("quitMessage");
 	}
-	
+
 	@Override
 	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws PermissionException {
 		if (!BotUtil.isTrigger(event.getMessage(), "quit"))
@@ -33,7 +33,7 @@ public class QuitHandler extends TranslatingHandler {
 		else
 			throw new PermissionException(this, event.getUser(), event.getMessage());
 	}
-	
+
 	@Override
 	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws PermissionException {
 		if (!BotUtil.isTrigger(event.getMessage(), "quit"))
@@ -43,5 +43,5 @@ public class QuitHandler extends TranslatingHandler {
 		else
 			throw new PermissionException(this, event.getUser(), event.getMessage());
 	}
-	
+
 }

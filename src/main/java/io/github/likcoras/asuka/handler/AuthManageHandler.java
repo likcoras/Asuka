@@ -30,19 +30,19 @@ import io.github.likcoras.asuka.handler.response.BotResponse;
 import io.github.likcoras.asuka.handler.response.EmptyResponse;
 
 public class AuthManageHandler extends TranslatingHandler {
-	
+
 	private static final int RPL_ISUPPORT = 005;
 	private static final int RPL_WHOREPLY = 352;
-	
+
 	private Map<Character, UserLevel> prefix;
 	private List<String> authChannels;
-	
+
 	@Override
 	public void configure(BotConfig config) throws ConfigException {
 		prefix = new ConcurrentHashMap<>();
 		authChannels = config.getStringList("authChannels");
 	}
-	
+
 	@Override
 	public BotResponse onServerResponse(AsukaBot bot, ServerResponseEvent<PircBotX> event) {
 		if (event.getCode() == RPL_ISUPPORT)
@@ -51,52 +51,52 @@ public class AuthManageHandler extends TranslatingHandler {
 			return parseWhoreply(event.getParsedResponse());
 		return EmptyResponse.get();
 	}
-	
+
 	@Override
 	public BotResponse onVoice(AsukaBot bot, VoiceEvent<PircBotX> event) {
 		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
-	
+
 	@Override
 	public BotResponse onHalfOp(AsukaBot bot, HalfOpEvent<PircBotX> event) {
 		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
-	
+
 	@Override
 	public BotResponse onOp(AsukaBot bot, OpEvent<PircBotX> event) {
 		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
-	
+
 	@Override
 	public BotResponse onSuperOp(AsukaBot bot, SuperOpEvent<PircBotX> event) {
 		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
-	
+
 	@Override
 	public BotResponse onOwner(AsukaBot bot, OwnerEvent<PircBotX> event) {
 		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
-	
+
 	@Override
 	public BotResponse onJoin(AsukaBot bot, JoinEvent<PircBotX> event) {
 		return parseModeChange(event.getChannel(), event.getUser());
 	}
-	
+
 	@Override
 	public BotResponse onPart(AsukaBot bot, PartEvent<PircBotX> event) {
 		return parseModeChange(event.getChannel(), event.getUser());
 	}
-	
+
 	@Override
 	public BotResponse onKick(AsukaBot bot, KickEvent<PircBotX> event) {
 		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
-	
+
 	@Override
 	public BotResponse onQuit(AsukaBot bot, QuitEvent<PircBotX> event) {
 		return new AuthModeRemoveResponse(event.getUser());
 	}
-	
+
 	private void parseIsupport(List<String> params) {
 		Optional<String> prefixParam = params.stream().filter(s -> s.startsWith("PREFIX=")).findAny();
 		if (!prefixParam.isPresent())
@@ -109,17 +109,21 @@ public class AuthManageHandler extends TranslatingHandler {
 			builder.put(prefixes[i], levelFromMode(modes[i]));
 		prefix = builder.build();
 	}
-	
+
 	private UserLevel levelFromMode(char modeChar) {
 		switch (modeChar) {
-		case 'q': return UserLevel.OWNER;
-		case 'a': return UserLevel.SUPEROP;
-		case 'o': return UserLevel.OP;
-		case 'h': return UserLevel.HALFOP;
+		case 'q':
+			return UserLevel.OWNER;
+		case 'a':
+			return UserLevel.SUPEROP;
+		case 'o':
+			return UserLevel.OP;
+		case 'h':
+			return UserLevel.HALFOP;
 		}
 		return UserLevel.VOICE;
 	}
-	
+
 	private BotResponse parseWhoreply(List<String> params) {
 		if (params.size() < 3)
 			return EmptyResponse.get();
@@ -132,7 +136,7 @@ public class AuthManageHandler extends TranslatingHandler {
 			return new AuthWhoResponse(user, level);
 		return EmptyResponse.get();
 	}
-	
+
 	private BotResponse parseModeChange(Channel channel, User user) {
 		if (!authChannels.contains(channel.getName()))
 			return EmptyResponse.get();
@@ -141,5 +145,5 @@ public class AuthManageHandler extends TranslatingHandler {
 			return new AuthModeRemoveResponse(user);
 		return new AuthModeResponse(user, levels.last());
 	}
-	
+
 }

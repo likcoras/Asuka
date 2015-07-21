@@ -9,11 +9,11 @@ import io.github.likcoras.asuka.AsukaBot;
 public class IgnoreListResponse implements BotResponse {
 
 	private GenericMessageEvent<PircBotX> event;
-	
+
 	public IgnoreListResponse(GenericMessageEvent<PircBotX> event) {
 		this.event = event;
 	}
-	
+
 	@Override
 	public void send(AsukaBot bot) {
 		StringBuilder list = new StringBuilder();

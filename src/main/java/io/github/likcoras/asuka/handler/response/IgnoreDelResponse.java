@@ -9,7 +9,7 @@ public class IgnoreDelResponse implements BotResponse {
 
 	private GenericMessageEvent<PircBotX> event;
 	private String user;
-	
+
 	public IgnoreDelResponse(GenericMessageEvent<PircBotX> event, String user) {
 		this.event = event;
 		this.user = user;
