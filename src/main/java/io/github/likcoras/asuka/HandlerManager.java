@@ -19,6 +19,7 @@ import io.github.likcoras.asuka.handler.Handler;
 import io.github.likcoras.asuka.handler.IgnoreManageHandler;
 import io.github.likcoras.asuka.handler.MangaUpdatesHandler;
 import io.github.likcoras.asuka.handler.QuitHandler;
+import io.github.likcoras.asuka.handler.SilentSkyRSSHandler;
 import io.github.likcoras.asuka.handler.SilentSkyXMLHandler;
 import io.github.likcoras.asuka.handler.UptimeHandler;
 import lombok.extern.log4j.Log4j2;
@@ -48,6 +49,7 @@ public class HandlerManager implements Listener<PircBotX> {
 				.add(new BatotoHandler())
 				.add(new MangaUpdatesHandler())
 				.add(new SilentSkyXMLHandler())
+				.add(new SilentSkyRSSHandler())
 				.build();
 	}
 	
