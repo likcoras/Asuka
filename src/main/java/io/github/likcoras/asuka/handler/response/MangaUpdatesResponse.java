@@ -23,7 +23,8 @@ public class MangaUpdatesResponse implements BotResponse {
 	public void send(AsukaBot bot) {
 		if (event instanceof MessageEvent)
 			((MessageEvent<PircBotX>) event).getChannel().send().message(message);
-		event.respond(message);
+		else 
+			event.respond(message);
 	}
 
 }
