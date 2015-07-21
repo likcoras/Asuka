@@ -12,13 +12,13 @@ public class QuitResponse implements BotResponse {
 	
 	public QuitResponse(GenericMessageEvent<PircBotX> event, String reply, String message) {
 		this.event = event;
-		this.reply = reply;
-		this.message = message;
+		this.reply = reply.replaceAll("%s", event.getUser().getNick());
+		this.message = message.replaceAll("%s", event.getUser().getNick());
 	}
 
 	@Override
 	public void send(AsukaBot bot) {
-		event.respond(reply.replaceAll("%s", event.getUser().getNick()));
+		event.respond(reply);
 		bot.getIrcBot().stopBotReconnect();
 		bot.getIrcBot().sendIRC().quitServer(message);
 	}
