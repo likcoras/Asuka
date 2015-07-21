@@ -19,13 +19,16 @@ import io.github.likcoras.asuka.handler.Handler;
 import io.github.likcoras.asuka.handler.IgnoreManageHandler;
 import io.github.likcoras.asuka.handler.QuitHandler;
 import io.github.likcoras.asuka.handler.UptimeHandler;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class HandlerManager implements Listener<PircBotX> {
 
 	private AsukaBot bot;
 	private List<Handler> handlers;
 	
 	public HandlerManager(AsukaBot bot) {
+		this.bot = bot;
 		addHandlers();
 	}
 	
@@ -48,14 +51,16 @@ public class HandlerManager implements Listener<PircBotX> {
 	public void onEvent(Event<PircBotX> event) {
 		for (Handler handler : handlers)
 			try {
-				handler.handle(bot, event);
+				handler.handle(bot, event).send(bot);
 			} catch (PermissionException e) {
-				e.getUser().send().notice("You are not allowed to execute query " + e.getQuery()); // TODO log
+				log.warn("User " + BotUtil.getId(e.getUser()) + " was denied access for query" + e.getQuery());
+				e.getUser().send().notice("You are not allowed to execute query " + e.getQuery());
 			} catch (HandlerException e) {
 				if (event instanceof GenericChannelEvent || event instanceof GenericUserEvent)
-					event.respond("Error while handling " + event.getClass().getName() + " with handler "
-							+ handler.getClass().getName() + ": " + e.getCause().toString());
-				// TODO log
+					event.respond("Error while handling " + event.getClass().getSimpleName() + " with handler "
+							+ handler.getClass().getSimpleName() + ": " + e.getCause().toString());
+				log.warn("Exception caught while handling " + event.getClass().getSimpleName() + " with handler "
+						+ handler.getClass().getSimpleName() + ": ", e);
 			}
 	}
 

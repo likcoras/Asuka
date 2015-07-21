@@ -13,7 +13,9 @@ import org.pircbotx.exception.IrcException;
 
 import io.github.likcoras.asuka.exception.ConfigException;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class AsukaBot {
 	
 	@Getter
@@ -32,33 +34,42 @@ public class AsukaBot {
 	}
 	
 	private AsukaBot() {
-		if (!initComponents())
-			return; // TODO inform user
+		log.info("Loading configuration...");
+		if (!initComponents()) {
+			log.info("Exiting.");
+			return;
+		}
 		try {
 			configureBot();
 		} catch (ConfigException e) {
-			// TODO inform user
+			log.error("Configuration exception while configuring irc bot:", e);
+			return;
 		}
+		log.info("Configuration loaded. Starting bot...");
 		try {
 			ircBot.startBot();
 		} catch (IOException | IrcException e) {
-			// TODO inform user
+			log.error("Exception caught while running bot: ", e); 
 		}
 	}
 	
 	private boolean initComponents() {
 		config = new BotConfig();
 		try {
-			if (!config.load(Paths.get("config.txt")))
-				return false; // TODO inform user
+			if (!config.load(Paths.get("config.txt"))) {
+				log.warn("A new configuration file was written, please edit!");
+				return false;
+			}
 			ignoreManager = new IgnoreManager();
 			authManager = new AuthManager(config);
 			handlerManager = new HandlerManager(this);
 			handlerManager.configHandlers(config);
 		} catch (ConfigException e) {
-			return false; // TODO inform user
+			log.error("Configuration exception while initializing:", e);
+			return false;
 		} catch (IOException e) {
-			return false; // TODO inform user
+			log.error("I/O exception while initializing:", e);
+			return false;
 		}
 		return true;
 	}
@@ -78,8 +89,12 @@ public class AsukaBot {
 				.setSocketFactory(config.getBoolean("ircSSL") ? 
 						new UtilSSLSocketFactory().trustAllCertificates() : SocketFactory.getDefault());
 		Stream<String[]> channels = config.getStringList("ircChannels").stream().map(s -> s.split(":"));
-		channels.filter(c -> c.length > 1).forEach(c -> botConfig.addAutoJoinChannel(c[0], c[1]));
-		channels.filter(c -> c.length == 1).forEach(c -> botConfig.addAutoJoinChannel(c[0]));
+		channels.forEach(c -> {
+			if (c.length > 1)
+				botConfig.addAutoJoinChannel(c[0], c[1]);
+			else
+				botConfig.addAutoJoinChannel(c[0]);
+		});
 		ircBot = new PircBotX(botConfig.buildConfiguration());
 	}
 	
