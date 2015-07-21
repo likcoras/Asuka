@@ -72,7 +72,7 @@ public class SilentSkyXMLHandler extends TranslatingHandler {
 		}
 	}
 
-	public BotResponse update(GenericMessageEvent<PircBotX> event) throws IOException, XMLStreamException {
+	private BotResponse update(GenericMessageEvent<PircBotX> event) throws IOException, XMLStreamException {
 		new URL(UPDATE_LINK).openConnection().connect();
 		XMLStreamReader xmlReader = XMLInputFactory.newFactory().createXMLStreamReader(new URL(XML_LINK).openStream());
 		synchronized (xmlData) {

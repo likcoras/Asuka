@@ -43,7 +43,7 @@ public class IgnoreManageHandler extends TranslatingHandler {
 			throw new PermissionException(this, event.getUser(), event.getMessage());
 	}
 
-	public BotResponse handleIgnore(GenericMessageEvent<PircBotX> event) {
+	private BotResponse handleIgnore(GenericMessageEvent<PircBotX> event) {
 		List<String> args = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings().trimResults()
 				.splitToList(event.getMessage());
 		if (args.size() > 1 && args.get(1).equalsIgnoreCase("list"))
