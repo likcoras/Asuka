@@ -15,7 +15,8 @@ public class SilentSkyRSSResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public SilentSkyRSSResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title, @NonNull String date, @NonNull String link) {
+	public SilentSkyRSSResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title,
+			@NonNull String date, @NonNull String link) {
 		this.event = event;
 		message = String.format(FORMAT, title, date, link);
 	}

@@ -16,8 +16,8 @@ public class BatotoResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public BatotoResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title, @NonNull String author, @NonNull String genres,
-			String status, String link) {
+	public BatotoResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title, @NonNull String author,
+			@NonNull String genres, String status, String link) {
 		this.event = event;
 		message = String.format(FORMAT, title, author, genres, status, link);
 	}

@@ -16,8 +16,8 @@ public class MangaUpdatesResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public MangaUpdatesResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title, @NonNull String author, @NonNull String genres,
-			String lastRelease, String link) {
+	public MangaUpdatesResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title,
+			@NonNull String author, @NonNull String genres, String lastRelease, String link) {
 		this.event = event;
 		message = String.format(FORMAT, title, author, genres, lastRelease, link);
 	}
