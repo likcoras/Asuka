@@ -84,7 +84,7 @@ public class AsukaBot {
 				.setName(config.getString("ircNick"))
 				.setLogin(config.getString("ircUsername"))
 				.setRealName(config.getString("ircRealname"))
-				.setNickservPassword("ircPassword")
+				.setNickservPassword(config.getString("ircPassword"))
 				.setServer(config.getString("ircServer"), config.getInt("ircPort"))
 				.setSocketFactory(config.getBoolean("ircSSL") ? 
 						new UtilSSLSocketFactory().trustAllCertificates() : SocketFactory.getDefault());
