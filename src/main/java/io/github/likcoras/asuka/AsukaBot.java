@@ -80,7 +80,7 @@ public class AsukaBot {
 				.setAutoNickChange(true)
 				.setAutoReconnect(true)
 				.setAutoSplitMessage(true)
-				.setCapEnabled(true)
+				.setMessageDelay(0L)
 				.setName(config.getString("ircNick"))
 				.setLogin(config.getString("ircUsername"))
 				.setRealName(config.getString("ircRealname"))
