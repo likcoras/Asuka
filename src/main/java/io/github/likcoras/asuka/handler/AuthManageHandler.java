@@ -3,14 +3,19 @@ package io.github.likcoras.asuka.handler;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
 import org.pircbotx.UserLevel;
 import org.pircbotx.hooks.events.HalfOpEvent;
+import org.pircbotx.hooks.events.JoinEvent;
+import org.pircbotx.hooks.events.KickEvent;
 import org.pircbotx.hooks.events.OpEvent;
 import org.pircbotx.hooks.events.OwnerEvent;
+import org.pircbotx.hooks.events.PartEvent;
+import org.pircbotx.hooks.events.QuitEvent;
 import org.pircbotx.hooks.events.ServerResponseEvent;
 import org.pircbotx.hooks.events.SuperOpEvent;
 import org.pircbotx.hooks.events.VoiceEvent;
@@ -18,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotConfig;
 import io.github.likcoras.asuka.exception.ConfigException;
+import io.github.likcoras.asuka.handler.response.AuthModeRemoveResponse;
 import io.github.likcoras.asuka.handler.response.AuthModeResponse;
 import io.github.likcoras.asuka.handler.response.AuthWhoResponse;
 import io.github.likcoras.asuka.handler.response.BotResponse;
@@ -48,27 +54,47 @@ public class AuthManageHandler extends TranslatingHandler {
 	
 	@Override
 	public BotResponse onVoice(AsukaBot bot, VoiceEvent<PircBotX> event) {
-		return parseModeSet(event.getChannel(), event.getRecipient(), UserLevel.VOICE);
+		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
 	
 	@Override
 	public BotResponse onHalfOp(AsukaBot bot, HalfOpEvent<PircBotX> event) {
-		return parseModeSet(event.getChannel(), event.getRecipient(), UserLevel.HALFOP);
+		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
 	
 	@Override
 	public BotResponse onOp(AsukaBot bot, OpEvent<PircBotX> event) {
-		return parseModeSet(event.getChannel(), event.getRecipient(), UserLevel.OP);
+		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
 	
 	@Override
 	public BotResponse onSuperOp(AsukaBot bot, SuperOpEvent<PircBotX> event) {
-		return parseModeSet(event.getChannel(), event.getRecipient(), UserLevel.SUPEROP);
+		return parseModeChange(event.getChannel(), event.getRecipient());
 	}
 	
 	@Override
 	public BotResponse onOwner(AsukaBot bot, OwnerEvent<PircBotX> event) {
-		return parseModeSet(event.getChannel(), event.getRecipient(), UserLevel.OWNER);
+		return parseModeChange(event.getChannel(), event.getRecipient());
+	}
+	
+	@Override
+	public BotResponse onJoin(AsukaBot bot, JoinEvent<PircBotX> event) {
+		return parseModeChange(event.getChannel(), event.getUser());
+	}
+	
+	@Override
+	public BotResponse onPart(AsukaBot bot, PartEvent<PircBotX> event) {
+		return parseModeChange(event.getChannel(), event.getUser());
+	}
+	
+	@Override
+	public BotResponse onKick(AsukaBot bot, KickEvent<PircBotX> event) {
+		return parseModeChange(event.getChannel(), event.getRecipient());
+	}
+	
+	@Override
+	public BotResponse onQuit(AsukaBot bot, QuitEvent<PircBotX> event) {
+		return new AuthModeRemoveResponse(event.getUser());
 	}
 	
 	private void parseIsupport(List<String> params) {
@@ -107,10 +133,13 @@ public class AuthManageHandler extends TranslatingHandler {
 		return EmptyResponse.get();
 	}
 	
-	private BotResponse parseModeSet(Channel channel, User user, UserLevel level) {
+	private BotResponse parseModeChange(Channel channel, User user) {
 		if (!authChannels.contains(channel.getName()))
 			return EmptyResponse.get();
-		return new AuthModeResponse(user, level);
+		SortedSet<UserLevel> levels = channel.getUserLevels(user);
+		if (levels.isEmpty())
+			return new AuthModeRemoveResponse(user);
+		return new AuthModeResponse(user, levels.last());
 	}
 	
 }
