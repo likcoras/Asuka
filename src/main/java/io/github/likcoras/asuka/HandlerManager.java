@@ -17,6 +17,7 @@ import io.github.likcoras.asuka.handler.AuthManageHandler;
 import io.github.likcoras.asuka.handler.BatotoHandler;
 import io.github.likcoras.asuka.handler.Handler;
 import io.github.likcoras.asuka.handler.IgnoreManageHandler;
+import io.github.likcoras.asuka.handler.MangaUpdatesHandler;
 import io.github.likcoras.asuka.handler.QuitHandler;
 import io.github.likcoras.asuka.handler.UptimeHandler;
 import lombok.extern.log4j.Log4j2;
@@ -44,6 +45,7 @@ public class HandlerManager implements Listener<PircBotX> {
 				.add(new QuitHandler())
 				.add(new UptimeHandler())
 				.add(new BatotoHandler())
+				.add(new MangaUpdatesHandler())
 				.build();
 	}
 	
