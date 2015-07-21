@@ -1,59 +1,31 @@
-# Note: do not put spaces after the colons
+# Configuration for Asuka
 
-# Database configuration
-# host: the host of the mysql server
-# port: the port of the mysql server
-# user: the username to login with
-# pass: the password for the user
-# database: the name of the database
-# table: the name of the table that contains the data
-# columntitle: the name of the column with all the titles
-# columnid: the name of the column with all the ids
-dbhost:localhost
-dbport:3306
-dbuser:root
-dbpass:
-dbdatabase:database
-dbtable:series
-dbcolumntitle:title
-dbcolumnid:id
+# IRC Configuration
+# Nick: Bot nick
+# Username: Bot username
+# Realname: Bot realname
+# Password: NickServ password
+# Server: The server to connect to
+# Port: The port to connect to
+# SSL: Whether to use ssl
+# Channels: Channels to join
+ircNick: SilentBot
+ircUsername: SilentBot
+ircRealname: A bot for silentsky
+ircPassword: test
+ircServer: irc.irchighway.net
+ircPort: 6697
+ircSSL: true
+ircChannels: #channel, #staffchannel:key
 
-# The location of the xml file to parse
-xmlfile:http://everath.net/sslist/csparse.xml
+# Misc. IRC
+# quitReply: Message sent to the requester when quitting
+# quitMessage: Message sent when quitting. (eg. QUIT: Oyasuminasai~ (requested by likcoras))
+# authChannels: Channels to fetch the "staff" from. (OPs from these channels are given access, etc.)
+# ownerId: Used to identify the owner. Format is username@hostname(not nick)
+quitReply: Goodbye, %s~
+quitMessage: Oyasuminasai~ (requested by %s)
+authChannels: #staffchannel
+ownerId: likcoras@tis.very.bored
 
-# The location to query to update the xml file
-xmlupdatefile:http://everath.net/sslist/index.php
-
-# The location of the rss feed with the latest releases
-latestfile:http://www.silentsky-scans.net/feed/
-
-# The base url for the mangaupdate(rlstrackr) search
-muurl:https://rlstrackr.com/series/info/
-
-# The base url for the batoto search
-bturl:http://bato.to/search?name_cond=c&name=
-
-# Irc configuration
-# nick, login, realname: login as "nick!user@host : realname"
-# host: the host of the irc server
-# port: the port to connect to
-# ssl: whether to make the connection secure
-# nickserv: the nickserv password
-# pass: the password to be sent as /PASS [pass] upon connecting
-# channels: the channels to connect to, use #chan:key,#chan2:key2, no spaces
-ircnick:SilentBot
-irclogin:SilentBot
-ircrealname:A bot for silentsky
-irchost:irc.irchighway.net
-ircport:6667
-ircssl:false
-ircnickserv:
-ircpass:
-ircchannels:#configureme,#configme:password
-
-# The message to be sent before quitting. %s will be replaced with the requester's name
-quitmsg:Oyasuminasai~
-
-# Note: every single field, except the passwords(ircnickserv, ircpass, and
-# dbpass, if the mysql user does not have a password) must be filled out.
-# The password fields must also exist, at the very least.
+version: ${project.version}
