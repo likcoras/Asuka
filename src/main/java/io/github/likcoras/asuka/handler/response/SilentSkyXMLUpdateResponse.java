@@ -5,12 +5,13 @@ import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
+import lombok.NonNull;
 
 public class SilentSkyXMLUpdateResponse implements BotResponse {
 
 	private GenericMessageEvent<PircBotX> event;
 
-	public SilentSkyXMLUpdateResponse(GenericMessageEvent<PircBotX> event) {
+	public SilentSkyXMLUpdateResponse(@NonNull GenericMessageEvent<PircBotX> event) {
 		this.event = event;
 	}
 

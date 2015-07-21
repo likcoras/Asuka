@@ -6,6 +6,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
+import lombok.NonNull;
 
 public class BatotoResponse implements BotResponse {
 
@@ -15,7 +16,7 @@ public class BatotoResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public BatotoResponse(GenericMessageEvent<PircBotX> event, String title, String author, String genres,
+	public BatotoResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title, @NonNull String author, @NonNull String genres,
 			String status, String link) {
 		this.event = event;
 		message = String.format(FORMAT, title, author, genres, status, link);

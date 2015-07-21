@@ -9,6 +9,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
+import lombok.NonNull;
 
 public class UptimeResponse implements BotResponse {
 
@@ -17,7 +18,7 @@ public class UptimeResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public UptimeResponse(GenericMessageEvent<PircBotX> event, long upsince) {
+	public UptimeResponse(@NonNull GenericMessageEvent<PircBotX> event, long upsince) {
 		this.event = event;
 		long seconds = upsince / 1000L;
 		long diff = event.getTimestamp() / 1000L - seconds;

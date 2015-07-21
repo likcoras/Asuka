@@ -5,6 +5,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
+import lombok.NonNull;
 
 public class IgnoreHelpResponse implements BotResponse {
 
@@ -14,7 +15,7 @@ public class IgnoreHelpResponse implements BotResponse {
 
 	private GenericMessageEvent<PircBotX> event;
 
-	public IgnoreHelpResponse(GenericMessageEvent<PircBotX> event) {
+	public IgnoreHelpResponse(@NonNull GenericMessageEvent<PircBotX> event) {
 		this.event = event;
 	}
 

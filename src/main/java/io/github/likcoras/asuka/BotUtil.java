@@ -2,16 +2,18 @@ package io.github.likcoras.asuka;
 
 import org.pircbotx.User;
 
+import lombok.NonNull;
+
 public final class BotUtil {
 
 	private BotUtil() {
 	}
 
-	public static String getId(User user) {
+	public static String getId(@NonNull User user) {
 		return user.getLogin() + "@" + user.getHostmask();
 	}
 
-	public static boolean isTrigger(String message, String trigger) {
+	public static boolean isTrigger(@NonNull String message, @NonNull String trigger) {
 		if (message.isEmpty())
 			return false;
 		String[] split = message.split("\\s");
@@ -21,7 +23,7 @@ public final class BotUtil {
 		return first.equalsIgnoreCase("." + trigger) || first.equalsIgnoreCase("!" + trigger);
 	}
 
-	public static String addFormat(String message) {
+	public static String addFormat(@NonNull String message) {
 		return message
 				.replaceAll("&b", "\u0002").replaceAll("&\u0002", "&b")
 				.replaceAll("&(\\d\\d)", "\u0003$1").replaceAll("&\u0003", "&")

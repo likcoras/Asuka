@@ -1,6 +1,7 @@
 package io.github.likcoras.asuka.exception;
 
 import lombok.Getter;
+import lombok.NonNull;
 import io.github.likcoras.asuka.handler.Handler;
 
 public class HandlerException extends Exception {
@@ -10,17 +11,17 @@ public class HandlerException extends Exception {
 	@Getter
 	private final Handler handler;
 
-	public HandlerException(Handler handler, String message) {
+	public HandlerException(@NonNull Handler handler, @NonNull String message) {
 		super(message);
 		this.handler = handler;
 	}
 
-	public HandlerException(Handler handler, Throwable cause) {
+	public HandlerException(@NonNull Handler handler, @NonNull Throwable cause) {
 		super(cause);
 		this.handler = handler;
 	}
 
-	public HandlerException(Handler handler, String message, Throwable cause) {
+	public HandlerException(@NonNull Handler handler, @NonNull String message, @NonNull Throwable cause) {
 		super(message, cause);
 		this.handler = handler;
 	}

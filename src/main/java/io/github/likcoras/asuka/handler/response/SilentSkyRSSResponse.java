@@ -6,6 +6,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
+import lombok.NonNull;
 
 public class SilentSkyRSSResponse implements BotResponse {
 
@@ -14,7 +15,7 @@ public class SilentSkyRSSResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public SilentSkyRSSResponse(GenericMessageEvent<PircBotX> event, String title, String date, String link) {
+	public SilentSkyRSSResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title, @NonNull String date, @NonNull String link) {
 		this.event = event;
 		message = String.format(FORMAT, title, date, link);
 	}

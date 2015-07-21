@@ -12,6 +12,7 @@ import org.pircbotx.User;
 import com.google.common.collect.ImmutableSet;
 
 import lombok.Cleanup;
+import lombok.NonNull;
 
 public class IgnoreManager {
 
@@ -21,23 +22,23 @@ public class IgnoreManager {
 		ignored = Collections.synchronizedSet(new HashSet<String>());
 	}
 
-	public void addIgnored(User user) {
+	public void addIgnored(@NonNull User user) {
 		addIgnored(user.getNick());
 	}
 
-	public void addIgnored(String user) {
+	public void addIgnored(@NonNull String user) {
 		ignored.add(user);
 	}
 
-	public void removeIgnored(User user) {
+	public void removeIgnored(@NonNull User user) {
 		removeIgnored(user.getNick());
 	}
 
-	public void removeIgnored(String user) {
+	public void removeIgnored(@NonNull String user) {
 		ignored.remove(user);
 	}
 
-	public boolean isIgnored(User user) {
+	public boolean isIgnored(@NonNull User user) {
 		return ignored.contains(user.getNick());
 	}
 
@@ -45,7 +46,7 @@ public class IgnoreManager {
 		return ImmutableSet.copyOf(ignored);
 	}
 
-	public void readFile(Path ignoreFile) throws IOException {
+	public void readFile(@NonNull Path ignoreFile) throws IOException {
 		@Cleanup
 		BufferedReader read = Files.newBufferedReader(ignoreFile);
 		synchronized (ignored) {
@@ -53,7 +54,7 @@ public class IgnoreManager {
 		}
 	}
 
-	public void writeFile(Path ignoreFile) throws IOException {
+	public void writeFile(@NonNull Path ignoreFile) throws IOException {
 		synchronized (ignored) {
 			Files.write(ignoreFile, ignored);
 		}

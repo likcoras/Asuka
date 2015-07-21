@@ -22,6 +22,7 @@ import io.github.likcoras.asuka.handler.QuitHandler;
 import io.github.likcoras.asuka.handler.SilentSkyRSSHandler;
 import io.github.likcoras.asuka.handler.SilentSkyXMLHandler;
 import io.github.likcoras.asuka.handler.UptimeHandler;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -30,12 +31,12 @@ public class HandlerManager implements Listener<PircBotX> {
 	private AsukaBot bot;
 	private List<Handler> handlers;
 
-	public HandlerManager(AsukaBot bot) {
+	public HandlerManager(@NonNull AsukaBot bot) {
 		this.bot = bot;
 		addHandlers();
 	}
 
-	public void configHandlers(BotConfig config) throws ConfigException {
+	public void configHandlers(@NonNull BotConfig config) throws ConfigException {
 		for (Handler handler : handlers)
 			handler.configure(config);
 	}
