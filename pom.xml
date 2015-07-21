@@ -7,6 +7,7 @@
   <description>An IRC bot that searches baka-updates and batoto, among other sources</description>
   
   <build>
+    
     <plugins>
       
       <plugin>
@@ -38,12 +39,35 @@
               <goal>shade</goal>
             </goals>
             <phase>package</phase>
+            <configuration>
+              <minimizeJar>true</minimizeJar>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+            </configuration>
           </execution>
         </executions>
         <version>2.4.1</version>
       </plugin>
       
     </plugins>
+    
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>config.txt</include>
+        </includes>
+      </resource>
+      
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>config.txt</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    
   </build>
   
   <properties>
