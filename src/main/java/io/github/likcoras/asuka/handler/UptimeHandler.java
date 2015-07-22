@@ -1,35 +1,36 @@
 package io.github.likcoras.asuka.handler;
 
 import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.events.ConnectEvent;
-import org.pircbotx.hooks.types.GenericMessageEvent;
+import org.pircbotx.hooks.events.MessageEvent;
+import org.pircbotx.hooks.events.PrivateMessageEvent;
 import io.github.likcoras.asuka.AsukaBot;
-import io.github.likcoras.asuka.BotConfig;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.HandlerException;
 import io.github.likcoras.asuka.handler.response.BotResponse;
 import io.github.likcoras.asuka.handler.response.EmptyResponse;
 import io.github.likcoras.asuka.handler.response.UptimeResponse;
 
-public class UptimeHandler implements Handler {
+public class UptimeHandler extends TranslatingHandler {
 
 	private long upSince;
 
 	@Override
-	public void configure(BotConfig config) {
+	public BotResponse onConnect(AsukaBot bot, ConnectEvent<PircBotX> event) {
+		upSince = event.getTimestamp();
+		return EmptyResponse.get();
 	}
-
+	
 	@Override
-	public BotResponse handle(AsukaBot bot, Event<PircBotX> event) throws HandlerException {
-		if (event instanceof ConnectEvent)
-			upSince = event.getTimestamp();
-		else if (event instanceof GenericMessageEvent) {
-			@SuppressWarnings("unchecked")
-			GenericMessageEvent<PircBotX> messageEvent = (GenericMessageEvent<PircBotX>) event;
-			if (BotUtil.isTrigger(messageEvent.getMessage(), "uptime"))
-				return new UptimeResponse(messageEvent, upSince);
-		}
+	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) {
+		if (BotUtil.isTrigger(event.getMessage(), "uptime"))
+			return new UptimeResponse(event, upSince);
+		return EmptyResponse.get();
+	}
+	
+	@Override
+	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) {
+		if (BotUtil.isTrigger(event.getMessage(), "uptime"))
+			return new UptimeResponse(event, upSince);
 		return EmptyResponse.get();
 	}
 
