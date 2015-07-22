@@ -92,6 +92,8 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 		LocalDate releaseDate = LocalDate.parse(lastRelease.get(2).text(),
 				DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.US));
 		Period since = Period.between(releaseDate, LocalDate.now());
+		if (since.isNegative())
+			since = Period.ZERO;
 		String group = lastRelease.get(3).text();
 		return chapter + " by " + group + " (" + since.toTotalMonths() + " months, " + since.getDays() + " days ago)";
 	}
