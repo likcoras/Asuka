@@ -3,6 +3,7 @@ package io.github.likcoras.asuka;
 import java.util.List;
 
 import org.pircbotx.PircBotX;
+import org.pircbotx.User;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
 import org.pircbotx.hooks.types.GenericChannelEvent;
@@ -62,8 +63,10 @@ public class HandlerManager implements Listener<PircBotX> {
 
 	@SuppressWarnings("unchecked")
 	private boolean shouldIgnore(Event<PircBotX> event) {
-		return !(event instanceof GenericUserEvent)
-				|| !bot.getIgnoreManager().isIgnored(((GenericUserEvent<PircBotX>) event).getUser());
+		if (!(event instanceof GenericUserEvent))
+			return false;
+		User user = ((GenericUserEvent<PircBotX>) event).getUser();
+		return user != null && bot.getIgnoreManager().isIgnored(user);
 	}
 
 	private void handle(Event<PircBotX> event) {
