@@ -9,10 +9,10 @@
 # Port: The port to connect to
 # SSL: Whether to use ssl
 # Channels: Channels to join
-ircNick: SilentBot
-ircUsername: SilentBot
+ircNick: Asuka
+ircUsername: Asuka
 ircRealname: A bot for silentsky
-ircPassword: test
+ircPassword: password-here
 ircServer: irc.irchighway.net
 ircPort: 6697
 ircSSL: true
