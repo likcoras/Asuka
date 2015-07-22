@@ -26,8 +26,9 @@ public class AuthManager {
 	public void setLevel(@NonNull String user, @NonNull UserLevel level) {
 		if (user.equals(ownerId))
 			return;
-		else if (levels.containsKey(user) && levels.get(user).compareTo(level) < 0)
-			levels.put(user, level);
+		else if (levels.containsKey(user) && levels.get(user).compareTo(level) > 0)
+			return;
+		levels.put(user, level);
 	}
 
 	public void removeLevel(@NonNull User user) {
