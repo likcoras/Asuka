@@ -59,13 +59,13 @@ public class HandlerManager implements Listener<PircBotX> {
 		if (!shouldIgnore(event))
 			handle(event);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private boolean shouldIgnore(Event<PircBotX> event) {
 		return !(event instanceof GenericUserEvent)
 				|| !bot.getIgnoreManager().isIgnored(((GenericUserEvent<PircBotX>) event).getUser());
 	}
-	
+
 	private void handle(Event<PircBotX> event) {
 		for (Handler handler : handlers)
 			try {
