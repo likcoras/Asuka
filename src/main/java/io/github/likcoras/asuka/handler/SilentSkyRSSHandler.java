@@ -9,7 +9,7 @@ import io.github.likcoras.asuka.handler.response.SilentSkyRSSResponse;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.DateFormat;
+import java.time.Instant;
 import java.util.List;
 
 import org.pircbotx.PircBotX;
@@ -59,7 +59,7 @@ public class SilentSkyRSSHandler extends TranslatingHandler {
 			return EmptyResponse.get();
 		SyndEntry latest = entries.get(0);
 		String title = latest.getTitle();
-		String date = DateFormat.getDateTimeInstance().format(latest.getPublishedDate());
+		Instant date = Instant.ofEpochMilli(latest.getPublishedDate().getTime());
 		String link = latest.getLink();
 		return new SilentSkyRSSResponse(event, title, date, link);
 	}

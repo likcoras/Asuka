@@ -1,10 +1,18 @@
 package io.github.likcoras.asuka;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.Locale;
+
 import org.pircbotx.User;
 
 import lombok.NonNull;
 
 public final class BotUtil {
+
+	private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter
+			.ofPattern("uuuu MMM dd hh:mm:ss a z", Locale.US).withZone(ZoneId.systemDefault());
 
 	private BotUtil() {
 	}
@@ -31,6 +39,10 @@ public final class BotUtil {
 				.replaceAll("&s", "\u0016").replaceAll("&\u0016", "&s")
 				.replaceAll("&i", "\u001d").replaceAll("&\u001d", "&i")
 				.replaceAll("&u", "\u001f").replaceAll("&\u001f", "&u");
+	}
+
+	public static String formatTime(TemporalAccessor time) {
+		return DEFAULT_FORMATTER.format(time);
 	}
 
 }

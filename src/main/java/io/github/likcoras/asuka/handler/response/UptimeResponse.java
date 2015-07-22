@@ -1,9 +1,7 @@
 package io.github.likcoras.asuka.handler.response;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.time.Duration;
+import java.time.Instant;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
@@ -18,14 +16,13 @@ public class UptimeResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public UptimeResponse(@NonNull GenericMessageEvent<PircBotX> event, long upsince) {
+	public UptimeResponse(@NonNull GenericMessageEvent<PircBotX> event, Instant upsince) {
 		this.event = event;
-		long seconds = upsince / 1000L;
-		long diff = event.getTimestamp() / 1000L - seconds;
-		String upsinceMessage = DateTimeFormatter.ofPattern("MMM dd hh:mm:ss 'UTC'", Locale.US)
-				.format(LocalDateTime.ofEpochSecond(seconds, 0, ZoneOffset.UTC));
-		String uptimeMessage = String.format("%dh %dm %ds", diff / 3600, diff % 3600 / 60, diff % 60);
-		message = String.format(FORMAT, uptimeMessage, upsinceMessage);
+		Duration uptime = Duration.between(upsince, Instant.ofEpochMilli(event.getTimestamp()));
+		String startMessage = BotUtil.formatTime(upsince);
+		String uptimeMessage = String.format("%dh %02dm %02ds", uptime.toHours(), uptime.getSeconds() % 3600 / 60,
+				uptime.getSeconds() % 60);
+		message = String.format(FORMAT, uptimeMessage, startMessage);
 	}
 
 	@Override

@@ -7,11 +7,12 @@ import io.github.likcoras.asuka.handler.response.BotResponse;
 import io.github.likcoras.asuka.handler.response.EmptyResponse;
 import io.github.likcoras.asuka.handler.response.MangaUpdatesResponse;
 import io.github.likcoras.asuka.handler.response.NoResultResponse;
+import lombok.NonNull;
+import lombok.Value;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -75,27 +76,43 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 		String title = document.select("div.content header h2").text();
 		String author = document.select("dd:contains(Author) + dt").isEmpty() ? "Unknown"
 				: document.select("dd:contains(Author) + dt").get(0).text();
-		String genres = document.select("dd:contains(Tags) + dt").text();
-		String status = statusMsg(document);
+		String tags = document.select("dd:contains(Tags) + dt").text();
+		Elements releases = document.select("table.table.no-border tr");
+		String group;
+		LocalDate date;
+		String chapter;
+		if (releases.isEmpty()) {
+			group = "";
+			date = LocalDate.MAX;
+			chapter = "";
+		} else {
+			Elements lastRelease = releases.get(0).getAllElements().get(0).getAllElements();
+			group = lastRelease.get(2).text();
+			date = LocalDate.parse(lastRelease.get(1).text(), DateTimeFormatter.ofPattern("MMMM dd, uuuu", Locale.US));
+			chapter = lastRelease.get(0).text();
+		}
 		Matcher matcher = LINK_PATTERN.matcher(link);
 		matcher.find();
 		link = DISPLAY_URL + matcher.group(7);
-		return new MangaUpdatesResponse(event, title, author, genres, status, link);
+		return new MangaUpdatesResponse(event, new MangaUpdatesData(title, author, tags, group, date, chapter, link));
 	}
 
-	private String statusMsg(Document document) {
-		Elements releases = document.select("table.table.no-border tr");
-		if (releases.isEmpty())
-			return "No releases";
-		Elements lastRelease = releases.get(0).getAllElements();
-		String chapter = lastRelease.get(1).text();
-		LocalDate releaseDate = LocalDate.parse(lastRelease.get(2).text(),
-				DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.US));
-		Period since = Period.between(releaseDate, LocalDate.now());
-		if (since.isNegative())
-			since = Period.ZERO;
-		String group = lastRelease.get(3).text();
-		return chapter + " by " + group + " (" + since.toTotalMonths() + " months, " + since.getDays() + " days ago)";
+	@Value
+	public static class MangaUpdatesData {
+		@NonNull
+		String title;
+		@NonNull
+		String author;
+		@NonNull
+		String tags;
+		@NonNull
+		String group;
+		@NonNull
+		LocalDate date;
+		@NonNull
+		String chapter;
+		@NonNull
+		String link;
 	}
 
 }

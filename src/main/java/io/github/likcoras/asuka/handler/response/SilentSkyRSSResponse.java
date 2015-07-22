@@ -1,5 +1,7 @@
 package io.github.likcoras.asuka.handler.response;
 
+import java.time.Instant;
+
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
@@ -16,9 +18,9 @@ public class SilentSkyRSSResponse implements BotResponse {
 	private String message;
 
 	public SilentSkyRSSResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String title,
-			@NonNull String date, @NonNull String link) {
+			@NonNull Instant date, @NonNull String link) {
 		this.event = event;
-		message = String.format(FORMAT, title, date, link);
+		message = String.format(FORMAT, title, BotUtil.formatTime(date), link);
 	}
 
 	@Override
