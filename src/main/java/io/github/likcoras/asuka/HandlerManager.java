@@ -56,11 +56,22 @@ public class HandlerManager implements Listener<PircBotX> {
 
 	@Override
 	public void onEvent(Event<PircBotX> event) {
+		if (!shouldIgnore(event))
+			handle(event);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean shouldIgnore(Event<PircBotX> event) {
+		return !(event instanceof GenericUserEvent)
+				|| !bot.getIgnoreManager().isIgnored(((GenericUserEvent<PircBotX>) event).getUser());
+	}
+	
+	private void handle(Event<PircBotX> event) {
 		for (Handler handler : handlers)
 			try {
 				handler.handle(bot, event).send(bot);
 			} catch (PermissionException e) {
-				log.warn("User " + BotUtil.getId(e.getUser()) + " was denied access for query" + e.getQuery());
+				log.warn("User " + BotUtil.getId(e.getUser()) + " was denied access for query " + e.getQuery());
 				e.getUser().send().notice("You are not allowed to execute query " + e.getQuery());
 			} catch (HandlerException e) {
 				if (event instanceof GenericChannelEvent || event instanceof GenericUserEvent)
