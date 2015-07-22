@@ -30,7 +30,7 @@
       <AppenderRef ref="Console"/>
     </Root>
     
-    <Logger name="org.pircbotx" level="info">
+    <Logger name="org.pircbotx" level="info" additivity="false">
       <AppenderRef ref="IrcLog" />
     </Logger>
     
