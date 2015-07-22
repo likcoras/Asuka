@@ -29,6 +29,7 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 
 	private static final String SEARCH_URL = "https://rlstrackr.com/search/series/?q=";
 	private static final String DISPLAY_URL = "http://www.mangaupdates.com/series.html?id=";
+	private static final String INFO_URL = "https://rlstrackr.com/series/info/";
 	private static final Pattern LINK_PATTERN = Pattern.compile(
 			"((https?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)/?)");
 
@@ -55,7 +56,7 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 			return getMangaUpdates(event);
 		Matcher matcher = LINK_PATTERN.matcher(event.getMessage());
 		if (matcher.find())
-			return getMangaUpdatesLink(event, matcher.group(1));
+			return getMangaUpdatesLink(event, INFO_URL + matcher.group(7));
 		return EmptyResponse.get();
 	}
 
