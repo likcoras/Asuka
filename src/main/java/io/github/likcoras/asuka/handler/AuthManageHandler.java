@@ -127,11 +127,11 @@ public class AuthManageHandler extends TranslatingHandler {
 	private BotResponse parseWhoreply(List<String> params) {
 		if (params.size() < 3)
 			return EmptyResponse.get();
-		String channel = params.get(2);
+		String channel = params.get(1);
 		if (!authChannels.contains(channel))
 			return EmptyResponse.get();
 		String user = params.get(3) + "@" + params.get(4);
-		UserLevel level = prefix.get(params.get(7).charAt(params.get(7).length() - 1));
+		UserLevel level = prefix.get(params.get(6).charAt(params.get(6).length() - 1));
 		if (level != null)
 			return new AuthWhoResponse(user, level);
 		return EmptyResponse.get();
