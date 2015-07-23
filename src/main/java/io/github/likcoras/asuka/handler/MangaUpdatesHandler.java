@@ -86,10 +86,10 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 			date = LocalDate.MAX;
 			chapter = "";
 		} else {
-			Elements lastRelease = releases.get(0).getAllElements().get(0).getAllElements();
-			group = lastRelease.get(2).text();
-			date = LocalDate.parse(lastRelease.get(1).text(), DateTimeFormatter.ofPattern("MMMM dd, uuuu", Locale.US));
-			chapter = lastRelease.get(0).text();
+			Elements lastRelease = releases.get(0).getAllElements();
+			group = lastRelease.get(3).text();
+			date = LocalDate.parse(lastRelease.get(2).text(), DateTimeFormatter.ofPattern("MMMM dd, uuuu", Locale.US));
+			chapter = lastRelease.get(1).text();
 		}
 		Matcher matcher = LINK_PATTERN.matcher(link);
 		matcher.find();
