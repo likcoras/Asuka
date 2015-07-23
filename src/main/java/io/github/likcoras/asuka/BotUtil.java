@@ -22,13 +22,7 @@ public final class BotUtil {
 	}
 
 	public static boolean isTrigger(@NonNull String message, @NonNull String trigger) {
-		if (message.isEmpty())
-			return false;
-		String[] split = message.split("\\s");
-		if (split.length < 1)
-			return false;
-		String first = split[0].trim();
-		return first.equalsIgnoreCase("." + trigger) || first.equalsIgnoreCase("!" + trigger);
+		return message.startsWith("." + trigger) || message.startsWith("!" + trigger);
 	}
 
 	public static String addFormat(@NonNull String message) {

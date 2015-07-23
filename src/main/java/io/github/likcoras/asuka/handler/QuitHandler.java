@@ -26,7 +26,7 @@ public class QuitHandler extends TranslatingHandler {
 
 	@Override
 	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws PermissionException {
-		if (!BotUtil.isTrigger(event.getMessage(), "quit"))
+		if (!BotUtil.isTrigger(event.getMessage(), "quit " + event.getBot().getNick()))
 			return EmptyResponse.get();
 		else if (bot.getAuthManager().checkAccess(event.getUser(), UserLevel.OP))
 			return new QuitResponse(event, quitReply, quitMessage);
