@@ -66,7 +66,7 @@ public class HandlerManager implements Listener<PircBotX> {
 		if (!shouldIgnore(event))
 			handle(event);
 	}
-	
+
 	public void shutdown() {
 		executor.shutdownNow();
 	}
@@ -94,7 +94,8 @@ public class HandlerManager implements Listener<PircBotX> {
 				if (e.getCause() instanceof PermissionException) {
 					PermissionException perm = (PermissionException) e.getCause();
 					perm.getUser().send().notice("You are not allowed to execute query " + perm.getQuery());
-					log.warn("User " + BotUtil.getId(perm.getUser()) + " was denied access when attempting to send " + perm.getQuery());
+					log.warn("User " + BotUtil.getId(perm.getUser()) + " was denied access when attempting to send "
+							+ perm.getQuery());
 				} else
 					log.error("Exception caught while handling:", e);
 			} catch (InterruptedException e) {
