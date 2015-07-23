@@ -11,16 +11,24 @@ import lombok.NonNull;
 
 public class SilentSkyXMLResponse implements BotResponse {
 
-	private static final String FORMAT = BotUtil
-			.addFormat("&b%s&b chapter &b%d&b | &bMediafire:&b %s | &bMega:&b %s | &bReader:&b %s");
+	private static final String HEAD_FORMAT = BotUtil.addFormat("&b%s&b chapter &b%d&b");
+	private static final String MEDIAFIRE_FORMAT = BotUtil.addFormat("| &bMediafire:&b ");
+	private static final String MEGA_FORMAT = BotUtil.addFormat("| &bMega:&b ");
+	private static final String READER_FORMAT = BotUtil.addFormat("| &bReader:&b ");
 
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
 	public SilentSkyXMLResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull SilentXMLData data) {
 		this.event = event;
-		message = String.format(FORMAT, data.getProject(), data.getChapter(), data.getMediafireLink(),
-				data.getMegaLink(), data.getReaderLink());
+		StringBuilder builder = new StringBuilder(String.format(HEAD_FORMAT, data.getProject(), data.getChapter()));
+		if (!data.getMediafireLink().isEmpty())
+			builder.append(MEDIAFIRE_FORMAT + data.getMediafireLink());
+		if (!data.getMegaLink().isEmpty())
+			builder.append(MEGA_FORMAT + data.getMegaLink());
+		if (!data.getReaderLink().isEmpty())
+			builder.append(READER_FORMAT + data.getReaderLink());
+		message = builder.toString();
 	}
 
 	@Override
