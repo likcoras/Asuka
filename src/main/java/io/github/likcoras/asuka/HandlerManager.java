@@ -16,6 +16,7 @@ import org.pircbotx.hooks.types.GenericUserEvent;
 import com.google.common.collect.ImmutableList;
 
 import io.github.likcoras.asuka.exception.ConfigException;
+import io.github.likcoras.asuka.exception.PermissionException;
 import io.github.likcoras.asuka.handler.AuthManageHandler;
 import io.github.likcoras.asuka.handler.BatotoHandler;
 import io.github.likcoras.asuka.handler.Handler;
@@ -86,7 +87,12 @@ public class HandlerManager implements Listener<PircBotX> {
 			try {
 				future.get().send(bot);
 			} catch (ExecutionException e) {
-				log.error("Exception caught while handling:", e);
+				if (e.getCause() instanceof PermissionException) {
+					PermissionException perm = (PermissionException) e.getCause();
+					perm.getUser().send().notice("You are not allowed to execute query " + perm.getQuery());
+					log.warn("User " + BotUtil.getId(perm.getUser()) + " was denied access when attempting to send " + perm.getQuery());
+				} else
+					log.error("Exception caught while handling:", e);
 			} catch (InterruptedException e) {
 				log.error("Interrupted:", e);
 			}
