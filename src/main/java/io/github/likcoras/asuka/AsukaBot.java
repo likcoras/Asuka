@@ -77,6 +77,7 @@ public class AsukaBot {
 	private void configureBot() throws ConfigException {
 		Configuration.Builder<PircBotX> botConfig = new Configuration.Builder<PircBotX>()
 				.addListener(handlerManager)
+				.addListener(new BotLogger())
 				.setAutoNickChange(true)
 				.setAutoReconnect(true)
 				.setAutoSplitMessage(true)
