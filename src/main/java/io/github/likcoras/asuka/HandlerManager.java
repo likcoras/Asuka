@@ -66,6 +66,10 @@ public class HandlerManager implements Listener<PircBotX> {
 		if (!shouldIgnore(event))
 			handle(event);
 	}
+	
+	public void shutdown() {
+		executor.shutdownNow();
+	}
 
 	@SuppressWarnings("unchecked")
 	private boolean shouldIgnore(Event<PircBotX> event) {

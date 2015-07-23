@@ -51,6 +51,7 @@ public class AsukaBot {
 		} catch (IOException | IrcException e) {
 			log.error("Exception caught while running bot: ", e);
 		}
+		handlerManager.shutdown();
 	}
 
 	private boolean initComponents() {
