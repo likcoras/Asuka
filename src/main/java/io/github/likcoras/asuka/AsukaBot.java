@@ -77,17 +77,10 @@ public class AsukaBot {
 	}
 
 	private void configureBot() throws ConfigException {
-		Configuration.Builder<PircBotX> botConfig = new Configuration.Builder<PircBotX>()
-				.addListener(handlerManager)
-				.addListener(new BotLogger())
-				.setAutoNickChange(true)
-				.setAutoReconnect(true)
-				.setAutoSplitMessage(true)
-				.setMessageDelay(0L)
-				.setName(config.getString("ircNick"))
-				.setLogin(config.getString("ircUsername"))
-				.setRealName(config.getString("ircRealname"))
-				.setNickservPassword(config.getString("ircPassword"))
+		Configuration.Builder<PircBotX> botConfig = new Configuration.Builder<PircBotX>().addListener(handlerManager)
+				.addListener(new BotLogger()).setAutoNickChange(true).setAutoReconnect(true).setAutoSplitMessage(true)
+				.setMessageDelay(0L).setName(config.getString("ircNick")).setLogin(config.getString("ircUsername"))
+				.setRealName(config.getString("ircRealname")).setNickservPassword(config.getString("ircPassword"))
 				.setServer(config.getString("ircServer"), config.getInt("ircPort"))
 				.setSocketFactory(config.getBoolean("ircSSL") ? new UtilSSLSocketFactory().trustAllCertificates()
 						: SocketFactory.getDefault());

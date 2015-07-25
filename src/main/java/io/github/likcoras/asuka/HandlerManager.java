@@ -50,16 +50,9 @@ public class HandlerManager implements Listener<PircBotX> {
 	}
 
 	private void addHandlers() {
-		handlers = ImmutableList.<Handler> builder()
-				.add(new AuthManageHandler())
-				.add(new IgnoreManageHandler())
-				.add(new QuitHandler())
-				.add(new UptimeHandler())
-				.add(new BatotoHandler())
-				.add(new MangaUpdatesHandler())
-				.add(new SilentSkyXMLHandler())
-				.add(new SilentSkyRSSHandler())
-				.build();
+		handlers = ImmutableList.<Handler> builder().add(new AuthManageHandler()).add(new IgnoreManageHandler())
+				.add(new QuitHandler()).add(new UptimeHandler()).add(new BatotoHandler()).add(new MangaUpdatesHandler())
+				.add(new SilentSkyXMLHandler()).add(new SilentSkyRSSHandler()).build();
 	}
 
 	@Override

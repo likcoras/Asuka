@@ -26,13 +26,10 @@ public final class BotUtil {
 	}
 
 	public static String addFormat(@NonNull String message) {
-		return message
-				.replaceAll("&b", "\u0002").replaceAll("&\u0002", "&b")
-				.replaceAll("&(\\d\\d)", "\u0003$1").replaceAll("&\u0003", "&")
-				.replaceAll("&r", "\u000f").replaceAll("&\u000f", "&r")
-				.replaceAll("&s", "\u0016").replaceAll("&\u0016", "&s")
-				.replaceAll("&i", "\u001d").replaceAll("&\u001d", "&i")
-				.replaceAll("&u", "\u001f").replaceAll("&\u001f", "&u");
+		return message.replaceAll("&b", "\u0002").replaceAll("&\u0002", "&b").replaceAll("&(\\d\\d)", "\u0003$1")
+				.replaceAll("&\u0003", "&").replaceAll("&r", "\u000f").replaceAll("&\u000f", "&r")
+				.replaceAll("&s", "\u0016").replaceAll("&\u0016", "&s").replaceAll("&i", "\u001d")
+				.replaceAll("&\u001d", "&i").replaceAll("&u", "\u001f").replaceAll("&\u001f", "&u");
 	}
 
 	public static String formatTime(TemporalAccessor time) {

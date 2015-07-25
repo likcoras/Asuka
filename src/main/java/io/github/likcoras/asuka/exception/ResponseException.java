@@ -17,5 +17,5 @@ public class ResponseException extends Exception {
 	public ResponseException(@NonNull String message, @NonNull Throwable cause) {
 		super(message, cause);
 	}
-	
+
 }
