@@ -48,7 +48,7 @@ public class IgnoreManageHandler extends TranslatingHandler {
 				.splitToList(event.getMessage());
 		if (args.size() > 1 && args.get(1).equalsIgnoreCase("list"))
 			return new IgnoreListResponse(event);
-		if (args.size() < 3)
+		else if (args.size() < 3)
 			return new IgnoreHelpResponse(event);
 		else if (args.get(1).equalsIgnoreCase("add"))
 			return new IgnoreAddResponse(event, args.get(2));
