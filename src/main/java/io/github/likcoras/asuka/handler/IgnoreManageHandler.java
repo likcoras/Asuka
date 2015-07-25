@@ -1,5 +1,7 @@
 package io.github.likcoras.asuka.handler;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.pircbotx.PircBotX;
@@ -22,6 +24,8 @@ import io.github.likcoras.asuka.handler.response.IgnoreHelpResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreListResponse;
 
 public class IgnoreManageHandler extends TranslatingHandler {
+
+	private static final Path IGNORE_FILE = Paths.get("ignore.txt");
 
 	@Override
 	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws PermissionException {
@@ -51,9 +55,9 @@ public class IgnoreManageHandler extends TranslatingHandler {
 		else if (args.size() < 3)
 			return new IgnoreHelpResponse(event);
 		else if (args.get(1).equalsIgnoreCase("add"))
-			return new IgnoreAddResponse(event, args.get(2));
+			return new IgnoreAddResponse(event, args.get(2), IGNORE_FILE);
 		else if (args.get(1).equalsIgnoreCase("del"))
-			return new IgnoreDelResponse(event, args.get(2));
+			return new IgnoreDelResponse(event, args.get(2), IGNORE_FILE);
 		else
 			return new IgnoreHelpResponse(event);
 	}
