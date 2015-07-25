@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.likcoras</groupId>
   <artifactId>Asuka</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.2</version>
   <name>Asuka</name>
   <description>An IRC bot that searches baka-updates and batoto, among other sources</description>
   
