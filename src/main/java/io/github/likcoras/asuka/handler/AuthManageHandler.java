@@ -130,7 +130,7 @@ public class AuthManageHandler extends TranslatingHandler {
 		String channel = params.get(1);
 		if (!authChannels.contains(channel))
 			return EmptyResponse.get();
-		String user = params.get(3) + "@" + params.get(4);
+		String user = params.get(2) + "@" + params.get(3);
 		UserLevel level = prefix.get(params.get(6).charAt(params.get(6).length() - 1));
 		if (level != null)
 			return new AuthWhoResponse(user, level);
