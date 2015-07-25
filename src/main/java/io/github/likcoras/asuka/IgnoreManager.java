@@ -47,6 +47,8 @@ public class IgnoreManager {
 	}
 
 	public void readFile(@NonNull Path ignoreFile) throws IOException {
+		if (Files.notExists(ignoreFile))
+			Files.createFile(ignoreFile);
 		@Cleanup
 		BufferedReader read = Files.newBufferedReader(ignoreFile);
 		synchronized (ignored) {
