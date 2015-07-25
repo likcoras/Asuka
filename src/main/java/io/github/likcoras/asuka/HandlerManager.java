@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableList;
 
 import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.exception.PermissionException;
+import io.github.likcoras.asuka.exception.ResponseException;
 import io.github.likcoras.asuka.handler.AuthManageHandler;
 import io.github.likcoras.asuka.handler.BatotoHandler;
 import io.github.likcoras.asuka.handler.Handler;
@@ -100,6 +101,8 @@ public class HandlerManager implements Listener<PircBotX> {
 					log.error("Exception caught while handling:", e);
 			} catch (InterruptedException e) {
 				log.error("Interrupted:", e);
+			} catch (ResponseException e) {
+				log.error("Error while sending response:", e);
 			}
 		}
 	}
