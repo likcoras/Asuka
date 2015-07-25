@@ -1,6 +1,5 @@
 package io.github.likcoras.asuka;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,7 +10,6 @@ import org.pircbotx.User;
 
 import com.google.common.collect.ImmutableSet;
 
-import lombok.Cleanup;
 import lombok.NonNull;
 
 public class IgnoreManager {
@@ -49,8 +47,6 @@ public class IgnoreManager {
 	public void readFile(@NonNull Path ignoreFile) throws IOException {
 		if (Files.notExists(ignoreFile))
 			Files.createFile(ignoreFile);
-		@Cleanup
-		BufferedReader read = Files.newBufferedReader(ignoreFile);
 		synchronized (ignored) {
 			Files.lines(ignoreFile).forEach(ignored::add);
 		}
