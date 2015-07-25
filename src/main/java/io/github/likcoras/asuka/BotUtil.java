@@ -1,5 +1,7 @@
 package io.github.likcoras.asuka;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -8,6 +10,7 @@ import java.util.Locale;
 import org.pircbotx.User;
 
 import lombok.NonNull;
+import lombok.SneakyThrows;
 
 public final class BotUtil {
 
@@ -34,6 +37,11 @@ public final class BotUtil {
 
 	public static String formatTime(TemporalAccessor time) {
 		return DEFAULT_FORMATTER.format(time);
+	}
+
+	@SneakyThrows(UnsupportedEncodingException.class)
+	public static String urlEncode(String url) {
+		return URLEncoder.encode(url, "UTF-8");
 	}
 
 }

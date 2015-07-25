@@ -64,7 +64,8 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 	private BotResponse getMangaUpdates(GenericMessageEvent<PircBotX> event) throws IOException {
 		if (event.getMessage().length() < 7)
 			return EmptyResponse.get();
-		Document document = Jsoup.parse(new URL(SEARCH_URL + event.getMessage().substring(6)), 10000);
+		Document document = Jsoup.parse(new URL(SEARCH_URL + BotUtil.urlEncode(event.getMessage().substring(6))),
+				10000);
 		Elements results = document.select("table.table.no-border a[href]");
 		if (results.isEmpty())
 			return new NoResultResponse(event);
