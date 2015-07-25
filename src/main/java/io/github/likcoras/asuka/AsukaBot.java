@@ -84,7 +84,7 @@ public class AsukaBot {
 				.setServer(config.getString("ircServer"), config.getInt("ircPort"))
 				.setSocketFactory(config.getBoolean("ircSSL") ? new UtilSSLSocketFactory().trustAllCertificates()
 						: SocketFactory.getDefault());
-		Stream<String[]> channels = config.getStringList("ircChannels").stream().map(s -> s.split(":"));
+		Stream<String[]> channels = config.getStringList("ircChannels").stream().map(s -> s.split(":", 2));
 		channels.forEach(c -> {
 			if (c.length > 1)
 				botConfig.addAutoJoinChannel(c[0], c[1]);
