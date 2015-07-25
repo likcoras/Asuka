@@ -62,6 +62,7 @@ public class AsukaBot {
 				return false;
 			}
 			ignoreManager = new IgnoreManager();
+			ignoreManager.readFile(Paths.get("ignore.txt"));
 			authManager = new AuthManager(config);
 			handlerManager = new HandlerManager(this);
 			handlerManager.configHandlers(config);
