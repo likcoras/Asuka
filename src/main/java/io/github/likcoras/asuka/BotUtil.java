@@ -25,6 +25,7 @@ public final class BotUtil {
 	}
 
 	public static boolean isTrigger(@NonNull String message, @NonNull String trigger) {
+		message = message.toLowerCase(Locale.ENGLISH);
 		return message.startsWith("." + trigger) || message.startsWith("!" + trigger);
 	}
 
