@@ -1,18 +1,19 @@
 package io.github.likcoras.asuka.handler;
 
 import io.github.likcoras.asuka.AsukaBot;
-import io.github.likcoras.asuka.BotConfig;
 import io.github.likcoras.asuka.exception.ConfigException;
-import io.github.likcoras.asuka.exception.HandlerException;
-import io.github.likcoras.asuka.exception.PermissionException;
-import io.github.likcoras.asuka.handler.response.BotResponse;
+import lombok.Getter;
+
 import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.Event;
+import org.pircbotx.hooks.ListenerAdapter;
 
-public interface Handler {
+public abstract class Handler extends ListenerAdapter<PircBotX> {
 
-	public void configure(BotConfig config) throws ConfigException;
+	@Getter
+	private final AsukaBot bot;
 
-	public BotResponse handle(AsukaBot bot, Event<PircBotX> event) throws PermissionException, HandlerException;
+	public Handler(AsukaBot bot) throws ConfigException {
+		this.bot = bot;
+	}
 
 }

@@ -2,10 +2,10 @@ package io.github.likcoras.asuka.handler;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.HandlerException;
-import io.github.likcoras.asuka.handler.response.BotResponse;
-import io.github.likcoras.asuka.handler.response.EmptyResponse;
+import io.github.likcoras.asuka.exception.ConfigException;
+import io.github.likcoras.asuka.handler.response.ExceptionResponse;
 import io.github.likcoras.asuka.handler.response.SilentSkyRSSResponse;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,8 +13,6 @@ import java.time.Instant;
 import java.util.List;
 
 import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.events.MessageEvent;
-import org.pircbotx.hooks.events.PrivateMessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import com.rometools.fetcher.FeedFetcher;
@@ -24,44 +22,37 @@ import com.rometools.fetcher.impl.LinkedHashMapFeedInfoCache;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.io.FeedException;
 
-public class SilentSkyRSSHandler extends TranslatingHandler {
+@Log4j2
+public class SilentSkyRSSHandler extends Handler {
 
 	private static final String RSS_LINK = "http://www.silentsky-scans.net/feed/";
 
 	private FeedFetcher fetcher = new HttpClientFeedFetcher(LinkedHashMapFeedInfoCache.getInstance());
 
-	@Override
-	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws HandlerException {
-		if (!BotUtil.isTrigger(event.getMessage(), "latest"))
-			return EmptyResponse.get();
-		try {
-			return onHandle(bot, event);
-		} catch (FetcherException | FeedException | IOException e) {
-			throw new HandlerException(this, "Exception while fetching data", e);
-		}
+	public SilentSkyRSSHandler(AsukaBot bot) throws ConfigException {
+		super(bot);
 	}
 
 	@Override
-	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws HandlerException {
-		if (!BotUtil.isTrigger(event.getMessage(), "latest"))
-			return EmptyResponse.get();
-		try {
-			return onHandle(bot, event);
-		} catch (FetcherException | FeedException | IOException e) {
-			throw new HandlerException(this, "Exception while fetching data", e);
-		}
+	public void onGenericMessage(GenericMessageEvent<PircBotX> event) {
+		if (BotUtil.isTrigger(event.getMessage(), "latest"))
+			try {
+				onHandle(event);
+			} catch (FetcherException | FeedException | IOException e) {
+				getBot().send(new ExceptionResponse(this, event, e));
+				log.error(BotUtil.getExceptionMessage(this, event, e), e);
+			}
 	}
 
-	private BotResponse onHandle(AsukaBot bot, GenericMessageEvent<PircBotX> event)
-			throws FetcherException, FeedException, IOException {
+	private void onHandle(GenericMessageEvent<PircBotX> event) throws FetcherException, FeedException, IOException {
 		List<SyndEntry> entries = fetcher.retrieveFeed(new URL(RSS_LINK)).getEntries();
 		if (entries.isEmpty())
-			return EmptyResponse.get();
+			return;
 		SyndEntry latest = entries.get(0);
 		String title = latest.getTitle();
 		Instant date = Instant.ofEpochMilli(latest.getPublishedDate().getTime());
 		String link = latest.getLink();
-		return new SilentSkyRSSResponse(event, title, date, link);
+		getBot().send(new SilentSkyRSSResponse(event, title, date, link));
 	}
 
 }
