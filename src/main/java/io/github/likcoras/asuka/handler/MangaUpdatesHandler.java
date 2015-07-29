@@ -2,13 +2,13 @@ package io.github.likcoras.asuka.handler;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.HandlerException;
-import io.github.likcoras.asuka.handler.response.BotResponse;
-import io.github.likcoras.asuka.handler.response.EmptyResponse;
+import io.github.likcoras.asuka.exception.ConfigException;
+import io.github.likcoras.asuka.handler.response.ExceptionResponse;
 import io.github.likcoras.asuka.handler.response.MangaUpdatesResponse;
 import io.github.likcoras.asuka.handler.response.NoResultResponse;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,11 +22,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.events.MessageEvent;
-import org.pircbotx.hooks.events.PrivateMessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
-public class MangaUpdatesHandler extends TranslatingHandler {
+@Log4j2
+public class MangaUpdatesHandler extends Handler {
 
 	private static final String SEARCH_URL = "https://rlstrackr.com/search/series/?q=";
 	private static final String DISPLAY_URL = "http://www.mangaupdates.com/series.html?id=";
@@ -34,45 +33,40 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 	private static final Pattern LINK_PATTERN = Pattern.compile(
 			"((https?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)/?)");
 
-	@Override
-	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws HandlerException {
-		try {
-			return handle(event);
-		} catch (IOException e) {
-			throw new HandlerException(this, "Exception while fetching data", e);
-		}
+	public MangaUpdatesHandler(AsukaBot bot) throws ConfigException {
+		super(bot);
 	}
 
 	@Override
-	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws HandlerException {
+	public void onGenericMessage(GenericMessageEvent<PircBotX> event) {
 		try {
-			return handle(event);
+			handle(event);
 		} catch (IOException e) {
-			throw new HandlerException(this, "Exception while fetching data", e);
+			getBot().send(new ExceptionResponse(this, event, e));
+			log.error(BotUtil.getExceptionMessage(this, event, e), e);
 		}
 	}
 
-	private BotResponse handle(GenericMessageEvent<PircBotX> event) throws IOException {
+	private void handle(GenericMessageEvent<PircBotX> event) throws IOException {
 		if (BotUtil.isTrigger(event.getMessage(), "baka"))
-			return getMangaUpdates(event);
+			getMangaUpdates(event);
 		Matcher matcher = LINK_PATTERN.matcher(event.getMessage());
 		if (matcher.find())
-			return getMangaUpdatesLink(event, INFO_URL + matcher.group(7));
-		return EmptyResponse.get();
+			getMangaUpdatesLink(event, INFO_URL + matcher.group(7));
 	}
 
-	private BotResponse getMangaUpdates(GenericMessageEvent<PircBotX> event) throws IOException {
+	private void getMangaUpdates(GenericMessageEvent<PircBotX> event) throws IOException {
 		if (event.getMessage().length() < 7)
-			return EmptyResponse.get();
+			return;
 		Document document = Jsoup.parse(new URL(SEARCH_URL + BotUtil.urlEncode(event.getMessage().substring(6))),
 				10000);
 		Elements results = document.select("table.table.no-border a[href]");
 		if (results.isEmpty())
-			return new NoResultResponse(event);
-		return getMangaUpdatesLink(event, results.get(0).attr("abs:href"));
+			getBot().send(new NoResultResponse(event));
+		getMangaUpdatesLink(event, results.get(0).attr("abs:href"));
 	}
 
-	private BotResponse getMangaUpdatesLink(GenericMessageEvent<PircBotX> event, String link) throws IOException {
+	private void getMangaUpdatesLink(GenericMessageEvent<PircBotX> event, String link) throws IOException {
 		Document document = Jsoup.parse(new URL(link.startsWith("http") ? link : "http://" + link), 10000);
 		String title = document.select("div.content header h2").text();
 		String author = document.select("dd:contains(Author) + dt").isEmpty() ? "Unknown"
@@ -95,7 +89,8 @@ public class MangaUpdatesHandler extends TranslatingHandler {
 		Matcher matcher = LINK_PATTERN.matcher(link);
 		matcher.find();
 		link = DISPLAY_URL + matcher.group(7);
-		return new MangaUpdatesResponse(event, new MangaUpdatesData(title, author, tags, group, date, chapter, link));
+		getBot().send(
+				new MangaUpdatesResponse(event, new MangaUpdatesData(title, author, tags, group, date, chapter, link)));
 	}
 
 	@Value

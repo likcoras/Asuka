@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.pircbotx.PircBotX;
 import org.pircbotx.UserLevel;
-import org.pircbotx.hooks.events.MessageEvent;
-import org.pircbotx.hooks.events.PrivateMessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import com.google.common.base.CharMatcher;
@@ -15,51 +13,44 @@ import com.google.common.base.Splitter;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.PermissionException;
-import io.github.likcoras.asuka.handler.response.BotResponse;
-import io.github.likcoras.asuka.handler.response.EmptyResponse;
+import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.response.IgnoreAddResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreDelResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreHelpResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreListResponse;
+import io.github.likcoras.asuka.handler.response.PermissionResponse;
 
-public class IgnoreManageHandler extends TranslatingHandler {
+public class IgnoreManageHandler extends Handler {
 
 	private static final Path IGNORE_FILE = Paths.get("ignore.txt");
 
-	@Override
-	public BotResponse onMessage(AsukaBot bot, MessageEvent<PircBotX> event) throws PermissionException {
-		if (!BotUtil.isTrigger(event.getMessage(), "ignore"))
-			return EmptyResponse.get();
-		else if (bot.getAuthManager().checkAccess(event.getUser(), UserLevel.OP))
-			return handleIgnore(event);
-		else
-			throw new PermissionException(this, event.getUser(), event.getMessage());
+	public IgnoreManageHandler(AsukaBot bot) throws ConfigException {
+		super(bot);
 	}
 
 	@Override
-	public BotResponse onPrivateMessage(AsukaBot bot, PrivateMessageEvent<PircBotX> event) throws PermissionException {
+	public void onGenericMessage(GenericMessageEvent<PircBotX> event) {
 		if (!BotUtil.isTrigger(event.getMessage(), "ignore"))
-			return EmptyResponse.get();
-		else if (bot.getAuthManager().checkAccess(event.getUser(), UserLevel.OP))
-			return handleIgnore(event);
+			return;
+		else if (getBot().getAuthManager().checkAccess(event.getUser(), UserLevel.OP))
+			handleIgnore(event);
 		else
-			throw new PermissionException(this, event.getUser(), event.getMessage());
+			getBot().send(new PermissionResponse(event));
 	}
 
-	private BotResponse handleIgnore(GenericMessageEvent<PircBotX> event) {
+	private void handleIgnore(GenericMessageEvent<PircBotX> event) {
 		List<String> args = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings().trimResults()
 				.splitToList(event.getMessage());
 		if (args.size() > 1 && args.get(1).equalsIgnoreCase("list"))
-			return new IgnoreListResponse(event);
+			getBot().send(new IgnoreListResponse(event));
 		else if (args.size() < 3)
-			return new IgnoreHelpResponse(event);
+			getBot().send(new IgnoreHelpResponse(event));
 		else if (args.get(1).equalsIgnoreCase("add"))
-			return new IgnoreAddResponse(event, args.get(2), IGNORE_FILE);
+			getBot().send(new IgnoreAddResponse(event, args.get(2), IGNORE_FILE));
 		else if (args.get(1).equalsIgnoreCase("del"))
-			return new IgnoreDelResponse(event, args.get(2), IGNORE_FILE);
+			getBot().send(new IgnoreDelResponse(event, args.get(2), IGNORE_FILE));
 		else
-			return new IgnoreHelpResponse(event);
+			getBot().send(new IgnoreHelpResponse(event));
 	}
 
 }

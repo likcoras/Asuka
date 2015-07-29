@@ -10,8 +10,20 @@ import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.exception.IrcException;
+import org.pircbotx.hooks.managers.ListenerManager;
 
 import io.github.likcoras.asuka.exception.ConfigException;
+import io.github.likcoras.asuka.handler.AuthManageHandler;
+import io.github.likcoras.asuka.handler.BatotoHandler;
+import io.github.likcoras.asuka.handler.IgnoreManageHandler;
+import io.github.likcoras.asuka.handler.MangaUpdatesHandler;
+import io.github.likcoras.asuka.handler.QuitHandler;
+import io.github.likcoras.asuka.handler.SilentSkyRSSHandler;
+import io.github.likcoras.asuka.handler.SilentSkyXMLHandler;
+import io.github.likcoras.asuka.handler.UptimeHandler;
+import io.github.likcoras.asuka.handler.response.BotResponse;
+import io.github.likcoras.asuka.out.DefaultOutputManager;
+import io.github.likcoras.asuka.out.OutputManager;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
@@ -27,7 +39,9 @@ public class AsukaBot {
 	@Getter
 	private IgnoreManager ignoreManager;
 	@Getter
-	private HandlerManager handlerManager;
+	private OutputManager outputManager;
+	@Getter
+	private ListenerManager<PircBotX> listenerManager;
 
 	public static void main(String[] args) {
 		new AsukaBot();
@@ -51,7 +65,6 @@ public class AsukaBot {
 		} catch (IOException | IrcException e) {
 			log.error("Exception caught while running bot: ", e);
 		}
-		handlerManager.shutdown();
 	}
 
 	private boolean initComponents() {
@@ -64,8 +77,9 @@ public class AsukaBot {
 			ignoreManager = new IgnoreManager();
 			ignoreManager.readFile(Paths.get("ignore.txt"));
 			authManager = new AuthManager(config);
-			handlerManager = new HandlerManager(this);
-			handlerManager.configHandlers(config);
+			outputManager = new DefaultOutputManager(this);
+			listenerManager = new AsukaListenerManager(this);
+			addListeners(listenerManager);
 		} catch (ConfigException e) {
 			log.error("Configuration exception while initializing:", e);
 			return false;
@@ -76,11 +90,24 @@ public class AsukaBot {
 		return true;
 	}
 
+	private void addListeners(ListenerManager<PircBotX> listenerManager) throws ConfigException {
+		listenerManager.addListener(new AuthManageHandler(this));
+		listenerManager.addListener(new BatotoHandler(this));
+		listenerManager.addListener(new IgnoreManageHandler(this));
+		listenerManager.addListener(new MangaUpdatesHandler(this));
+		listenerManager.addListener(new QuitHandler(this));
+		listenerManager.addListener(new SilentSkyRSSHandler(this));
+		listenerManager.addListener(new SilentSkyXMLHandler(this));
+		listenerManager.addListener(new UptimeHandler(this));
+		listenerManager.addListener(new BotLogger());
+	}
+
 	private void configureBot() throws ConfigException {
-		Configuration.Builder<PircBotX> botConfig = new Configuration.Builder<PircBotX>().addListener(handlerManager)
-				.addListener(new BotLogger()).setAutoNickChange(true).setAutoReconnect(true).setAutoSplitMessage(true)
-				.setMessageDelay(0L).setName(config.getString("ircNick")).setLogin(config.getString("ircUsername"))
-				.setRealName(config.getString("ircRealname")).setNickservPassword(config.getString("ircPassword"))
+		Configuration.Builder<PircBotX> botConfig = new Configuration.Builder<PircBotX>().setAutoNickChange(true)
+				.setAutoReconnect(true).setAutoSplitMessage(true).setMessageDelay(0L)
+				.setListenerManager(listenerManager).setName(config.getString("ircNick"))
+				.setLogin(config.getString("ircUsername")).setRealName(config.getString("ircRealname"))
+				.setNickservPassword(config.getString("ircPassword"))
 				.setServer(config.getString("ircServer"), config.getInt("ircPort"))
 				.setSocketFactory(config.getBoolean("ircSSL") ? new UtilSSLSocketFactory().trustAllCertificates()
 						: SocketFactory.getDefault());
@@ -92,6 +119,10 @@ public class AsukaBot {
 				botConfig.addAutoJoinChannel(c[0]);
 		});
 		ircBot = new PircBotX(botConfig.buildConfiguration());
+	}
+
+	public void send(BotResponse response) {
+		outputManager.send(response);
 	}
 
 }

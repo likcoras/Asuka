@@ -7,8 +7,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
+import org.pircbotx.PircBotX;
 import org.pircbotx.User;
+import org.pircbotx.hooks.types.GenericEvent;
 
+import io.github.likcoras.asuka.handler.Handler;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
@@ -26,6 +29,7 @@ public final class BotUtil {
 
 	public static boolean isTrigger(@NonNull String message, @NonNull String trigger) {
 		message = message.toLowerCase(Locale.ENGLISH);
+		trigger = trigger.toLowerCase(Locale.ENGLISH);
 		return message.startsWith("." + trigger) || message.startsWith("!" + trigger);
 	}
 
@@ -43,6 +47,11 @@ public final class BotUtil {
 	@SneakyThrows(UnsupportedEncodingException.class)
 	public static String urlEncode(String url) {
 		return URLEncoder.encode(url, "UTF-8");
+	}
+
+	public static String getExceptionMessage(Handler handler, GenericEvent<PircBotX> event, Exception cause) {
+		return "Error while handling " + event.getClass().getSimpleName() + " with "
+				+ handler.getClass().getSimpleName() + ": " + cause.getMessage();
 	}
 
 }
