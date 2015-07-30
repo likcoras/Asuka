@@ -2,14 +2,13 @@ package io.github.likcoras.asuka.handler.response;
 
 import org.pircbotx.UserLevel;
 import io.github.likcoras.asuka.AsukaBot;
-import lombok.NonNull;
 
 public class AuthWhoResponse implements BotResponse {
 
 	private String user;
 	private UserLevel level;
 
-	public AuthWhoResponse(@NonNull String user, @NonNull UserLevel level) {
+	public AuthWhoResponse(String user, UserLevel level) {
 		this.user = user;
 		this.level = level;
 	}

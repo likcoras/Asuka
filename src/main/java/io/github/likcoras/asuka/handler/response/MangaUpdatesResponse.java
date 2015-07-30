@@ -10,7 +10,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
 import io.github.likcoras.asuka.handler.MangaUpdatesHandler.MangaUpdatesData;
-import lombok.NonNull;
 
 public class MangaUpdatesResponse implements BotResponse {
 
@@ -21,7 +20,7 @@ public class MangaUpdatesResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public MangaUpdatesResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull MangaUpdatesData data) {
+	public MangaUpdatesResponse(GenericMessageEvent<PircBotX> event, MangaUpdatesData data) {
 		this.event = event;
 		message = String.format(FORMAT, data.getTitle(), data.getAuthor(), data.getTags(), getReleaseMessage(data),
 				data.getLink());

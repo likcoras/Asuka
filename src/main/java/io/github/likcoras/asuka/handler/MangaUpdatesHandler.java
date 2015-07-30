@@ -5,7 +5,6 @@ import io.github.likcoras.asuka.BotUtil;
 import io.github.likcoras.asuka.handler.response.ExceptionResponse;
 import io.github.likcoras.asuka.handler.response.MangaUpdatesResponse;
 import io.github.likcoras.asuka.handler.response.NoResultResponse;
-import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.log4j.Log4j2;
 
@@ -94,19 +93,12 @@ public class MangaUpdatesHandler extends Handler {
 
 	@Value
 	public static class MangaUpdatesData {
-		@NonNull
 		String title;
-		@NonNull
 		String author;
-		@NonNull
 		String tags;
-		@NonNull
 		String group;
-		@NonNull
 		LocalDate date;
-		@NonNull
 		String chapter;
-		@NonNull
 		String link;
 	}
 

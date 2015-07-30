@@ -1,7 +1,6 @@
 package io.github.likcoras.asuka.exception;
 
 import lombok.Getter;
-import lombok.NonNull;
 
 public class ConfigException extends Exception {
 
@@ -14,14 +13,14 @@ public class ConfigException extends Exception {
 	@Getter
 	private final Class<?> requiredType;
 
-	public ConfigException(@NonNull String key) {
+	public ConfigException(String key) {
 		super("Attempted to access missing required key " + key);
 		this.key = key;
 		this.reason = Reason.MISSING;
 		this.requiredType = null;
 	}
 
-	public ConfigException(@NonNull String key, Class<?> type) {
+	public ConfigException(String key, Class<?> type) {
 		super("Attempted to access key " + key + " as " + type.getSimpleName());
 		this.key = key;
 		this.reason = Reason.INVALID;

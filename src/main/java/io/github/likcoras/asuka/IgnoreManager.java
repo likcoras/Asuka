@@ -10,8 +10,6 @@ import org.pircbotx.User;
 
 import com.google.common.collect.ImmutableSet;
 
-import lombok.NonNull;
-
 public class IgnoreManager {
 
 	private Set<String> ignored;
@@ -20,31 +18,31 @@ public class IgnoreManager {
 		ignored = Collections.synchronizedSet(new HashSet<String>());
 	}
 
-	public void addIgnored(@NonNull User user) {
+	public void addIgnored(User user) {
 		addIgnored(user.getNick());
 	}
 
-	public void addIgnored(@NonNull String user) {
+	public void addIgnored(String user) {
 		ignored.add(user);
 	}
 
-	public void removeIgnored(@NonNull User user) {
+	public void removeIgnored(User user) {
 		removeIgnored(user.getNick());
 	}
 
-	public void removeIgnored(@NonNull String user) {
+	public void removeIgnored(String user) {
 		ignored.remove(user);
 	}
 
-	public boolean isIgnored(@NonNull User user) {
-		return ignored.contains(user.getNick());
+	public boolean isIgnored(User user) {
+		return user != null && ignored.contains(user.getNick());
 	}
 
 	public Set<String> getIgnored() {
 		return ImmutableSet.copyOf(ignored);
 	}
 
-	public void readFile(@NonNull Path ignoreFile) throws IOException {
+	public void readFile(Path ignoreFile) throws IOException {
 		if (Files.notExists(ignoreFile))
 			Files.createFile(ignoreFile);
 		synchronized (ignored) {
@@ -52,7 +50,7 @@ public class IgnoreManager {
 		}
 	}
 
-	public void writeFile(@NonNull Path ignoreFile) throws IOException {
+	public void writeFile(Path ignoreFile) throws IOException {
 		synchronized (ignored) {
 			Files.write(ignoreFile, ignored);
 		}

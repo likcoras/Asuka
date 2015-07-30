@@ -7,7 +7,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
 import io.github.likcoras.asuka.handler.SilentSkyXMLHandler.SilentXMLData;
-import lombok.NonNull;
 
 public class SilentSkyXMLResponse implements BotResponse {
 
@@ -19,7 +18,7 @@ public class SilentSkyXMLResponse implements BotResponse {
 	private GenericMessageEvent<PircBotX> event;
 	private String message;
 
-	public SilentSkyXMLResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull SilentXMLData data) {
+	public SilentSkyXMLResponse(GenericMessageEvent<PircBotX> event, SilentXMLData data) {
 		this.event = event;
 		StringBuilder builder = new StringBuilder(String.format(HEAD_FORMAT, data.getProject(), data.getChapter()));
 		if (!data.getMediafireLink().isEmpty())

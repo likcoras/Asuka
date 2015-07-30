@@ -4,7 +4,6 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 import io.github.likcoras.asuka.AsukaBot;
-import lombok.NonNull;
 
 public class QuitResponse implements BotResponse {
 
@@ -12,7 +11,7 @@ public class QuitResponse implements BotResponse {
 	private String reply;
 	private String message;
 
-	public QuitResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String reply, @NonNull String message) {
+	public QuitResponse(GenericMessageEvent<PircBotX> event, String reply, String message) {
 		this.event = event;
 		this.reply = reply.replaceAll("%s", event.getUser().getNick());
 		this.message = message.replaceAll("%s", event.getUser().getNick());

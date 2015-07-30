@@ -12,7 +12,6 @@ import org.pircbotx.User;
 import org.pircbotx.hooks.types.GenericEvent;
 
 import io.github.likcoras.asuka.handler.Handler;
-import lombok.NonNull;
 import lombok.SneakyThrows;
 
 public final class BotUtil {
@@ -23,17 +22,17 @@ public final class BotUtil {
 	private BotUtil() {
 	}
 
-	public static String getId(@NonNull User user) {
+	public static String getId(User user) {
 		return user.getLogin() + "@" + user.getHostmask();
 	}
 
-	public static boolean isTrigger(@NonNull String message, @NonNull String trigger) {
+	public static boolean isTrigger(String message, String trigger) {
 		message = message.toLowerCase(Locale.ENGLISH);
 		trigger = trigger.toLowerCase(Locale.ENGLISH);
 		return message.startsWith("." + trigger) || message.startsWith("!" + trigger);
 	}
 
-	public static String addFormat(@NonNull String message) {
+	public static String addFormat(String message) {
 		return message.replaceAll("&b", "\u0002").replaceAll("&\u0002", "&b").replaceAll("&(\\d\\d)", "\u0003$1")
 				.replaceAll("&\u0003", "&").replaceAll("&r", "\u000f").replaceAll("&\u000f", "&r")
 				.replaceAll("&s", "\u0016").replaceAll("&\u0016", "&s").replaceAll("&i", "\u001d")

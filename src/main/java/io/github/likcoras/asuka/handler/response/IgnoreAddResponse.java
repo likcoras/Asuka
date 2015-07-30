@@ -8,7 +8,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.exception.ResponseException;
-import lombok.NonNull;
 
 public class IgnoreAddResponse implements BotResponse {
 
@@ -16,7 +15,7 @@ public class IgnoreAddResponse implements BotResponse {
 	private String user;
 	private Path ignoreFile;
 
-	public IgnoreAddResponse(@NonNull GenericMessageEvent<PircBotX> event, @NonNull String user, Path ignoreFile) {
+	public IgnoreAddResponse(GenericMessageEvent<PircBotX> event, String user, Path ignoreFile) {
 		this.event = event;
 		this.user = user;
 		this.ignoreFile = ignoreFile;

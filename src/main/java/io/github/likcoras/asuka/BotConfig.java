@@ -10,7 +10,6 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import lombok.Cleanup;
-import lombok.NonNull;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.Resources;
@@ -23,7 +22,7 @@ public class BotConfig {
 		config = new Properties();
 	}
 
-	public boolean load(@NonNull Path path) throws IOException {
+	public boolean load(Path path) throws IOException {
 		if (Files.exists(path)) {
 			loadFile(path);
 			return true;
@@ -33,14 +32,14 @@ public class BotConfig {
 		}
 	}
 
-	public String getString(@NonNull String key) throws ConfigException {
+	public String getString(String key) throws ConfigException {
 		String value = config.getProperty(key);
 		if (value == null)
 			throw new ConfigException(key);
 		return value;
 	}
 
-	public int getInt(@NonNull String key) throws ConfigException {
+	public int getInt(String key) throws ConfigException {
 		try {
 			return Integer.parseInt(getString(key));
 		} catch (NumberFormatException e) {
@@ -48,7 +47,7 @@ public class BotConfig {
 		}
 	}
 
-	public boolean getBoolean(@NonNull String key) throws ConfigException {
+	public boolean getBoolean(String key) throws ConfigException {
 		String value = getString(key);
 		if (value.equalsIgnoreCase("true"))
 			return true;
@@ -58,11 +57,11 @@ public class BotConfig {
 			throw new ConfigException(key, Boolean.class);
 	}
 
-	public List<String> getStringList(@NonNull String key) throws ConfigException {
+	public List<String> getStringList(String key) throws ConfigException {
 		return Splitter.on(',').omitEmptyStrings().trimResults().splitToList(getString(key));
 	}
 
-	public List<Integer> getIntList(@NonNull String key) throws ConfigException {
+	public List<Integer> getIntList(String key) throws ConfigException {
 		try {
 			return getStringList(key).stream().mapToInt(s -> Integer.parseInt(s)).boxed().collect(Collectors.toList());
 		} catch (NumberFormatException e) {
