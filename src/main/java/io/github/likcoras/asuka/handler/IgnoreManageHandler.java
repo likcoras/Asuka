@@ -13,7 +13,6 @@ import com.google.common.base.Splitter;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.response.IgnoreAddResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreDelResponse;
 import io.github.likcoras.asuka.handler.response.IgnoreHelpResponse;
@@ -24,7 +23,7 @@ public class IgnoreManageHandler extends Handler {
 
 	private static final Path IGNORE_FILE = Paths.get("ignore.txt");
 
-	public IgnoreManageHandler(AsukaBot bot) throws ConfigException {
+	public IgnoreManageHandler(AsukaBot bot) {
 		super(bot);
 	}
 

@@ -2,7 +2,6 @@ package io.github.likcoras.asuka.handler;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.response.ExceptionResponse;
 import io.github.likcoras.asuka.handler.response.PermissionResponse;
 import io.github.likcoras.asuka.handler.response.SilentSkyXMLResponse;
@@ -32,7 +31,7 @@ public class SilentSkyXMLHandler extends Handler {
 	private Map<String, SilentXMLData> xmlData = new HashMap<>();
 	private volatile long updateTime = -1L;
 
-	public SilentSkyXMLHandler(AsukaBot bot) throws ConfigException {
+	public SilentSkyXMLHandler(AsukaBot bot) {
 		super(bot);
 	}
 

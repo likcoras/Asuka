@@ -2,7 +2,6 @@ package io.github.likcoras.asuka.handler;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.response.ExceptionResponse;
 import io.github.likcoras.asuka.handler.response.MangaUpdatesResponse;
 import io.github.likcoras.asuka.handler.response.NoResultResponse;
@@ -33,7 +32,7 @@ public class MangaUpdatesHandler extends Handler {
 	private static final Pattern LINK_PATTERN = Pattern.compile(
 			"((https?://)?(www\\.)?((rlstrackr.com/series/info/)|(mangaupdates.com/series.html\\?id=))(\\d+)/?)");
 
-	public MangaUpdatesHandler(AsukaBot bot) throws ConfigException {
+	public MangaUpdatesHandler(AsukaBot bot) {
 		super(bot);
 	}
 

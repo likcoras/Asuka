@@ -2,7 +2,6 @@ package io.github.likcoras.asuka.handler;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.response.ExceptionResponse;
 import io.github.likcoras.asuka.handler.response.SilentSkyRSSResponse;
 import lombok.extern.log4j.Log4j2;
@@ -29,7 +28,7 @@ public class SilentSkyRSSHandler extends Handler {
 
 	private FeedFetcher fetcher = new HttpClientFeedFetcher(LinkedHashMapFeedInfoCache.getInstance());
 
-	public SilentSkyRSSHandler(AsukaBot bot) throws ConfigException {
+	public SilentSkyRSSHandler(AsukaBot bot) {
 		super(bot);
 	}
 

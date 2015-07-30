@@ -8,14 +8,13 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.response.UptimeResponse;
 
 public class UptimeHandler extends Handler {
 
 	private Instant upSince;
 
-	public UptimeHandler(AsukaBot bot) throws ConfigException {
+	public UptimeHandler(AsukaBot bot) {
 		super(bot);
 	}
 

@@ -2,7 +2,6 @@ package io.github.likcoras.asuka.handler;
 
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
-import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.response.BatotoResponse;
 import io.github.likcoras.asuka.handler.response.ExceptionResponse;
 import io.github.likcoras.asuka.handler.response.NoResultResponse;
@@ -25,7 +24,7 @@ public class BatotoHandler extends Handler {
 	private static final String SEARCH_URL = "http://bato.to/search?name_cond=c&order_cond=views&order=desc&name=";
 	private static final Pattern LINK_PATTERN = Pattern.compile("((https?://)?bato.to/comic/_/(comics/)?\\S+/?)");
 
-	public BatotoHandler(AsukaBot bot) throws ConfigException {
+	public BatotoHandler(AsukaBot bot) {
 		super(bot);
 	}
 
