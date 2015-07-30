@@ -15,6 +15,7 @@ import org.pircbotx.hooks.managers.ListenerManager;
 import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.AuthManageHandler;
 import io.github.likcoras.asuka.handler.BatotoHandler;
+import io.github.likcoras.asuka.handler.GetNickHandler;
 import io.github.likcoras.asuka.handler.IgnoreManageHandler;
 import io.github.likcoras.asuka.handler.MangaUpdatesHandler;
 import io.github.likcoras.asuka.handler.QuitHandler;
@@ -94,6 +95,7 @@ public class AsukaBot {
 		listenerManager.addListener(new AuthManageHandler(this));
 		listenerManager.addListener(new BatotoHandler(this));
 		listenerManager.addListener(new IgnoreManageHandler(this));
+		listenerManager.addListener(new GetNickHandler(this));
 		listenerManager.addListener(new MangaUpdatesHandler(this));
 		listenerManager.addListener(new QuitHandler(this));
 		listenerManager.addListener(new SilentSkyRSSHandler(this));
