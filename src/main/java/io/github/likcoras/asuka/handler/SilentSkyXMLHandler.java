@@ -117,7 +117,7 @@ public class SilentSkyXMLHandler extends Handler {
 		return newData;
 	}
 
-	public void getData(GenericMessageEvent<PircBotX> event, String trigger) {
+	private void getData(GenericMessageEvent<PircBotX> event, String trigger) {
 		synchronized (xmlData) {
 			getBot().send(new SilentSkyXMLResponse(event, xmlData.get(trigger)));
 		}
