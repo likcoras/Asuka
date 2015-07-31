@@ -28,4 +28,5 @@ quitMessage: Oyasuminasai~ (requested by %s)
 authChannel: #staffchannel
 ownerId: likcoras@tis.very.bored
 
+# Do NOT change this unless told to
 version: ${project.version}

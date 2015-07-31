@@ -2,6 +2,7 @@ package io.github.likcoras.asuka;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import javax.net.SocketFactory;
@@ -75,6 +76,10 @@ public class AsukaBot {
 			if (!config.load(Paths.get("config.txt"))) {
 				log.warn("A new configuration file was written, please edit!");
 				return false;
+			} else if (!checkOldConfig()) {
+				log.error(
+						"Old configuration detected, please follow the instructions above, or delete the configuration to re-generate one.");
+				return false;
 			}
 			ignoreManager = new IgnoreManager();
 			ignoreManager.readFile(Paths.get("ignore.txt"));
@@ -90,6 +95,29 @@ public class AsukaBot {
 			return false;
 		}
 		return true;
+	}
+
+	private boolean checkOldConfig() throws ConfigException {
+		int[] version = Arrays.asList(config.getString("version").replaceAll("-SNAPSHOT", "").split("\\.")).stream()
+				.mapToInt(s -> Integer.parseInt(s)).toArray();
+		boolean valid = true;
+		if (!isHigher(version, new int[] { 3, 0, 5 })) {
+			log.error("Change 'authChannels' to 'authChannel' and only allow a single channel. Afterwards, set 'version' to at least 3.0.5");
+			valid = false;
+		}
+		return valid;
+	}
+
+	private boolean isHigher(int[] current, int[] required) {
+		if (current[0] > required[0])
+			return true;
+		else if (current[0] == required[0])
+			if (current[1] > required[1])
+				return true;
+			else if (current[1] == required[1])
+				if (current[2] >= required[2])
+					return true;
+		return false;
 	}
 
 	private void addListeners(ListenerManager<PircBotX> listenerManager) throws ConfigException {
