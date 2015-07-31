@@ -16,8 +16,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import com.rometools.fetcher.FeedFetcher;
 import com.rometools.fetcher.FetcherException;
-import com.rometools.fetcher.impl.HttpClientFeedFetcher;
-import com.rometools.fetcher.impl.LinkedHashMapFeedInfoCache;
+import com.rometools.fetcher.impl.HttpURLFeedFetcher;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.io.FeedException;
 
@@ -26,7 +25,7 @@ public class SilentSkyRSSHandler extends Handler {
 
 	private static final String RSS_LINK = "http://www.silentsky-scans.net/feed/";
 
-	private FeedFetcher fetcher = new HttpClientFeedFetcher(LinkedHashMapFeedInfoCache.getInstance());
+	private FeedFetcher fetcher = new HttpURLFeedFetcher();
 
 	public SilentSkyRSSHandler(AsukaBot bot) {
 		super(bot);
