@@ -3,7 +3,6 @@ package io.github.likcoras.asuka.handler.response;
 import java.time.Duration;
 import java.time.Instant;
 import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 import io.github.likcoras.asuka.AsukaBot;
 import io.github.likcoras.asuka.BotUtil;
@@ -26,10 +25,7 @@ public class UptimeResponse implements BotResponse {
 
 	@Override
 	public void send(AsukaBot bot) {
-		if (event instanceof MessageEvent)
-			((MessageEvent<PircBotX>) event).getChannel().send().message(message);
-		else
-			event.getUser().send().message(message);
+		BotUtil.chanUserRespond(event, message);
 	}
 
 }

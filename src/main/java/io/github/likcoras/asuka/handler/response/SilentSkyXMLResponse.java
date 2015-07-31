@@ -1,7 +1,6 @@
 package io.github.likcoras.asuka.handler.response;
 
 import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
@@ -32,10 +31,7 @@ public class SilentSkyXMLResponse implements BotResponse {
 
 	@Override
 	public void send(AsukaBot bot) {
-		if (event instanceof MessageEvent)
-			((MessageEvent<PircBotX>) event).getChannel().send().message(message);
-		else
-			event.respond(message);
+		BotUtil.chanUserRespond(event, message);
 	}
 
 }

@@ -4,9 +4,12 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
+import io.github.likcoras.asuka.BotUtil;
 import io.github.likcoras.asuka.exception.ResponseException;
 
 public class GetNickResponse implements BotResponse {
+
+	private static final String FORMAT = "Attempted to recover nick ";
 
 	private GenericMessageEvent<PircBotX> event;
 	private String nick;
@@ -24,7 +27,7 @@ public class GetNickResponse implements BotResponse {
 		bot.getIrcBot().sendRaw().rawLine("NICKSERV RELEASE " + nick + " " + password);
 		bot.getIrcBot().sendIRC().changeNick(nick);
 		bot.getIrcBot().sendIRC().identify(password);
-		event.respond("Attempted to recover nick " + nick);
+		BotUtil.chanUserRespond(event, FORMAT + nick);
 	}
 
 }

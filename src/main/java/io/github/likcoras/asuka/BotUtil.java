@@ -9,7 +9,9 @@ import java.util.Locale;
 
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
+import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericEvent;
+import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.handler.Handler;
 import lombok.SneakyThrows;
@@ -51,6 +53,13 @@ public final class BotUtil {
 	public static String getExceptionMessage(Handler handler, GenericEvent<PircBotX> event, Exception cause) {
 		return "Error while handling " + event.getClass().getSimpleName() + " with "
 				+ handler.getClass().getSimpleName() + ": " + cause.getMessage();
+	}
+
+	public static void chanUserRespond(GenericMessageEvent<PircBotX> event, String message) {
+		if (event instanceof MessageEvent)
+			((MessageEvent<PircBotX>) event).getChannel().send().message(message);
+		else
+			event.getUser().send().message(message);
 	}
 
 }

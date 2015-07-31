@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.Period;
 
 import org.pircbotx.PircBotX;
-import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import io.github.likcoras.asuka.AsukaBot;
@@ -28,10 +27,7 @@ public class MangaUpdatesResponse implements BotResponse {
 
 	@Override
 	public void send(AsukaBot bot) {
-		if (event instanceof MessageEvent)
-			((MessageEvent<PircBotX>) event).getChannel().send().message(message);
-		else
-			event.respond(message);
+		BotUtil.chanUserRespond(event, message);
 	}
 
 	private String getReleaseMessage(MangaUpdatesData data) {
