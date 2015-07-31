@@ -13,7 +13,7 @@ public class AuthManager {
 	private Map<String, UserLevel> levels;
 
 	public AuthManager(BotConfig config) throws ConfigException {
-		levels = new ConcurrentHashMap<String, UserLevel>();
+		levels = new ConcurrentHashMap<>();
 		ownerId = config.getString("ownerId");
 		levels.put(ownerId, UserLevel.OWNER);
 	}

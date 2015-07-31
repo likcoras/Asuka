@@ -15,7 +15,7 @@ public class IgnoreManager {
 	private Set<String> ignored;
 
 	public IgnoreManager() {
-		ignored = Collections.synchronizedSet(new HashSet<String>());
+		ignored = Collections.synchronizedSet(new HashSet<>());
 	}
 
 	public void addIgnored(User user) {

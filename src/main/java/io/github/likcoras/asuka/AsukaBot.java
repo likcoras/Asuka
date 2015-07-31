@@ -105,7 +105,7 @@ public class AsukaBot {
 	}
 
 	private void configureBot() throws ConfigException {
-		Configuration.Builder<PircBotX> botConfig = new Configuration.Builder<PircBotX>().setAutoNickChange(true)
+		Configuration.Builder<PircBotX> botConfig = new Configuration.Builder<>().setAutoNickChange(true)
 				.setAutoReconnect(true).setAutoSplitMessage(true).setMessageDelay(0L)
 				.setListenerManager(listenerManager).setName(config.getString("ircNick"))
 				.setLogin(config.getString("ircUsername")).setRealName(config.getString("ircRealname"))
