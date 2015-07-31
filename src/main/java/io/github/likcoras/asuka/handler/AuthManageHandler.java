@@ -26,12 +26,12 @@ public class AuthManageHandler extends Handler {
 	private static final int RPL_WHOREPLY = 352;
 
 	private Map<Character, UserLevel> prefix;
-	private List<String> authChannels;
+	private String authChannel;
 
 	public AuthManageHandler(AsukaBot bot) throws ConfigException {
 		super(bot);
 		prefix = new ConcurrentHashMap<>();
-		authChannels = bot.getConfig().getStringList("authChannels");
+		authChannel = bot.getConfig().getString("authChannel");
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class AuthManageHandler extends Handler {
 		if (params.size() < 3)
 			return;
 		String channel = params.get(1);
-		if (!authChannels.contains(channel))
+		if (!authChannel.equalsIgnoreCase(channel))
 			return;
 		String user = params.get(2) + "@" + params.get(3);
 		UserLevel level = prefix.get(params.get(6).charAt(params.get(6).length() - 1));
@@ -92,7 +92,7 @@ public class AuthManageHandler extends Handler {
 	}
 
 	private void parseModeChange(Channel channel, User user) {
-		if (!authChannels.contains(channel.getName()))
+		if (!authChannel.equalsIgnoreCase(channel.getName()))
 			return;
 		SortedSet<UserLevel> levels = channel.getUserLevels(user);
 		if (levels.isEmpty())

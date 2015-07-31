@@ -21,11 +21,11 @@ ircChannels: #channel, #staffchannel:key
 # Misc. IRC
 # quitReply: Message sent to the requester when quitting
 # quitMessage: Message sent when quitting. (eg. QUIT: Oyasuminasai~ (requested by likcoras))
-# authChannels: Channels to fetch the "staff" from. (OPs from these channels are given access, etc.)
+# authChannel: Channel to fetch the "staff" from. (OPs from this channel are given access, etc.)
 # ownerId: Used to identify the owner. Format is username@hostname(not nick)
 quitReply: Goodbye, %s~
 quitMessage: Oyasuminasai~ (requested by %s)
-authChannels: #staffchannel
+authChannel: #staffchannel
 ownerId: likcoras@tis.very.bored
 
 version: ${project.version}
