@@ -20,7 +20,6 @@ import io.github.likcoras.asuka.handler.GetNickHandler;
 import io.github.likcoras.asuka.handler.IgnoreManageHandler;
 import io.github.likcoras.asuka.handler.MangaUpdatesHandler;
 import io.github.likcoras.asuka.handler.QuitHandler;
-import io.github.likcoras.asuka.handler.RawHandler;
 import io.github.likcoras.asuka.handler.SilentSkyRSSHandler;
 import io.github.likcoras.asuka.handler.SilentSkyXMLHandler;
 import io.github.likcoras.asuka.handler.UptimeHandler;
@@ -127,7 +126,6 @@ public class AsukaBot {
 		listenerManager.addListener(new GetNickHandler(this));
 		listenerManager.addListener(new MangaUpdatesHandler(this));
 		listenerManager.addListener(new QuitHandler(this));
-		listenerManager.addListener(new RawHandler(this));
 		listenerManager.addListener(new SilentSkyRSSHandler(this));
 		listenerManager.addListener(new SilentSkyXMLHandler(this));
 		listenerManager.addListener(new UptimeHandler(this));
