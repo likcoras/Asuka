@@ -9,13 +9,10 @@ import io.github.likcoras.asuka.exception.ConfigException;
 
 public class AuthManager {
 
-	private String ownerId;
 	private Map<String, UserLevel> levels;
 
 	public AuthManager(BotConfig config) throws ConfigException {
 		levels = new ConcurrentHashMap<>();
-		ownerId = config.getString("ownerId");
-		levels.put(ownerId, UserLevel.OWNER);
 	}
 
 	public void setLevel(User user, UserLevel level) {
@@ -23,9 +20,7 @@ public class AuthManager {
 	}
 
 	public void setLevel(String user, UserLevel level) {
-		if (user.equals(ownerId))
-			return;
-		else if (levels.containsKey(user) && levels.get(user).compareTo(level) > 0)
+		if (levels.containsKey(user) && levels.get(user).compareTo(level) > 0)
 			return;
 		levels.put(user, level);
 	}
@@ -35,8 +30,7 @@ public class AuthManager {
 	}
 
 	public void removeLevel(String user) {
-		if (!user.equals(ownerId))
-			levels.remove(user);
+		levels.remove(user);
 	}
 
 	public Optional<UserLevel> getLevel(User user) {
