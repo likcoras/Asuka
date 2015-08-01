@@ -101,7 +101,8 @@ public class AsukaBot {
 				.mapToInt(s -> Integer.parseInt(s)).toArray();
 		boolean valid = true;
 		if (!isHigher(version, new int[] { 3, 0, 5 })) {
-			log.error("Change 'authChannels' to 'authChannel' and only allow a single channel. Afterwards, set 'version' to at least 3.0.5");
+			log.error(
+					"Change 'authChannels' to 'authChannel' and only allow a single channel. Afterwards, set 'version' to at least 3.0.5");
 			valid = false;
 		}
 		return valid;
