@@ -14,7 +14,6 @@ import java.util.List;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
-import com.rometools.fetcher.FeedFetcher;
 import com.rometools.fetcher.FetcherException;
 import com.rometools.fetcher.impl.HttpURLFeedFetcher;
 import com.rometools.rome.feed.synd.SyndEntry;
@@ -25,10 +24,11 @@ public class SilentSkyRSSHandler extends Handler {
 
 	private static final String RSS_LINK = "http://www.silentsky-scans.net/feed/";
 
-	private FeedFetcher fetcher = new HttpURLFeedFetcher();
+	private HttpURLFeedFetcher fetcher = new HttpURLFeedFetcher();
 
 	public SilentSkyRSSHandler(AsukaBot bot) {
 		super(bot);
+		fetcher.setConnectTimeout(10000);
 	}
 
 	@Override
