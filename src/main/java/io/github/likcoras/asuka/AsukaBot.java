@@ -15,13 +15,7 @@ import org.pircbotx.hooks.managers.ListenerManager;
 
 import io.github.likcoras.asuka.exception.ConfigException;
 import io.github.likcoras.asuka.handler.AuthManageHandler;
-import io.github.likcoras.asuka.handler.BatotoHandler;
-import io.github.likcoras.asuka.handler.GetNickHandler;
-import io.github.likcoras.asuka.handler.IgnoreManageHandler;
-import io.github.likcoras.asuka.handler.MangaUpdatesHandler;
 import io.github.likcoras.asuka.handler.QuitHandler;
-import io.github.likcoras.asuka.handler.SilentSkyRSSHandler;
-import io.github.likcoras.asuka.handler.SilentSkyXMLHandler;
 import io.github.likcoras.asuka.handler.UptimeHandler;
 import io.github.likcoras.asuka.handler.response.BotResponse;
 import io.github.likcoras.asuka.out.DefaultOutputManager;
@@ -122,13 +116,7 @@ public class AsukaBot {
 
 	private void addListeners(ListenerManager<PircBotX> listenerManager) throws ConfigException {
 		listenerManager.addListener(new AuthManageHandler(this));
-		listenerManager.addListener(new BatotoHandler(this));
-		listenerManager.addListener(new IgnoreManageHandler(this));
-		listenerManager.addListener(new GetNickHandler(this));
-		listenerManager.addListener(new MangaUpdatesHandler(this));
 		listenerManager.addListener(new QuitHandler(this));
-		listenerManager.addListener(new SilentSkyRSSHandler(this));
-		listenerManager.addListener(new SilentSkyXMLHandler(this));
 		listenerManager.addListener(new UptimeHandler(this));
 		listenerManager.addListener(new BotLogger());
 	}
