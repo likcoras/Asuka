@@ -31,7 +31,7 @@ public final class BotUtil {
 	public static boolean isTrigger(String message, String trigger) {
 		message = message.toLowerCase(Locale.ENGLISH);
 		trigger = trigger.toLowerCase(Locale.ENGLISH);
-		return message.startsWith("." + trigger) || message.startsWith("!" + trigger);
+		return message.startsWith("@" + trigger);
 	}
 
 	public static String addFormat(String message) {
