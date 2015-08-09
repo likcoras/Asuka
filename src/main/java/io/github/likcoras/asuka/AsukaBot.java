@@ -14,7 +14,6 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.managers.ListenerManager;
 
 import io.github.likcoras.asuka.exception.ConfigException;
-import io.github.likcoras.asuka.handler.AuthManageHandler;
 import io.github.likcoras.asuka.handler.QuitHandler;
 import io.github.likcoras.asuka.handler.UptimeHandler;
 import io.github.likcoras.asuka.handler.response.BotResponse;
@@ -115,7 +114,6 @@ public class AsukaBot {
 	}
 
 	private void addListeners(ListenerManager<PircBotX> listenerManager) throws ConfigException {
-		listenerManager.addListener(new AuthManageHandler(this));
 		listenerManager.addListener(new QuitHandler(this));
 		listenerManager.addListener(new UptimeHandler(this));
 		listenerManager.addListener(new BotLogger());

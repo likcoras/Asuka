@@ -1,47 +1,24 @@
 package io.github.likcoras.asuka;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.pircbotx.Channel;
 import org.pircbotx.User;
 import org.pircbotx.UserLevel;
-import com.google.common.base.Optional;
 import io.github.likcoras.asuka.exception.ConfigException;
 
 public class AuthManager {
 
-	private Map<String, UserLevel> levels;
+	private String authChannel;
 
 	public AuthManager(BotConfig config) throws ConfigException {
-		levels = new ConcurrentHashMap<>();
-	}
-
-	public void setLevel(User user, UserLevel level) {
-		setLevel(BotUtil.getId(user), level);
-	}
-
-	public void setLevel(String user, UserLevel level) {
-		if (levels.containsKey(user) && levels.get(user).compareTo(level) > 0)
-			return;
-		levels.put(user, level);
-	}
-
-	public void removeLevel(User user) {
-		removeLevel(BotUtil.getId(user));
-	}
-
-	public void removeLevel(String user) {
-		levels.remove(user);
-	}
-
-	public Optional<UserLevel> getLevel(User user) {
-		return Optional.fromNullable(levels.get(BotUtil.getId(user)));
+		authChannel = config.getString("authChannel");
 	}
 
 	public boolean checkAccess(User user, UserLevel required) {
-		Optional<UserLevel> userLevel = getLevel(user);
-		if (!userLevel.isPresent())
+		Channel channel = user.getBot().getUserChannelDao().getChannel(authChannel);
+		UserLevel userLevel = channel.getUserLevels(user).last();
+		if (userLevel == null)
 			return false;
-		return required.compareTo(userLevel.get()) <= 0;
+		return required.compareTo(userLevel) <= 0;
 	}
 
 }
