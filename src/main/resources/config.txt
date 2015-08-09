@@ -9,22 +9,22 @@
 # Port: The port to connect to
 # SSL: Whether to use ssl
 # Channels: Channels to join
-ircNick: Asuka
-ircUsername: Asuka
-ircRealname: A bot for silentsky
+ircNick: A`Gario
+ircUsername: A`Gario
+ircRealname: Contact likcoras for questions
 ircPassword: password-here
-ircServer: irc.irchighway.net
+ircServer: irc.rizon.net
 ircPort: 6697
 ircSSL: true
-ircChannels: #channel, #staffchannel:key
+ircChannels: #agario, #agariomods
 
 # Misc. IRC
 # quitReply: Message sent to the requester when quitting
-# quitMessage: Message sent when quitting. (eg. QUIT: Oyasuminasai~ (requested by likcoras))
+# quitMessage: Message sent when quitting. (eg. QUIT: Bye~ (requested by likcoras))
 # authChannel: Channel to fetch the "staff" from. (OPs from this channel are given access, etc.)
 quitReply: Goodbye, %s~
-quitMessage: Oyasuminasai~ (requested by %s)
-authChannel: #staffchannel
+quitMessage: Bye~ (requested by %s)
+authChannel: #agario
 
 # Do NOT change this unless told to
 version: ${project.version}
